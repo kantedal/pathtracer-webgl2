@@ -1,7 +1,18 @@
+
+interface WebGLVertexArrayObject {
+
+}
+
 interface WebGL2RenderingContext {
   readonly canvas: HTMLCanvasElement;
   readonly drawingBufferHeight: number;
   readonly drawingBufferWidth: number;
+  clearBufferfv(test0:any, test1:any, test2: any);
+  renderbufferStorageMultisample(test0:any, test1:any, test2: any, test3:any, test4:any);
+  framebufferTextureLayer(type:any, type2:any, type3:any, type4:any, type5:any);
+  drawBuffers(input: any);
+  createVertexArray(): WebGLVertexArrayObject;
+  bindVertexArray(vao: WebGLVertexArrayObject);
   activeTexture(texture: number): void;
   attachShader(program: WebGLProgram | null, shader: WebGLShader | null): void;
   bindAttribLocation(program: WebGLProgram | null, index: number, name: string): void;
@@ -172,6 +183,7 @@ interface WebGL2RenderingContext {
   readonly BYTE: number;
   readonly CCW: number;
   readonly CLAMP_TO_EDGE: number;
+  readonly COLOR: number;
   readonly COLOR_ATTACHMENT0: number;
   readonly COLOR_BUFFER_BIT: number;
   readonly COLOR_CLEAR_VALUE: number;
@@ -211,6 +223,7 @@ interface WebGL2RenderingContext {
   readonly EQUAL: number;
   readonly FASTEST: number;
   readonly FLOAT: number;
+  readonly HALF_FLOAT: number;
   readonly FLOAT_MAT2: number;
   readonly FLOAT_MAT3: number;
   readonly FLOAT_MAT4: number;
@@ -219,6 +232,8 @@ interface WebGL2RenderingContext {
   readonly FLOAT_VEC4: number;
   readonly FRAGMENT_SHADER: number;
   readonly FRAMEBUFFER: number;
+  readonly DRAW_FRAMEBUFFER: number;
+  readonly READ_FRAMEBUFFER: number;
   readonly FRAMEBUFFER_ATTACHMENT_OBJECT_NAME: number;
   readonly FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE: number;
   readonly FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE: number;
@@ -324,6 +339,9 @@ interface WebGL2RenderingContext {
   readonly RGB5_A1: number;
   readonly RGBA: number;
   readonly RGBA4: number;
+  readonly RGB32F: number;
+  readonly RGBA32F: number;
+  readonly RGBA16F: number;
   readonly SAMPLER_2D: number;
   readonly SAMPLER_CUBE: number;
   readonly SAMPLES: number;

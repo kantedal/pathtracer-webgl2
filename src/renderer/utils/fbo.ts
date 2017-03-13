@@ -2,14 +2,13 @@ import Shader from "./shader";
 import RenderTarget from "./render-target";
 import {gl} from "./render-context";
 
-export default class PingPongFBO extends RenderTarget {
-  private _textures: WebGLTexture[];
-  private _currentTexture: number;
+export default class FBO extends RenderTarget {
+  private _texture: WebGLTexture;
   private _framebuffer: WebGLFramebuffer;
 
   constructor(shader: Shader, sizeX: number, sizeY: number) {
     super(shader, sizeX, sizeY);
-    this.resetTextures();
+    this.resetTexture();
     this._framebuffer = gl.createFramebuffer();
   }
 
@@ -26,41 +25,25 @@ export default class PingPongFBO extends RenderTarget {
     gl.vertexAttribPointer(this._texCoordAttribLocation, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, this._framebuffer);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this._textures[this._currentTexture], 0);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, this._texture, 0);
 
     this._shader.update();
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-    this._currentTexture = 1 - this._currentTexture;
   }
 
-  public resetTextures() {
-    this._textures = [];
-
-    this._textures.push(gl.createTexture());
-    gl.bindTexture(gl.TEXTURE_2D, this._textures[0]);
+  public resetTexture() {
+    this._texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, this._texture);
     gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this._sizeX, this._sizeY, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
-
-    this._textures.push(gl.createTexture());
-    gl.bindTexture(gl.TEXTURE_2D, this._textures[1]);
-    gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this._sizeX, this._sizeY, 0, gl.RGBA, gl.FLOAT, null);
-    gl.bindTexture(gl.TEXTURE_2D, null);
-
-    this._currentTexture = 0;
   }
 
-  get texture(): WebGLTexture { return this._textures[1 - this._currentTexture]; }
-  get lastTexture(): WebGLTexture { return this._textures[1 - this._currentTexture]; }
+  get texture(): WebGLTexture { return this._texture; }
 }
