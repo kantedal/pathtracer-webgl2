@@ -1,10 +1,17 @@
 import {gl} from "./render-context";
 
-interface IUniform {
-  value: any | WebGLTexture;
-  type: string;
+export interface IUniform {
+  value: any;
+  type: number;
   location?: WebGLUniformLocation;
 }
+
+export const FLOAT_TYPE = 0;
+export const INTEGER_TYPE = 1;
+export const VEC2_TYPE = 2;
+export const VEC3_TYPE = 3;
+export const VEC4_TYPE = 4;
+export const TEXTURE_TYPE = 5;
 
 export default class Shader {
   private _vertexShader: WebGLShader;
@@ -19,18 +26,24 @@ export default class Shader {
   }
 
   public update() {
+    let textureCount = 0;
+
     for (let uniformName in this._uniforms) {
       let uniform = this._uniforms[uniformName];
-      let textureCount = 0;
-
       switch (uniform.type) {
-        case 'f':
+        case FLOAT_TYPE:
           gl.uniform1f(uniform.location, uniform.value);
           break;
-        case 'v2':
+        case VEC2_TYPE:
           gl.uniform2fv(uniform.location, uniform.value);
           break;
-        case 't':
+        case VEC3_TYPE:
+          gl.uniform3fv(uniform.location, uniform.value);
+          break;
+        case INTEGER_TYPE:
+          gl.uniform1i(uniform.location, uniform.value);
+          break;
+        case TEXTURE_TYPE:
 
           gl.uniform1i(uniform.location, textureCount);
 
@@ -71,21 +84,24 @@ export default class Shader {
           }
           gl.bindTexture(gl.TEXTURE_2D, uniform.value);
           textureCount++;
+          break;
       }
     }
   }
 
   private createShader(type: number, source: string): WebGLShader {
-    let shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
+    let shader = gl.createShader(type)
+    gl.shaderSource(shader, source)
+    gl.compileShader(shader)
 
     if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
       return shader;
     }
 
-    console.error(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
+    console.warn(gl.getShaderInfoLog(shader))
+    //console.warn(gl.getShaderSource(shader))
+    //console.debug(gl.getShaderSource(shader))
+    gl.deleteShader(shader)
   }
 
   private updateUniforms() {

@@ -1,20 +1,29 @@
+import {gl} from "./render-context";
 
 export default class DataTexture {
-  private _texture: WebGLTexture;
+  public _texture: WebGLTexture;
 
-  constructor(private _gl: WebGL2RenderingContext) {
-    this.resetTexture();
+  constructor(
+    private _width: number,
+    private _height: number,
+    private _data: Float32Array,
+    private _name: string
+  ) {
+    this._texture = gl.createTexture();
+
+    this.updateTexture();
   }
 
-  public resetTexture() {
-    this._texture = this._gl.createTexture();
-    this._gl.activeTexture(this._gl.TEXTURE0);
-    this._gl.bindTexture(this._gl.TEXTURE_2D, this._texture);
-    this._gl.pixelStorei(this._gl.UNPACK_FLIP_Y_WEBGL, 1);
-    this._gl.texParameterf(this._gl.TEXTURE_2D, this._gl.TEXTURE_MAG_FILTER, this._gl.NEAREST);
-    this._gl.texParameterf(this._gl.TEXTURE_2D, this._gl.TEXTURE_MIN_FILTER, this._gl.NEAREST);
-    this._gl.texParameterf(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_S, this._gl.CLAMP_TO_EDGE);
-    this._gl.texParameterf(this._gl.TEXTURE_2D, this._gl.TEXTURE_WRAP_T, this._gl.CLAMP_TO_EDGE);
-    this._gl.texImage2D(this._gl.TEXTURE_2D, 0, this._gl.RGB, 512, 512, 0, this._gl.RGB, this._gl.FLOAT, null);
+  public updateTexture() {
+    gl.bindTexture(gl.TEXTURE_2D, this._texture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB32F, this._width, this._height, 0, gl.RGB, gl.FLOAT, this._data);
   }
+
+  get texture() { return this._texture; }
+  get width(): number { return this._width; }
+  get height(): number { return this._height; }
 }

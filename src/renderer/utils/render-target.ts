@@ -2,12 +2,6 @@ import Shader from "./shader";
 import createProgram from "./createProgram";
 import {gl} from "./render-context";
 
-export interface IUniform {
-  value: any | WebGLTexture;
-  type: string;
-  location?: WebGLUniformLocation;
-}
-
 export default class RenderTarget {
   protected _program: WebGLProgram;
   protected _positionAttribLocation: number;

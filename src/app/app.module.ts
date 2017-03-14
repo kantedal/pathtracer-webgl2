@@ -5,6 +5,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import {RenderService} from "../renderer/render.service";
+import {SceneService} from "../renderer/scene.service";;
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import {RenderService} from "../renderer/render.service";
     HttpModule
   ],
   providers: [
-    RenderService
+    RenderService,
+    SceneService
   ],
   bootstrap: [AppComponent]
 })

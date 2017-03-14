@@ -6,7 +6,6 @@ import {LoadObjects} from "../utils/obj-loader";
 import buildScene from './scene-builder';
 
 export default class Scene {
-  private _sceneListener: SceneListener;
   private _intersectables: Array<Object3d>;
   private _triangles: Array<Triangle>;
   private _materials: Array<Material>;
@@ -74,32 +73,8 @@ export default class Scene {
     }
   }
 
-  buildSceneTextures() {
-    return buildScene(this);
-  }
-
-  public loadObj() {
-    LoadObjects([
-        {fileName: './assets/models/test.obj', material: this._materials[7] },
-      ], (objects) => {
-        for (let object of objects) {
-          this._intersectables.splice(0, 0, object);
-        }
-
-        if (this._sceneListener != null)
-          this._sceneListener.sceneUpdated();
-      },
-      () => {});
-  }
-
-
   get materials(): Array<Material> { return this._materials; }
   set materials(value: Array<Material>) { this._materials = value;}
-  set sceneListener(value: SceneListener) { this._sceneListener = value; }
   get intersectables(): Array<Object3d> { return this._intersectables; }
   set intersectables(value: Array<Object3d>) { this._intersectables = value; }
-}
-
-export interface SceneListener {
-  sceneUpdated();
 }
