@@ -1,5 +1,7 @@
 ///<reference path="../node_modules/@types/node/index.d.ts" />
 ///<reference path="./typings/webgl2.d.ts" />
+///<reference path="./typings/gl-matrix.d.ts" />
+///<reference path="./typings/jquery.d.ts" />
 
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';

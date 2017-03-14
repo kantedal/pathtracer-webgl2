@@ -1,9 +1,6 @@
-import {ElementRef} from "@angular/core";
 import Shader from "../utils/shader";
 import RenderTarget, {IUniform} from "../utils/render-target";
-import FBO from "../utils/fbo";
 import PingPongFBO from "../utils/pingpong-fbo";
-import {initContext, gl} from "../utils/render-context";
 
 /*
  Shader imports
@@ -17,7 +14,6 @@ const pongpongFrag = require('raw-loader!glslify-loader!./shaders/ping-pong.frag
 export default class RenderView {
   private _renderTarget: RenderTarget;
   private _uniforms: {[name: string]: IUniform};
-  private _fboTest: FBO;
 
   private _mousePos: number[];
   private _pingPongTest: PingPongFBO;
@@ -47,10 +43,9 @@ export default class RenderView {
     pingPongShader.uniforms = this._pingPongUniforms;
 
     this._pingPongTest = new PingPongFBO(pingPongShader, 512, 512);
-    this.render();
   }
 
-  private render = () => {
+  public render(pathTracerTexture: WebGLTexture) {
     this._pingPongTest.render();
     this._pingPongUniforms['u_last_texture'].value = this._pingPongTest.texture;
 
@@ -58,6 +53,5 @@ export default class RenderView {
     this._uniforms['u_texture'].value = this._pingPongTest.texture;
 
     this._renderTarget.render();
-    requestAnimationFrame(this.render);
   }
 }

@@ -1,7 +1,4 @@
 import {ElementRef} from "@angular/core";
-/**
- * Created by fille on 2017-03-13.
- */
 
 export let gl: WebGL2RenderingContext;
 

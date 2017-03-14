@@ -1,4 +1,4 @@
-import {Component, AfterViewInit} from '@angular/core';
+import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {RenderService} from "../renderer/render.service";
 
 @Component({
@@ -7,10 +7,11 @@ import {RenderService} from "../renderer/render.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  ngAfterViewInit(): void {
-  }
-  title = 'app works!';
+  @ViewChild('renderCanvas') renderCanvas: ElementRef
+
   constructor(public renderService: RenderService) {}
 
-
+  ngAfterViewInit(): void {
+    this.renderService.init(this.renderCanvas)
+  }
 }
