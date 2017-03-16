@@ -1,0 +1,42 @@
+.bottom-bar {
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  height: 50px;
+  background: rgba(0,0,0,0.2);
+  pointer-events: visible;
+}
+
+.zoom-slider {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.bottom-info-label {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 200;
+  line-height: 50px;
+  color: #fff;
+}
+
+.bottom-info-data-label {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 200;
+  line-height: 50px;
+  color: #fff;
+}
+
+.resolution-inputs {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.resolution-input {
+  color: #fff;
+  font-weight: 200;
+  font-size: 12px;
+  width: 40px;
+  text-align: center;
+}

@@ -1,6 +1,7 @@
 import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
-import {RenderService} from "../renderer/render.service";
-import {SceneService} from "../renderer/scene.service";
+import {RenderService} from "./renderer/render.service";
+import {SceneService} from "./renderer/scene.service";
+import {SettingsService} from "./services/settings.service";
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     public renderService: RenderService,
+    public settingsService: SettingsService,
     public sceneService: SceneService
   ) {}
 
