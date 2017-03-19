@@ -29,7 +29,7 @@ uniform sampler2D u_objects_bvh_texture;
 uniform sampler2D u_objects_texture;
 uniform sampler2D u_light_sphere_texture;
 
-#define EPS 0.000001
+#define EPS 0.00000001
 #define PI 3.14
 
 #define SAMPLE_STEP_128 vec2(1,0) / 128.0

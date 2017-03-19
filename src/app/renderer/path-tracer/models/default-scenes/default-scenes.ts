@@ -26,7 +26,7 @@ export function createDefaultScene1(scene: Scene): Promise<void> {
     let emission_red_material = new EmissionMaterial(vec3.fromValues(1,0.7,0.7));
     emission_red_material.emission_rate = 10.0;
     let light_emission_material = new EmissionMaterial(vec3.fromValues(0,1,1));
-    light_emission_material.emission_rate = 0.3;
+    light_emission_material.emission_rate = 6.0;
 
     scene.materials.push(green_material);
     scene.materials.push(blue_material);
@@ -42,12 +42,12 @@ export function createDefaultScene1(scene: Scene): Promise<void> {
 
     // Load objects from .obj files
     LoadObjects([
-        { fileName: '../../../assets/models/cylinder.obj', material: glossy_blue_material, smooth_shading: true },
+        //{ fileName: '../../../assets/models/cylinder.obj', material: glossy_blue_material, smooth_shading: true },
         { fileName: './assets/models/box.obj', material: white_material, smooth_shading: false },
         //{ fileName: '../../../assets/models/bottom_disc.obj', material: white_material, smooth_shading: false },
         { fileName: '../../../assets/models/teapot5.obj', material: gold_material, smooth_shading: true },
-        { fileName: '../../../assets/models/bunny.obj', material: green_glass, smooth_shading: true },
-        //{ fileName: '../../../assets/models/dragon2.obj', material: green_glass, smooth_shading: true },
+        //{ fileName: '../../../assets/models/bunny.obj', material: green_glass, smooth_shading: true },
+        { fileName: '../../../assets/models/dragon2.obj', material: green_glass, smooth_shading: true },
         { fileName: './assets/models/light_plane4.obj', material: emission_material, smooth_shading: false },
         { fileName: '../../../assets/models/light_plane5.obj', material: emission_red_material, smooth_shading: false },
       ], (objects) => {

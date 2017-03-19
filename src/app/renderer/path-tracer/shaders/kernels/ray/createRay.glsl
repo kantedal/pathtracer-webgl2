@@ -2,11 +2,11 @@
 #pragma glslify: random = require("glsl-random")
 
 Ray createRay(vec2 pixel_position, int sample_step) {
-  float width = 512.0;
-  float height = 512.0;
+  float width = resolution.x;
+  float height = resolution.y;
 
-  float i = (pixel_position.x / width) - 0.5;
-  float j = (pixel_position.y / height) - 0.5;
+  float i = ((pixel_position.x / width) - 0.5) * width / height;
+  float j = ((pixel_position.y / height) - 0.5);
   vec3 image_point = i * 1.5 * camera_right + j * 1.5 * camera_up + camera_position + camera_direction;
 
   vec3 dx = (camera_up / width);

@@ -14,9 +14,9 @@ Material getMaterial(int material_index) {
   vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);
   vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);
 
-  vec3 color = vec3(texelFetch(materialTexture, ivec2(int(sample1.x * 512.0), int(sample1.y * 512.0)), 0));
-  vec3 extra_data1 = vec3(texelFetch(materialTexture, ivec2(int(sample2.x * 512.0), int(sample2.y * 512.0)), 0));
-  vec3 extra_data2 = vec3(texelFetch(materialTexture, ivec2(int(sample3.x * 512.0), int(sample3.y * 512.0)), 0));
+  vec3 color = vec3(texture(materialTexture, sample1));
+  vec3 extra_data1 = vec3(texture(materialTexture, sample2));
+  vec3 extra_data2 = vec3(texture(materialTexture, sample3));
 
   int material_type = int(extra_data1.x);
   float emission_rate = extra_data1.y;

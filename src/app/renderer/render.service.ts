@@ -61,12 +61,12 @@ export class RenderService {
 
     this._stats.end();
 
-    this._samples++;
-    if (this._samples == 300) {
-      console.log('Time for 300 samples: ', moment().valueOf() - this._startTime, 'ms');
-    }
-    else {
+    // this._samples++;
+    // if (this._samples == 300) {
+    //   console.log('Time for 300 samples: ', moment().valueOf() - this._startTime, 'ms');
+    // }
+    // else {
       requestAnimationFrame(this.render)
-    }
+    //}
   }
 }
