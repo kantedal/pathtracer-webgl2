@@ -1,17 +1,15 @@
 import 'hammerjs';
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
-import { MaterialModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser'
+import { NgModule } from '@angular/core'
+import { FormsModule } from '@angular/forms'
+import { HttpModule } from '@angular/http'
+import { MaterialModule } from '@angular/material'
 
-import { AppComponent } from './app.component';
-import {RenderService} from "./renderer/render.service";
-import {SceneService} from "./renderer/scene.service";
-import {BottomBarComponent} from "./components/bottom-bar/bottom-bar.component";
-import {SettingsService} from "./services/settings.service";
-;
+import { AppComponent } from './app.component'
+import {RenderService} from "./renderer/render.service"
+import {BottomBarComponent} from "./components/bottom-bar/bottom-bar.component"
+import {SettingsService} from "./services/settings.service"
 
 @NgModule({
   declarations: [
@@ -26,7 +24,6 @@ import {SettingsService} from "./services/settings.service";
   ],
   providers: [
     RenderService,
-    SceneService,
     SettingsService
   ],
   bootstrap: [AppComponent]

@@ -89,6 +89,10 @@ export default class Shader {
     }
   }
 
+  public updateTexture(data) {
+
+  }
+
   private createShader(type: number, source: string): WebGLShader {
     let shader = gl.createShader(type)
     gl.shaderSource(shader, source)

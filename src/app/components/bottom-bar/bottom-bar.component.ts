@@ -17,6 +17,14 @@ export class BottomBarComponent {
     })
   }
 
+  powerUpdate(event) {
+    this.settingsService.power = event.value;
+  }
+
+  detailLevelUpdate(event) {
+    this.settingsService.detailLevel = event.value;
+  }
+
   zoomSliderUpdate(event) {
     this.settingsService.zoom = event.value / 100.0
   }

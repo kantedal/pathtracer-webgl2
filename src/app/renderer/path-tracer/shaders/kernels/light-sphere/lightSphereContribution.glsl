@@ -22,7 +22,7 @@ vec3 lightSphereContribution(Ray ray) {
   float u = 0.5 - atan(normal.z, normal.x) / 6.28;
   float v = 0.5 - 2.0 * asin(normal.y) / 6.28;
 
-  vec3 clr = texture(lightSphereTexture, vec2(u,v)).rgb;
+  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;
   return clr;
 }
 #pragma glslify: export(lightSphereContribution)

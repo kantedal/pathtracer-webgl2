@@ -1,25 +1,23 @@
 import Camera from "./path-tracer/models/camera";
-import Scene from "./path-tracer/models/scene";
-
-export class SceneNavigator {
-  public static OBJECT_SELECTED = 'OBJECT_SELECTED';
-
+import {SettingsService} from "../services/settings.service";
+export class CameraNavigator {
   private renderCanvas: any;
+  p
 
   // Interaction data
-  private middle_mouse_down: boolean;
-  private left_mouse_down: boolean;
+  private middle_mouse_down: boolean
+  private left_mouse_down: boolean
 
-  private start_camera_position: GLM.IArray;
-  private start_lookat_position: GLM.IArray;
-  private start_mouse_position: any;
+  private start_camera_position: GLM.IArray
+  private start_lookat_position: GLM.IArray
+  private start_mouse_position: any
 
-  constructor(private camera: Camera, private scene: Scene) {
+  constructor(private camera: Camera, private settingsService: SettingsService) {
     this.renderCanvas = $('#renderCanvas')
     this.setupCameraMove();
     this.setupCameraZoom();
     this.setupCameraRotation();
-    this.setupClickListeners();
+
   }
 
   setupCameraMove() {
@@ -35,25 +33,25 @@ export class SceneNavigator {
         let u = vec3.fromValues(0,0,0);
         let v = vec3.fromValues(0,0,0);
 
-        vec3.scale(u, this.camera.camera_right, -5 * (event.pageX / 512 - 0.5) - this.start_mouse_position.x);
-        vec3.scale(v, this.camera.camera_up, 5 * (event.pageY / 512 - 0.5) - this.start_mouse_position.y);
+        vec3.scale(u, this.camera.camera_right, -(event.clientX / window.innerWidth - 0.5) - this.start_mouse_position.x)
+        vec3.scale(v, this.camera.camera_up, (event.clientY / window.innerHeight - 0.5)  - this.start_mouse_position.y)
 
-        vec3.add(uv, u, v);
-        vec3.add(this.camera.position, this.start_camera_position, uv);
-        vec3.add(this.camera.look_at, this.start_lookat_position, uv);
+        vec3.add(uv, u, v)
+        vec3.add(this.camera.position, this.start_camera_position, uv)
+        vec3.add(this.camera.look_at, this.start_lookat_position, uv)
 
-        this.camera.hasChanged = true;
+        this.camera.hasChanged = true
       }
     });
 
     this.renderCanvas.mousedown((event) => {
       if (event.which === 2) {
-        this.start_mouse_position.x = -5 * (event.pageX / 512 - 0.5);
-        this.start_mouse_position.y = 5 * (event.pageY / 512 - 0.5);
-        this.start_camera_position = vec3.fromValues(this.camera.position[0], this.camera.position[1], this.camera.position[2]);
-        this.start_lookat_position = vec3.fromValues(this.camera.look_at[0], this.camera.look_at[1], this.camera.look_at[2]);
+        this.start_mouse_position.x = -(event.clientX / window.innerWidth - 0.5)
+        this.start_mouse_position.y = (event.clientY / window.innerHeight - 0.5)
+        this.start_camera_position = vec3.fromValues(this.camera.position[0], this.camera.position[1], this.camera.position[2])
+        this.start_lookat_position = vec3.fromValues(this.camera.look_at[0], this.camera.look_at[1], this.camera.look_at[2])
 
-        this.middle_mouse_down = true;
+        this.middle_mouse_down = true
       }
     });
 
@@ -65,11 +63,11 @@ export class SceneNavigator {
     this.renderCanvas.on('mousewheel', (event) => {
       let new_direction = vec3.fromValues(0,0,0);
       if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
-        vec3.scale(new_direction, this.camera.direction, 0.5);
+        vec3.scale(new_direction, this.camera.direction, 0.05);
         vec3.add(this.camera.position, this.camera.position, new_direction);
       }
       else {
-        vec3.scale(new_direction, this.camera.direction, -0.5);
+        vec3.scale(new_direction, this.camera.direction, -0.05);
         vec3.add(this.camera.position, this.camera.position, new_direction);
       }
       this.camera.hasChanged = true;
@@ -88,8 +86,8 @@ export class SceneNavigator {
         let u = vec3.fromValues(0, 0, 0);
         let v = vec3.fromValues(0, 0, 0);
 
-        vec3.scale(u, this.camera.camera_right, -8 * (event.offsetX / 512 - 0.5) - this.start_mouse_position.x);
-        vec3.scale(v, this.camera.camera_up, 8 * (event.offsetY / 512 - 0.5) - this.start_mouse_position.y);
+        vec3.scale(u, this.camera.camera_right, -4.0 * (event.clientX / window.innerWidth - 0.5) - this.start_mouse_position.x);
+        vec3.scale(v, this.camera.camera_up, 4.0 * (event.clientY / window.innerHeight - 0.5) - this.start_mouse_position.y);
 
         vec3.add(uv, u, v);
         vec3.add(this.camera.position, this.start_camera_position, uv);
@@ -101,8 +99,8 @@ export class SceneNavigator {
 
     this.renderCanvas.mousedown((event) => {
       if (event.which === 1) {
-        this.start_mouse_position.x = -8 * (event.offsetX / 512 - 0.5);
-        this.start_mouse_position.y = 8 * (event.offsetY / 512 - 0.5);
+        this.start_mouse_position.x = -4.0 * (event.clientX / window.innerWidth - 0.5)
+        this.start_mouse_position.y = 4.0 * (event.clientY / window.innerHeight - 0.5)
         this.start_camera_position = vec3.fromValues(this.camera.position[0], this.camera.position[1], this.camera.position[2]);
         this.left_mouse_down = true;
       }
@@ -110,20 +108,5 @@ export class SceneNavigator {
 
     this.renderCanvas.mouseup((event) => this.left_mouse_down = false );
     this.renderCanvas.mouseout((event) => this.left_mouse_down = false );
-  }
-
-  setupClickListeners() {
-    this.renderCanvas.click((event) => {
-      let ray = this.camera.createRayFromPixel(vec2.fromValues(event.offsetX, 512 - event.offsetY));
-      let object = this.scene.sceneIntersection(ray);
-
-      if (object !== null) {
-        //this.fire(NavigatorService.OBJECT_SELECTED, object);
-      }
-      else {
-        //this.fire(NavigatorService.OBJECT_SELECTED, null);
-      }
-
-    });
   }
 }

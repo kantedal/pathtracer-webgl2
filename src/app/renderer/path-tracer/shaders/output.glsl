@@ -5,6 +5,11 @@ precision lowp float;
 in vec2 v_texCoord;
 out vec4 outColor;
 
+// Fractal uniforms
+uniform float u_power;
+uniform float u_minDistance;
+uniform float u_bailout;
+
 uniform float time;
 uniform float samples;
 uniform int trace_depth;
@@ -18,6 +23,8 @@ uniform vec3 camera_position;
 uniform vec3 camera_direction;
 uniform vec3 camera_right;
 uniform vec3 camera_up;
+
+uniform sampler2D u_dome_texture;
 
 uniform sampler2D u_accumulated_texture;
 uniform sampler2D u_buffer_texture;
@@ -112,32 +119,6 @@ Ray createRay(vec2 pixel_position, int sample_step) {
   vec3 direction = normalize(image_point - camera_position);
 
   return Ray(camera_position, direction);
-}
-
-vec3 lightSphereContribution(Ray ray) {
-  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));
-  vec3 position = vec3(0,0,0);
-  float radius = 100.0;
-
-  vec3 op = position - ray.start_position;
-  float t, epsilon = 0.0001;
-  float b = dot(op, ray.direction);
-  float disc = b * b - dot(op, op) + radius * radius;
-  if (disc < 0.0) return vec3(0,0,0);
-  else disc = sqrt(disc);
-
-  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);
-
-  if (t < 0.01)
-    return vec3(0,0,0);
-
-  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;
-  vec3 normal = normalize(collision_position);
-  float u = 0.5 - atan(normal.z, normal.x) / 6.28;
-  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;
-
-  vec3 clr = texture(u_light_sphere_texture, vec2(u,v)).rgb;
-  return clr;
 }
 
 // Material
@@ -392,16 +373,14 @@ float getTriangleIndex(float stackIdx) {
 }
 
 float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_1, float closest_collision_distance) {
-  if (dot(ray.direction, triangle.n0) > 0.0) return -1.0;
-
-  vec3 v0 = object_position + triangle.v0;
+  vec3 v0_0 = object_position + triangle.v0;
 
   //Begin calculating determinant - also used to calculate u parameter
   vec3 P = cross(ray.direction, triangle.edge2);
   float det = dot(triangle.edge1, P);
 
   //Distance from vertex1 to ray origin
-  vec3 T = ray.start_position - v0;
+  vec3 T = ray.start_position - v0_0;
   float u = dot(T, P);
   vec3 Q = cross(T, triangle.edge1);
   float v = dot(ray.direction, Q);
@@ -486,7 +465,7 @@ float boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {
 
 // Scene
 
-void getObjectAtIndex(int index, inout Object object_0) {
+void getObjectAtIndex(int index, inout Object object_1) {
   vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;
 
   vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);
@@ -505,7 +484,7 @@ void getObjectAtIndex(int index, inout Object object_0) {
   float bvh_start_index = extra_data.x;
   float triangle_start_index = extra_data.y;
 
-  object_0 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);
+  object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);
 }
 
 float boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {
@@ -557,25 +536,25 @@ void getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) 
   node_0.node_index = index;
 }
 
-void processLeaf(BVHNode node, inout Collision closest_collision_2442302364, Ray ray, float triangle_start_index_2442302364, Object object_1) {
-  float triangle_count_2442302364 = node.extra_data1;
-  float start_triangle_index = node.extra_data2 + triangle_start_index_2442302364;
+void processLeaf(BVHNode node, inout Collision closest_collision_1373304475, Ray ray, float triangle_start_index_1373304475, Object object_0) {
+  float triangle_count_1373304475 = node.extra_data1;
+  float start_triangle_index = node.extra_data2 + triangle_start_index_1373304475;
 
   float current_index = start_triangle_index;
-  float end_index = start_triangle_index + triangle_count_2442302364;
+  float end_index = start_triangle_index + triangle_count_1373304475;
 
   Collision collision;
-  for (float idx = 0.0; idx < triangle_count_2442302364; idx++) {
+  for (float idx = 0.0; idx < triangle_count_1373304475; idx++) {
     Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));
 
-    if (triangleIntersection(ray, triangle, object_1.position, collision, closest_collision_2442302364.distance) == 1.0) {
-      closest_collision_2442302364 = collision;
+    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_1373304475.distance) == 1.0) {
+      closest_collision_1373304475 = collision;
     }
   }
 }
 
-void traverseObjectTree(Ray ray, inout Collision closest_collision_2442302364, Object object) {
-  float start_index_2442302364 = object.object_bvh_start_index;
+void traverseObjectTree(Ray ray, inout Collision closest_collision_1373304475, Object object) {
+  float start_index_1373304475 = object.object_bvh_start_index;
   float triangle_start_index = object.triangle_start_index;
 
   Collision collision;
@@ -593,14 +572,14 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2442302364, O
     float box_index = stack[--stackIdx];
 
     // Fetch node data
-    getNodeData(box_index, start_index_2442302364, ray, node);
+    getNodeData(box_index, start_index_1373304475, ray, node);
 
     if (node.is_leaf == 0.0) {
       // Check collision with bounding box
       float collision_distance = 0.0;
 
-      getNodeData(node.extra_data1, start_index_2442302364, ray, left_node);
-      getNodeData(node.extra_data2, start_index_2442302364, ray, right_node);
+      getNodeData(node.extra_data1, start_index_1373304475, ray, left_node);
+      getNodeData(node.extra_data2, start_index_1373304475, ray, right_node);
 
       left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);
       right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);
@@ -612,11 +591,11 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2442302364, O
       float near_child = mix(node.extra_data1, node.extra_data2, mixer);
       float far_child = mix(node.extra_data2, node.extra_data1, mixer);
 
-      if (far_distance < closest_collision_2442302364.distance) {
+      if (far_distance < closest_collision_1373304475.distance) {
         stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index
         stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index
       }
-      else if (near_distance < closest_collision_2442302364.distance) {
+      else if (near_distance < closest_collision_1373304475.distance) {
         stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index
       }
 
@@ -624,73 +603,137 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2442302364, O
       if (stackIdx > 31) return;
     }
     else {
-      processLeaf(node, closest_collision_2442302364, ray, triangle_start_index, object);
+      processLeaf(node, closest_collision_1373304475, ray, triangle_start_index, object);
     }
   }
 }
 
-bool sceneIntersection(Ray ray, inout Collision collision_0) {
-  Collision closest_collision;
-  closest_collision.distance = 1000.0;
+vec3 lightSphereContribution(Ray ray) {
+  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));
+  vec3 position = vec3(0,0,0);
+  float radius = 100.0;
 
-  Object object;
-  int collision_count = 0;
-  for (int i = 0; i < object_count; i++) {
-    getObjectAtIndex(i, object);
+  vec3 op = position - ray.start_position;
+  float t, epsilon = 0.0001;
+  float b = dot(op, ray.direction);
+  float disc = b * b - dot(op, op) + radius * radius;
+  if (disc < 0.0) return vec3(0,0,0);
+  else disc = sqrt(disc);
 
-    float collision_distance = boundingBoxCollision_0(object.bounding_bottom + object.position, object.bounding_top + object.position, ray);
+  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);
 
-    if (collision_distance < closest_collision.distance) {
-      traverseObjectTree(ray, closest_collision, object);
+  if (t < 0.01)
+    return vec3(0,0,0);
+
+  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;
+  vec3 normal = normalize(collision_position);
+  float u = 0.5 - atan(normal.z, normal.x) / 6.28;
+  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;
+
+  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;
+  return clr;
+}
+
+// Fractal uniform
+
+float distanceEstimator(vec3 pos) {
+  int Iterations = 100;
+
+  vec3 z = pos;
+  float dr = 1.0;
+  float r = 0.0;
+
+  for (int i = 0; i < Iterations; i++) {
+    r = length(z);
+    if (r > u_bailout)
+      break;
+
+    // Convert to polar coordinates
+    float theta = acos(z.z/r);
+    float phi = atan(z.y, z.x);
+    dr = pow(r, u_power - 1.0) * u_power * dr + 1.0;
+
+    // Scale and rotate the point
+    float zr = pow(r, u_power);
+    theta = theta * u_power;
+    phi = phi * u_power;
+
+    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+    z += pos;
+  }
+
+  return 0.5 * log(r) * r / dr;
+}
+
+vec3 calculateNormal(vec3 pos) {
+  float e = 0.00001;
+  float n = distanceEstimator(pos);
+  float dx = distanceEstimator(pos + vec3(e, 0, 0)) - n;
+  float dy = distanceEstimator(pos + vec3(0, e, 0)) - n;
+  float dz = distanceEstimator(pos + vec3(0, 0, e)) - n;
+
+  vec3 grad = vec3(dx,dy,dz);
+  return normalize(grad);
+}
+
+bool rayMarch(Ray ray, inout Collision collision_0) {
+  float maxSteps = 500.0;
+
+  float totalDistance = 0.0;
+  float steps;
+  vec3 p;
+  for (steps = 0.0; steps < maxSteps; steps++) {
+    p = ray.start_position + totalDistance * ray.direction;
+    float distance = distanceEstimator(p);
+    totalDistance += distance;
+
+    if (distance < u_minDistance) {
+      collision_0.position = p;
+      collision_0.normal = calculateNormal(p);
+      return true;
     }
   }
 
-  if (closest_collision.distance == 10000.0) {
-    return false;
-  }
-  else {
-    collision_0 = closest_collision;
-    return true;
-  }
+  return false;
 }
 
 vec3 pathTrace(Ray ray) {
   vec3 mask = vec3(1,1,1);
   vec3 accumulated_color = vec3(0,0,0);
   Collision collision;
-  Material collision_material;
+  Material collision_material = Material(vec3(0.8), 5, 0.0, 1.0, 1.0);
 
-  for (float iteration = 0.0; iteration < float(trace_depth); iteration++) {
+  for (float iteration = 0.0; iteration < 3.0; iteration++) {
     float distribution = 1.0;
 
-    if (!sceneIntersection(ray, collision)) {
-      if (global_lightning_enabled == 1.0) {
+    if (!rayMarch(ray, collision)) {
+
+      if (iteration == 0.0) {
+        return vec3(0.5); //(lightSphereContribution - 0.5) * 1.5 + 0.5;
+      }
+      else {
         vec3 lightSphereColor = lightSphereContribution(ray);
-        if (iteration == 0.0) {
-          return vec3(0); //(lightSphereContribution - 0.5) * 1.5 + 0.5;
-        }
-        else {
-          lightSphereColor = vec3(0,0,0); //((lightSphereContribution - 0.5) * 2.5 + 0.5) * 0.8;
-          accumulated_color += (mask * lightSphereColor);
-        }
+        accumulated_color += (mask * ((lightSphereColor - 0.5) * 3.5 + 0.5) * 0.8);
+        //accumulated_color += (mask * lightSphereColor);
       }
       return accumulated_color;
     }
 
-    collision_material = getMaterial(collision.material_index);
-
     vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);
     mask *= BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;
-    //mask *= 2.0;
 
-    accumulated_color += mask * collision_material.emission_rate;
-
-    if (collision_material.emission_rate != 0.0)  return accumulated_color;;
-
-    ray = Ray(collision.position + next_dir * EPS, next_dir);
+    ray = Ray(collision.position + next_dir * 0.001, next_dir);
   }
 
   return accumulated_color;
+
+//  if (rayMarch(ray, collision)) {
+//    return dot(-ray.direction, collision.normal) * vec3(0.8);
+//  }
+//  else {
+//    return vec3(0.2);
+//  }
+  //return vec3(1.0 - steps / maxSteps);
 }
 
 void main( void ) {

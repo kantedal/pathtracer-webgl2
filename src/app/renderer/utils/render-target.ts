@@ -3,7 +3,7 @@ import createProgram from "./createProgram";
 import {gl} from "./render-context";
 
 export default class RenderTarget {
-  protected _program: WebGLProgram;
+  public _program: WebGLProgram;
   protected _positionAttribLocation: number;
   protected _positionBuffer: WebGLBuffer;
   protected _texCoordAttribLocation: number;

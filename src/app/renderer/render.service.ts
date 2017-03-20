@@ -1,12 +1,10 @@
-import {Injectable, ElementRef} from "@angular/core";
-import {initContext} from "./utils/render-context";
-import RenderView from "./render-view/render-view";
-import PathTracer from "./path-tracer/path-tracer";
-import {SceneService} from "./scene.service";
-import {ISceneTextures} from "./path-tracer/models/scene-builder";
-import * as moment from "moment";
-import {SettingsService} from "../services/settings.service";
-const Stats = require('stats-js');
+import {Injectable, ElementRef} from "@angular/core"
+import {initContext} from "./utils/render-context"
+import RenderView from "./render-view/render-view"
+import PathTracer from "./path-tracer/path-tracer"
+import * as moment from "moment"
+import {SettingsService} from "../services/settings.service"
+const Stats = require('stats-js')
 
 
 @Injectable()
@@ -19,10 +17,7 @@ export class RenderService {
   private _startTime: number;
   private _samples: number = 0;
 
-  constructor(
-    public sceneService: SceneService,
-    public settingsService: SettingsService
-  ) {}
+  constructor(public settingsService: SettingsService) {}
 
   public init(canvas: ElementRef) {
     initContext(canvas)
@@ -43,14 +38,11 @@ export class RenderService {
     this._stats.domElement.style.top = '0px'
     document.body.appendChild(this._stats.domElement)
 
-    this.sceneService.init(canvas)
-    this.sceneService.loadScene().then((sceneTextures: ISceneTextures) => {
-      this._pathTracer = new PathTracer(this.settingsService, this.sceneService, sceneTextures)
-      this._renderView = new RenderView(this.settingsService)
+    this._pathTracer = new PathTracer(this.settingsService)
+    this._renderView = new RenderView(this.settingsService)
 
-      this._startTime = moment().valueOf();
-      this.render()
-    });
+    this._startTime = moment().valueOf();
+    this.render()
   }
 
   private render = () => {

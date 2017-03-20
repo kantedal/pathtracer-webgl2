@@ -1,4 +1,4 @@
-#pragma glslify: getSample = require(../helpers/getSample.glsl)
+#pragma glslify: getSample = require("../helpers/getSample.glsl")
 
 void getObjectAtIndex(int index, inout Object object) {
   vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;
