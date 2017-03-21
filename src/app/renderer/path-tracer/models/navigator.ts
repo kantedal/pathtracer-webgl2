@@ -2,7 +2,7 @@ import Camera from "./camera";
 import Scene from "./scene";
 
 export default class Navigator {
-  private render_canvas;
+  private renderCanvas;
   private scene: Scene;
   private camera: Camera;
 
@@ -16,15 +16,26 @@ export default class Navigator {
 
 
   constructor(camera: Camera, scene: Scene) {
-    this.render_canvas = $('#renderCanvas');
+    this.renderCanvas = $('#renderCanvas');
 
     this.scene = scene;
     this.camera = camera;
 
-    this.setupCameraMove();
-    this.setupCameraZoom();
-    this.setupCameraRotation();
-    this.setupClickListeners();
+    this.setupCameraKeyboardMove()
+    this.setupCameraMove()
+    this.setupCameraZoom()
+    this.setupCameraRotation()
+    this.setupClickListeners()
+  }
+
+  setupCameraKeyboardMove() {
+    // this.renderCanvas.on('keydown', e => {
+    //   console.log(e)
+    // })
+    // window.onkeydown = e => {
+    //   console.log(e)
+    // }
+    console.log('event')
   }
 
   setupCameraMove() {
@@ -34,7 +45,7 @@ export default class Navigator {
     this.start_mouse_position = {x: 0, y: 0};
 
     // Mouse move
-    this.render_canvas.mousemove((event) => {
+    this.renderCanvas.mousemove((event) => {
       if (this.middle_mouse_down) {
         let uv = vec3.fromValues(0,0,0);
         let u = vec3.fromValues(0,0,0);
@@ -62,12 +73,12 @@ export default class Navigator {
       }
     });
 
-    this.render_canvas.mouseup((event) => this.middle_mouse_down = false );
-    this.render_canvas.mouseout((event) => this.middle_mouse_down = false );
+    this.renderCanvas.mouseup((event) => this.middle_mouse_down = false );
+    this.renderCanvas.mouseout((event) => this.middle_mouse_down = false );
   }
 
   setupCameraZoom() {
-    this.render_canvas.on('mousewheel', (event) => {
+    this.renderCanvas.on('mousewheel', (event) => {
       let new_direction = vec3.fromValues(0,0,0);
       if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
         vec3.scale(new_direction, this.camera.direction, 0.5);
@@ -87,7 +98,7 @@ export default class Navigator {
     this.start_mouse_position = {x: 0, y: 0};
 
     // Mouse move
-    this.render_canvas.mousemove((event) => {
+    this.renderCanvas.mousemove((event) => {
       if (this.left_mouse_down) {
         let uv = vec3.fromValues(0, 0, 0);
         let u = vec3.fromValues(0, 0, 0);
@@ -104,7 +115,7 @@ export default class Navigator {
       }
     });
 
-    this.render_canvas.mousedown((event) => {
+    this.renderCanvas.mousedown((event) => {
       if (event.which === 1) {
         this.start_mouse_position.x = -8 * (event.pageX / 512 - 0.5);
         this.start_mouse_position.y = 8 * (event.pageY / 512 - 0.5);
@@ -113,12 +124,12 @@ export default class Navigator {
       }
     });
 
-    this.render_canvas.mouseup((event) => this.left_mouse_down = false );
-    this.render_canvas.mouseout((event) => this.left_mouse_down = false );
+    this.renderCanvas.mouseup((event) => this.left_mouse_down = false );
+    this.renderCanvas.mouseout((event) => this.left_mouse_down = false );
   }
 
   setupClickListeners() {
-    this.render_canvas.click((event) => {
+    this.renderCanvas.click((event) => {
       let ray = this.camera.createRayFromPixel(vec2.fromValues(event.offsetX, event.offsetY));
       this.scene.sceneIntersection(ray);
     });

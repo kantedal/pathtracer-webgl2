@@ -7,6 +7,8 @@ export default class Camera {
   private _hasChanged: boolean
   private _camera_right: GLM.IArray
   private _camera_up: GLM.IArray
+  yawRotation: number = 0.0;
+  pitchRotation: number = 0.0;
 
   constructor(position: GLM.IArray, look_at: GLM.IArray) {
     this._position = position

@@ -1,0 +1,18 @@
+.top-bar {
+  position: absolute;
+  width: 100%;
+  top: 0;
+  height: 50px;
+  background: rgba(0,0,0,0.0);
+  pointer-events: visible;
+}
+
+.header {
+  font-size: 35px;
+  font-weight: 200;
+  font-family: 'Permanent Marker', cursive;
+  line-height: 50px;
+  color: #fff;
+  width: 100%;
+  text-align: center;
+}

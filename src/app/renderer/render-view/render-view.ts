@@ -4,7 +4,7 @@ import {FLOAT_TYPE} from "../utils/shader";
 import {TEXTURE_TYPE} from "../utils/shader";
 import {IUniform} from "../utils/shader";
 import {VEC2_TYPE} from "../utils/shader";
-import {SettingsService} from "../../services/settings.service";
+import {SettingsService} from "../settings/settings.service";
 
 /*
  Shader imports

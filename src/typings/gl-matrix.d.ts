@@ -1588,6 +1588,8 @@ declare module mat3 {
    * @returns out
    */
   export function rotate(out: GLM.IArray, a: GLM.IArray, rad: number): GLM.IArray;
+
+  export function fromValues(m00: number, m01: number, m02: number, m10: number, m11: number, m12: number, m20: number, m21: number, m22: number): GLM.IArray;
 }
 
 // mat4

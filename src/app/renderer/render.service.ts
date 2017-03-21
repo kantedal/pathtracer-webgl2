@@ -3,7 +3,7 @@ import {initContext} from "./utils/render-context"
 import RenderView from "./render-view/render-view"
 import PathTracer from "./path-tracer/path-tracer"
 import * as moment from "moment"
-import {SettingsService} from "../services/settings.service"
+import {SettingsService} from "./settings/settings.service"
 const Stats = require('stats-js')
 
 
@@ -34,7 +34,7 @@ export class RenderService {
     this._stats = new Stats()
     this._stats.setMode(0)
     this._stats.domElement.style.position = 'absolute'
-    this._stats.domElement.style.right = '0px'
+    this._stats.domElement.style.left = '200px'
     this._stats.domElement.style.top = '0px'
     document.body.appendChild(this._stats.domElement)
 

@@ -1,6 +1,6 @@
 import Shader, {IUniform, TEXTURE_TYPE, FLOAT_TYPE, INTEGER_TYPE, VEC2_TYPE, VEC3_TYPE} from "../utils/shader";
 import PingPongFBO from "../utils/pingpong-fbo";
-import {SettingsService} from "../../services/settings.service";
+import {SettingsService} from "../settings/settings.service";
 import Camera from "./models/camera";
 import {CameraNavigator} from "../camera-navigator";
 import {gl} from "../utils/render-context";
@@ -18,6 +18,7 @@ export default class PathTracer {
   private _frameBuffer: PingPongFBO
   private _pathTracerUniforms: {[name: string]: IUniform}
   private _refreshScreen: boolean
+  private _shouldRender = true
 
   constructor(private _settingsService: SettingsService) {
     this._camera = new Camera(vec3.fromValues(-2,0,0), vec3.fromValues(1,0,0))
@@ -28,7 +29,7 @@ export default class PathTracer {
       u_accumulated_texture: { type: TEXTURE_TYPE, value: null },
       u_dome_texture: { type: TEXTURE_TYPE, value: null},
       
-      // Uniforms
+      // Render settings uniforms
       time: { type: FLOAT_TYPE, value: 1.0 },
       samples: { type: FLOAT_TYPE, value: 0.0 },
       trace_depth: { type: INTEGER_TYPE, value: 3 },
@@ -39,13 +40,35 @@ export default class PathTracer {
       u_power: { type: FLOAT_TYPE, value: 10.0 },
       u_bailout: { type: FLOAT_TYPE, value: 10.0 },
       u_minDistance: { type: FLOAT_TYPE, value: 0.001 },
+      u_maxIterations: { type: FLOAT_TYPE, value: 300 },
+
+      // // Menger sponge
+      // u_halfSpongeScale: { type: FLOAT_TYPE, value: 0.5 },
+
+      // Material uniforms
+      u_materialType: { type: FLOAT_TYPE, value: 0.0 },
+      u_materialColor: { type: VEC3_TYPE, value: [0.9, 0.9, 0.9] },
+
+      // Light uniforms
+      u_globalLightPower: { type: FLOAT_TYPE, value: 3.0 },
 
       // Camera
+      u_cameraYaw: { type: FLOAT_TYPE, value: 0.0},
+      u_cameraPitch: { type: FLOAT_TYPE, value: 0.0},
       camera_position: { type: VEC3_TYPE, value: this._camera.position },
       camera_direction: { type: VEC3_TYPE, value: this._camera.direction },
       camera_right: { type: VEC3_TYPE, value: this._camera.camera_right },
       camera_up: { type: VEC3_TYPE, value: this._camera.camera_up },
     };
+
+
+    // Add fractal attributes
+    for (let attributeSub of this._settingsService.mengerSponge.attributes) {
+      let attr = attributeSub.getValue()
+      this._pathTracerUniforms[attr.uniformName] = {type: attr.uniformType, value: attr.value}
+      console.log(this._pathTracerUniforms)
+    }
+
     pathTracerShader.uniforms = this._pathTracerUniforms
 
     let lightSphereImage = new Image();
@@ -66,17 +89,46 @@ export default class PathTracer {
 
       this._pathTracerUniforms['u_dome_texture'].value = lightSphereTexture
     }
-    lightSphereImage.src = "./assets/dome.jpg";
+    lightSphereImage.src = "./assets/sky2.jpg";
 
     this._frameBuffer = new PingPongFBO(pathTracerShader, 512, 512)
+    this._refreshScreen = false
 
+    this.setupSettingsListeners();
+  }
+
+  public render() {
+    if (this._shouldRender) {
+      this._pathTracerUniforms['u_accumulated_texture'].value = this._frameBuffer.texture
+
+      this._pathTracerUniforms['u_cameraYaw'].value = this._camera.yawRotation
+      this._pathTracerUniforms['u_cameraPitch'].value = this._camera.pitchRotation
+      this._pathTracerUniforms['camera_position'].value = this._camera.position
+      this._pathTracerUniforms['camera_direction'].value = this._camera.direction
+      this._pathTracerUniforms['camera_right'].value = this._camera.camera_right
+      this._pathTracerUniforms['camera_up'].value = this._camera.camera_up
+
+      this._frameBuffer.render();
+
+      if (this._camera.hasChanged || this._refreshScreen ) {
+        this._pathTracerUniforms['samples'].value = 0.0
+        this._camera.hasChanged = false
+        this._refreshScreen = false
+      }
+      else {
+        this._pathTracerUniforms['samples'].value += 1.0
+      }
+      this._pathTracerUniforms['time'].value += 0.01
+    }
+  }
+
+  private setupSettingsListeners() {
     this._settingsService.resolutionObservable.subscribe((resolution: GLM.IArray) => {
       this._pathTracerUniforms['resolution'].value = resolution
       this._frameBuffer.setWindowSize(resolution[0], resolution[1])
       this._frameBuffer.resetTextures()
       this._refreshScreen = true
     })
-
     this._settingsService.powerObservable.subscribe(power => {
       this._pathTracerUniforms['u_power'].value = power
       this._refreshScreen = true
@@ -85,30 +137,29 @@ export default class PathTracer {
       this._pathTracerUniforms['u_minDistance'].value = 1 / val
       this._refreshScreen = true
     })
+    this._settingsService.maxIterationsObservable.subscribe(val => {
+      this._pathTracerUniforms['u_maxIterations'].value = val
+      this._refreshScreen = true
+    })
+    this._settingsService.materialColorSub.asObservable().subscribe(val => {
+      this._pathTracerUniforms['u_materialColor'].value = val
+      this._refreshScreen = true
+    })
+    this._settingsService.materialTypeSub.asObservable().subscribe(val => {
+      this._pathTracerUniforms['u_materialType'].value = val
+      this._refreshScreen = true
+    })
+    this._settingsService.shouldRenderSub.asObservable().subscribe(val => this._shouldRender = val)
+    this._settingsService.globalLightPowerSub.asObservable().subscribe(val => {
+      this._pathTracerUniforms['u_globalLightPower'].value = val
+      this._refreshScreen = true
+    })
 
-    this._refreshScreen = false
+    for (let attributeSub of this._settingsService.mengerSponge.attributes) {
+      attributeSub.asObservable().subscribe(val => { this._pathTracerUniforms[val.uniformName].value = val.value; this._refreshScreen = true })
+    }
   }
 
-  public render() {
-    this._pathTracerUniforms['u_accumulated_texture'].value = this._frameBuffer.texture
-
-    this._pathTracerUniforms['camera_position'].value = this._camera.position
-    this._pathTracerUniforms['camera_direction'].value = this._camera.direction
-    this._pathTracerUniforms['camera_right'].value = this._camera.camera_right
-    this._pathTracerUniforms['camera_up'].value = this._camera.camera_up
-
-    this._frameBuffer.render();
-
-    if (this._camera.hasChanged || this._refreshScreen ) {
-      this._pathTracerUniforms['samples'].value = 0.0
-      this._camera.hasChanged = false
-      this._refreshScreen = false
-    }
-    else {
-      this._pathTracerUniforms['samples'].value += 1.0
-    }
-    this._pathTracerUniforms['time'].value += 0.01
-  }
 
   get renderTexture(): WebGLTexture { return this._frameBuffer.texture; }
 }

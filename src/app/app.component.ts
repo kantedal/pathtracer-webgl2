@@ -1,6 +1,6 @@
 import {Component, AfterViewInit, ViewChild, ElementRef} from '@angular/core';
 import {RenderService} from "./renderer/render.service";
-import {SettingsService} from "./services/settings.service";
+import {SettingsService} from "./renderer/settings/settings.service";
 
 @Component({
   selector: 'app-root',

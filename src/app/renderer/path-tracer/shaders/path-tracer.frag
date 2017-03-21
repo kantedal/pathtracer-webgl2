@@ -7,8 +7,22 @@ out vec4 outColor;
 // Fractal uniforms
 uniform float u_power;
 uniform float u_minDistance;
+uniform float u_maxIterations;
 uniform float u_bailout;
 
+// Menger sponge
+uniform float u_halfSpongeScale;
+uniform float u_spongeScale;
+uniform float u_spongeOffset;
+
+// Material uniforms
+uniform float u_materialType;
+uniform vec3 u_materialColor;
+
+// Global light uniforms
+uniform float u_globalLightPower;
+
+// Renderer uniforms
 uniform float time;
 uniform float samples;
 uniform int trace_depth;
@@ -18,6 +32,8 @@ uniform int object_count;
 uniform vec2 resolution;
 
 // Camera uniforms
+uniform float u_cameraYaw;
+uniform float u_cameraPitch;
 uniform vec3 camera_position;
 uniform vec3 camera_direction;
 uniform vec3 camera_right;
@@ -87,7 +103,7 @@ struct Object {
 
 // Ray
 #pragma glslify: Ray = require("./kernels/ray/Ray.glsl")
-#pragma glslify: createRay = require("./kernels/ray/createRay.glsl", resolution=resolution, camera_position=camera_position, camera_up=camera_up, camera_right=camera_right, camera_direction=camera_direction, time=time)
+#pragma glslify: createRay = require("./kernels/ray/createRay.glsl", pitch=u_cameraPitch, yaw=u_cameraYaw, resolution=resolution, camera_position=camera_position, camera_up=camera_up, camera_right=camera_right, camera_direction=camera_direction, time=time)
 // Material
 #pragma glslify: getMaterial = require("./kernels/material/getMaterial.glsl", texelFetch=texelFetch, texture=texture, materialTexture=u_material_texture)
 #pragma glslify: BRDF = require("./kernels/material/BRDF.glsl")
@@ -105,8 +121,7 @@ struct Object {
 // Scene
 #pragma glslify: getObjectAtIndex = require("./kernels/intersectable/getObjectAtIndex.glsl", texture=texture, SAMPLE_STEP_512=SAMPLE_STEP_512, u_objects_texture=u_objects_texture, Object=Object)
 #pragma glslify: traverseObjectTree = require("./kernels/bvh/traverseObjectTree.glsl", texelFetch=texelFetch, texture=texture, u_objects_bvh_texture=u_objects_bvh_texture, getTriangleIndex=getTriangleIndex, triangleIntersection=triangleIntersection, getTriangleFromIndex=getTriangleFromIndex, Triangle=Triangle, BVHNode=BVHNode, Object=Object, Collision=Collision, SAMPLE_STEP_2048=SAMPLE_STEP_2048))
-#pragma glslify: pathTrace = require("./kernels/pathTrace.glsl", EPS=EPS, texture=texture, u_dome_texture=u_dome_texture, minDistance=u_minDistance, u_bailout=u_bailout, u_power=u_power, global_lightning_enabled=global_lightning_enabled, trace_depth=trace_depth, sceneIntersection=sceneIntersection, lightSphereContribution=lightSphereContribution, getMaterial=getMaterial, Collision=Collision, BRDF=BRDF, PDF=PDF)
-
+#pragma glslify: pathTrace = require("./kernels/pathTrace.glsl", EPS=EPS, spongeOffset=u_spongeOffset, spongeScale=u_spongeScale, halfSpongeScale=u_halfSpongeScale, globalLightPower=u_globalLightPower, materialColor=u_materialColor, materialType=u_materialType, maxIterations=u_maxIterations, texture=texture, u_dome_texture=u_dome_texture, minDistance=u_minDistance, u_bailout=u_bailout, u_power=u_power, global_lightning_enabled=global_lightning_enabled, trace_depth=trace_depth, sceneIntersection=sceneIntersection, lightSphereContribution=lightSphereContribution, getMaterial=getMaterial, Collision=Collision, BRDF=BRDF, PDF=PDF)
 
 void main( void ) {
     vec3 traceColor = vec3(0,0,0);
