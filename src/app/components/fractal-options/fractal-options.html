@@ -28,19 +28,7 @@
 
     <div *ngIf="settingsService.mengerSponge.isEnabled">
       <div *ngFor="let attribute of settingsService.mengerSponge.attributes">
-        <div class="property-box">
-          <div class="property-header">{{attribute.getValue().name}}</div>
-
-          <md-slider
-            min="{{attribute.getValue().minValue}}"
-            max="{{attribute.getValue().maxValue}}"
-            step="{{attribute.getValue().stepSize}}"
-            value="{{(attribute | async ).value}}"
-            (input)="settingsService.mengerSponge.setAttribute(attribute, $event.value)"
-          >
-          </md-slider>
-          <span class="data-label">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>
-        </div>
+        <!--<setting-attribute [attribute]="attribute"></setting-attribute>-->
       </div>
     </div>
 

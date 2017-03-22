@@ -22,6 +22,7 @@ uniform vec3 u_materialColor;
 
 // Global light uniforms
 uniform float u_globalLightPower;
+uniform float u_globalLightContrast;
 
 // Renderer uniforms
 uniform float time;
@@ -864,7 +865,7 @@ vec3 pathTrace(Ray ray) {
         return vec3(0.3);
       }
       else {
-        float lightPower = (u_globalLightPower - 0.5) * 3.0 + 0.5;
+        float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;
         accumulated_color += mask * lightSphereColor * lightPower;
       }
       return accumulated_color;

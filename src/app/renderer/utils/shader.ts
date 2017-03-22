@@ -18,6 +18,7 @@ export default class Shader {
   private _fragmentShader: WebGLShader;
   private _program: WebGLProgram;
   private _uniforms: {[name: string]: IUniform};
+  needsUpdate: boolean = false
 
   constructor(vertexSource: string, fragmentSource: string) {
     this._vertexShader = this.createShader(gl.VERTEX_SHADER, vertexSource);
@@ -115,6 +116,12 @@ export default class Shader {
         uniform.location = gl.getUniformLocation(this._program, name);
       }
     }
+  }
+
+  public setUniform(id: string, data: IUniform) {
+    this._uniforms[id] = data
+    this.updateUniforms()
+    this.needsUpdate = true
   }
 
   set uniforms(value: {[p: string]: IUniform}) {

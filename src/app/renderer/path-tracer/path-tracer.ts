@@ -16,6 +16,7 @@ export default class PathTracer {
   private _camera: Camera
   private _navigator: CameraNavigator
   private _frameBuffer: PingPongFBO
+  private _pathTracerShader: Shader
   private _pathTracerUniforms: {[name: string]: IUniform}
   private _refreshScreen: boolean
   private _shouldRender = true
@@ -24,11 +25,11 @@ export default class PathTracer {
     this._camera = new Camera(vec3.fromValues(-2,0,0), vec3.fromValues(1,0,0))
     this._navigator = new CameraNavigator(this._camera, _settingsService)
 
-    let pathTracerShader = new Shader(pathTracerVert, pathTracerFrag);
+    this._pathTracerShader = new Shader(pathTracerVert, pathTracerFrag);
     this._pathTracerUniforms = {
       u_accumulated_texture: { type: TEXTURE_TYPE, value: null },
       u_dome_texture: { type: TEXTURE_TYPE, value: null},
-      
+
       // Render settings uniforms
       time: { type: FLOAT_TYPE, value: 1.0 },
       samples: { type: FLOAT_TYPE, value: 0.0 },
@@ -61,7 +62,6 @@ export default class PathTracer {
       camera_up: { type: VEC3_TYPE, value: this._camera.camera_up },
     };
 
-
     // Add fractal attributes
     for (let attributeSub of this._settingsService.mengerSponge.attributes) {
       let attr = attributeSub.getValue()
@@ -69,7 +69,9 @@ export default class PathTracer {
       console.log(this._pathTracerUniforms)
     }
 
-    pathTracerShader.uniforms = this._pathTracerUniforms
+    this._pathTracerShader.uniforms = this._pathTracerUniforms
+
+    this._settingsService.connectShader(this._pathTracerShader)
 
     let lightSphereImage = new Image();
     lightSphereImage.onload = () => {
@@ -91,7 +93,7 @@ export default class PathTracer {
     }
     lightSphereImage.src = "./assets/sky2.jpg";
 
-    this._frameBuffer = new PingPongFBO(pathTracerShader, 512, 512)
+    this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
     this._refreshScreen = false
 
     this.setupSettingsListeners();
@@ -110,10 +112,11 @@ export default class PathTracer {
 
       this._frameBuffer.render();
 
-      if (this._camera.hasChanged || this._refreshScreen ) {
+      if (this._camera.hasChanged || this._refreshScreen || this._pathTracerShader.needsUpdate) {
         this._pathTracerUniforms['samples'].value = 0.0
         this._camera.hasChanged = false
         this._refreshScreen = false
+        this._pathTracerShader.needsUpdate = false
       }
       else {
         this._pathTracerUniforms['samples'].value += 1.0
@@ -150,10 +153,10 @@ export default class PathTracer {
       this._refreshScreen = true
     })
     this._settingsService.shouldRenderSub.asObservable().subscribe(val => this._shouldRender = val)
-    this._settingsService.globalLightPowerSub.asObservable().subscribe(val => {
-      this._pathTracerUniforms['u_globalLightPower'].value = val
-      this._refreshScreen = true
-    })
+    // this._settingsService.globalLightPowerSub.asObservable().subscribe(val => {
+    //   this._pathTracerUniforms['u_globalLightPower'].value = val
+    //   this._refreshScreen = true
+    // })
 
     for (let attributeSub of this._settingsService.mengerSponge.attributes) {
       attributeSub.asObservable().subscribe(val => { this._pathTracerUniforms[val.uniformName].value = val.value; this._refreshScreen = true })

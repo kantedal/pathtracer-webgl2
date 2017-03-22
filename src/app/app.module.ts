@@ -14,6 +14,7 @@ import {SettingsService} from "./renderer/settings/settings.service"
 import {TopBarComponent} from "./components/top-bar/top-bar.component";
 import {FractalOptionsComponent} from "./components/fractal-options/fractal-options.component";
 import {RenderOptionsComponent} from "./components/render-options/render-options.component";
+import {SettingAttributeComponent} from './components/setting-attribute/setting-attribute.component'
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import {RenderOptionsComponent} from "./components/render-options/render-options
     TopBarComponent,
     FractalOptionsComponent,
     RenderOptionsComponent,
-    BottomBarComponent
+    BottomBarComponent,
+    SettingAttributeComponent
   ],
   imports: [
     BrowserModule,

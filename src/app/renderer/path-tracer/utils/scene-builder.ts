@@ -1,4 +1,10 @@
 
+import Scene from '../models/scene'
+import {Object3d} from '../models/primitives/object3d'
+import {MATERIAL_TYPES} from '../models/materials/material'
+import {DiffuseMaterial} from '../models/materials/diffuse-material'
+import {GlossyMaterial} from '../models/materials/glossy-material'
+
 export function buildScene(scene: Scene) {
   let textureData = {
     objects: new Float32Array(512 * 512 * 3),

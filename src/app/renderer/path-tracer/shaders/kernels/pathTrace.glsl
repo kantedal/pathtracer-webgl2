@@ -38,7 +38,7 @@ vec3 pathTrace(Ray ray) {
         return vec3(0.3);
       }
       else {
-        float lightPower = (globalLightPower - 0.5) * 3.0 + 0.5;
+        float lightPower = (globalLightPower - 0.5) * globalLightContrast + 0.5;
         accumulated_color += mask * lightSphereColor * lightPower;
       }
       return accumulated_color;

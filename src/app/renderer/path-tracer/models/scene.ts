@@ -2,8 +2,6 @@ import {Object3d} from "./primitives/object3d";
 import Triangle from "./primitives/triangle";
 import Material from "./materials/material";
 import Ray from "./ray";
-import {LoadObjects} from "../utils/obj-loader";
-import buildScene from './scene-builder';
 
 export default class Scene {
   private _intersectables: Array<Object3d>;
