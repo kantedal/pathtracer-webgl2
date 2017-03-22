@@ -32,7 +32,7 @@
 
 
 float distanceEstimator(vec3 w) {
-  int Iterations = 10;
+  int Iterations = 5;
   vec3 offset = vec3(spongeOffset);
   float scale = spongeScale;
 

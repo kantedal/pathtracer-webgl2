@@ -1,5 +1,5 @@
 vec3 calculateNormal(vec3 pos) {
-  float e = minDistance * 0.5;
+  float e = 0.000001;
   float n = distanceEstimator(pos);
   float dx = distanceEstimator(pos + vec3(e, 0, 0)) - n;
   float dy = distanceEstimator(pos + vec3(0, e, 0)) - n;
@@ -8,7 +8,6 @@ vec3 calculateNormal(vec3 pos) {
   vec3 grad = vec3(dx,dy,dz);
   return normalize(grad);
 }
-
 
 //vec3 calculateNormal(vec3 pos) {
 //  float e = minDistance * 0.5;

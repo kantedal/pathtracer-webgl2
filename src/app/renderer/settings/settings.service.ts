@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
 import {MengerSponge} from "./fractal-settings/menger-sponge";
 import Fractal from "./fractal-settings/fractal";
+import LightSettings from "./light-settings";
 
 @Injectable()
 export class SettingsService {
@@ -11,6 +12,7 @@ export class SettingsService {
   private _zoomObservable: BehaviorSubject<number>
 
   // Lighting attributes
+  lightSettings: LightSettings = new LightSettings()
   globalLightPowerSub: BehaviorSubject<number> = new BehaviorSubject(3.0)
 
   // Fractals
