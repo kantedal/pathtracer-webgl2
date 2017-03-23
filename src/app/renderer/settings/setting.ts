@@ -4,6 +4,8 @@ import Shader from '../utils/shader'
 export const UI_TYPE_SLIDER = 'UI_TYPE_SLIDER'
 export const UI_TYPE_TOGGLE = 'UI_TYPE_TOGGLE'
 export const UI_TYPE_TEXTFIELD = 'UI_TYPE_TEXTFIELD'
+export const UI_TYPE_DOUBLE_TEXTFIELD = 'UI_TYPE_DOUBLE_TEXTFIELD'
+export const UI_TYPE_TRIPLE_TEXTFIELD = 'UI_TYPE_TRIPLE_TEXTFIELD'
 export const UI_TYPE_COLORPICKER = 'UI_TYPE_COLORPICKER'
 
 export interface ISliderAttribute {
@@ -11,7 +13,6 @@ export interface ISliderAttribute {
   maxValue: number
   stepSize: number
 }
-
 
 export interface ISettingAttribute {
   name: string
@@ -29,10 +30,7 @@ export class Setting {
 
   public connectShader(shader: Shader) {
     for (let attribute of this.attributes) {
-      attribute.asObservable().subscribe(attr => {
-        console.log(attr.uniformName, attr.value)
-        shader.setUniform(attr.uniformName, { type: attr.uniformType, value: attr.value })
-      })
+      attribute.asObservable().subscribe(attr => shader.setUniform(attr.uniformName, { type: attr.uniformType, value: attr.value }))
     }
   }
 

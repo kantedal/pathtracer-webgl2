@@ -5,6 +5,7 @@ in vec2 v_texCoord;
 out vec4 outColor;
 
 // Fractal uniforms
+uniform float u_fractalType;
 uniform float u_power;
 uniform float u_minDistance;
 uniform float u_maxIterations;
@@ -22,6 +23,11 @@ uniform vec3 u_materialColor;
 // Global light uniforms
 uniform float u_globalLightPower;
 uniform float u_globalLightContrast;
+
+// Render effect settings
+uniform float u_fogEnabled;
+uniform float u_fogDistance;
+uniform vec3 u_fogColor;
 
 // Renderer uniforms
 uniform float time;
@@ -122,7 +128,7 @@ struct Object {
 // Scene
 #pragma glslify: getObjectAtIndex = require("./kernels/intersectable/getObjectAtIndex.glsl", texture=texture, SAMPLE_STEP_512=SAMPLE_STEP_512, u_objects_texture=u_objects_texture, Object=Object)
 #pragma glslify: traverseObjectTree = require("./kernels/bvh/traverseObjectTree.glsl", texelFetch=texelFetch, texture=texture, u_objects_bvh_texture=u_objects_bvh_texture, getTriangleIndex=getTriangleIndex, triangleIntersection=triangleIntersection, getTriangleFromIndex=getTriangleFromIndex, Triangle=Triangle, BVHNode=BVHNode, Object=Object, Collision=Collision, SAMPLE_STEP_2048=SAMPLE_STEP_2048))
-#pragma glslify: pathTrace = require("./kernels/pathTrace.glsl", EPS=EPS, globalLightContrast=u_globalLightContrast, spongeOffset=u_spongeOffset, spongeScale=u_spongeScale, halfSpongeScale=u_halfSpongeScale, globalLightPower=u_globalLightPower, materialColor=u_materialColor, materialType=u_materialType, maxIterations=u_maxIterations, texture=texture, u_dome_texture=u_dome_texture, minDistance=u_minDistance, u_bailout=u_bailout, u_power=u_power, global_lightning_enabled=global_lightning_enabled, trace_depth=trace_depth, sceneIntersection=sceneIntersection, lightSphereContribution=lightSphereContribution, getMaterial=getMaterial, Collision=Collision, BRDF=BRDF, PDF=PDF)
+#pragma glslify: pathTrace = require("./kernels/pathTrace.glsl", EPS=EPS, fractalType=u_fractalType, fogEnabled=u_fogEnabled, fogDistance=u_fogDistance, fogColor=u_fogColor, globalLightContrast=u_globalLightContrast, spongeOffset=u_spongeOffset, spongeScale=u_spongeScale, halfSpongeScale=u_halfSpongeScale, globalLightPower=u_globalLightPower, materialColor=u_materialColor, materialType=u_materialType, maxIterations=u_maxIterations, texture=texture, u_dome_texture=u_dome_texture, minDistance=u_minDistance, u_bailout=u_bailout, u_power=u_power, global_lightning_enabled=global_lightning_enabled, trace_depth=trace_depth, sceneIntersection=sceneIntersection, lightSphereContribution=lightSphereContribution, getMaterial=getMaterial, Collision=Collision, BRDF=BRDF, PDF=PDF)
 
 void main( void ) {
     vec3 traceColor = vec3(0,0,0);

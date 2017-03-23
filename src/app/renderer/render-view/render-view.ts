@@ -13,8 +13,8 @@ const baseRendererVert = require('raw-loader!glslify-loader!./shaders/render-vie
 const baseRendererFrag = require('raw-loader!glslify-loader!./shaders/render-view.frag');
 
 export default class RenderView {
-  private _renderTarget: RenderTarget;
-  private _uniforms: {[name: string]: IUniform};
+  private _renderTarget: RenderTarget
+  private _uniforms: {[name: string]: IUniform}
 
   constructor(private _settingsService: SettingsService) {
     let shader = new Shader(baseRendererVert, baseRendererFrag);
@@ -33,17 +33,26 @@ export default class RenderView {
     window.onmousemove = (e) => this._uniforms['u_mousePosition'].value = [e.clientX, e.clientY]
     //window.onresize = () => this._renderTarget.setWindowSize(window.innerWidth, window.innerHeight)
 
-    this._settingsService.zoomObservable.subscribe((value: number) => this._uniforms['u_zoom'].value = value)
-
-    this._settingsService.resolutionObservable.subscribe((resolution: GLM.IArray) => {
-      this._uniforms['u_rendererResolution'].value = resolution;
+    this._settingsService.zoomSub.asObservable().subscribe((value: number) => {
+      this._uniforms['u_zoom'].value = value
     })
+
+    this._settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => this._uniforms['u_rendererResolution'].value = resolution)
   }
 
   public render(pathTracerTexture: WebGLTexture) {
     this._uniforms['u_time'].value += 0.01;
     this._uniforms['u_texture'].value = pathTracerTexture;
     this._uniforms['u_resolution'].value = [window.innerWidth, window.innerHeight];
+
+    // if (this._settingsService.scaledDown) {
+    //   this._uniforms['u_rendererResolution'].value = vec2.fromValues(this._settingsService.resolutionSub.getValue()[0] * 0.5, this._settingsService.resolutionSub.getValue()[1] * 0.5)
+    // }
+    // else {
+    //   this._uniforms['u_rendererResolution'].value = vec2.fromValues(this._settingsService.resolutionSub.getValue()[0], this._settingsService.resolutionSub.getValue()[1])
+    // }
+    //
+    // this._uniforms['u_zoom'].value = this._settingsService.scaledDown ? this._settingsService.zoomSub.getValue() * 2.0 : this._settingsService.zoomSub.getValue();
 
     this._renderTarget.render();
   }

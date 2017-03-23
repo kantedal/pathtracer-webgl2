@@ -14,7 +14,7 @@ export default class PingPongFBO extends RenderTarget {
   }
 
   public render() {
-    gl.viewport(0, 0, this._sizeX, this._sizeY);
+    gl.viewport(0, 0, this.sizeX * this.scaleFactor, this.sizeY * this.scaleFactor)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this._program);
 
@@ -48,7 +48,7 @@ export default class PingPongFBO extends RenderTarget {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this._sizeX, this._sizeY, 0, gl.RGBA, gl.FLOAT, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this.sizeX * this.scaleFactor, this.sizeY * this.scaleFactor, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
 
     this._textures.push(gl.createTexture());
@@ -57,7 +57,7 @@ export default class PingPongFBO extends RenderTarget {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this._sizeX, this._sizeY, 0, gl.RGBA, gl.FLOAT, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this.sizeX * this.scaleFactor, this.sizeY * this.scaleFactor, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
 
     this._currentTexture = 0;

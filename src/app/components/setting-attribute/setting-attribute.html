@@ -1,12 +1,33 @@
 <div class="property-box">
-  <div class="property-header">{{attribute.getValue().name}}</div>
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_SLIDER'">
+    <div class="property-header">{{attribute.getValue().name}}</div>
 
-  <md-slider
-    min="{{attribute.getValue().uiAttributes.minValue}}"
-    max="{{attribute.getValue().uiAttributes.maxValue}}"
-    step="{{attribute.getValue().uiAttributes.stepSize}}"
-    value="{{(attribute | async ).value}}"
-    (input)="updateAttribute($event.value)"
-  ></md-slider>
-  <span class="data-label">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>
+    <md-slider
+      min="{{attribute.getValue().uiAttributes.minValue}}"
+      max="{{attribute.getValue().uiAttributes.maxValue}}"
+      step="{{attribute.getValue().uiAttributes.stepSize}}"
+      value="{{(attribute | async ).value}}"
+      (input)="updateAttribute($event.value)"
+    ></md-slider>
+    <span class="data-label">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>
+  </div>
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_COLORPICKER'">
+    <div class="property-header">{{attribute.getValue().name}}</div>
+    <input
+      class="color-picker"
+      [cpPosition]="'right'"
+      [(colorPicker)]="color"
+      [style.background]="color"
+      (colorPickerChange)="updateAttribute(hexToRgb($event))"/>
+  </div>
+
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_TOGGLE'">
+    <span style="height: 50px;">
+       <md-slide-toggle class="property-toggle" (change)="updateAttribute($event.checked ? 1.0 : 0.0)">
+         {{attribute.getValue().name}}
+       </md-slide-toggle>
+    </span>
+
+  </div>
+
 </div>

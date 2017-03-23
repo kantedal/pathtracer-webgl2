@@ -73,15 +73,19 @@ export class CameraNavigator {
 
 
   setupCameraZoom() {
+    let rotMat = mat3.create()
+    let dir = vec3.fromValues(0,0,0);
     this.renderCanvas.on('mousewheel', (event) => {
-      let new_direction = vec3.fromValues(0,0,0);
+
+      mat3.multiply(rotMat, this.rotationMatrixVector(vec3.fromValues(0,1,0), this.camera.yawRotation), this.rotationMatrixVector(vec3.fromValues(0,0,1), this.camera.pitchRotation))
+      vec3.transformMat3(dir, this.camera.direction, rotMat)
       if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
-        vec3.scale(new_direction, this.camera.direction, 0.05);
-        vec3.add(this.camera.position, this.camera.position, new_direction);
+        vec3.scale(dir, dir, 0.05);
+        vec3.add(this.camera.position, this.camera.position, dir);
       }
       else {
-        vec3.scale(new_direction, this.camera.direction, -0.05);
-        vec3.add(this.camera.position, this.camera.position, new_direction);
+        vec3.scale(dir, dir, -0.05);
+        vec3.add(this.camera.position, this.camera.position, dir);
       }
       this.camera.hasChanged = true;
     });

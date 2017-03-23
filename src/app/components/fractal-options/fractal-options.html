@@ -5,6 +5,15 @@
     </div>
 
     <div class="property-box">
+      <div class="property-header">Fractal type</div>
+      <md-select [(ngModel)]="selelectedMaterial" class="dropdown" (change)="settingsService.fractalTypeSub.next($event.value)">
+        <md-option *ngFor="let fractal of fractals" [value]="fractal.id">
+          {{ fractal.name }}
+        </md-option>
+      </md-select>
+    </div>
+
+    <div class="property-box">
       <div class="property-header">Shape</div>
       <md-slider min="1" max="19" step="0.1" value="10.0" (input)="powerUpdate($event)"></md-slider>
       <span class="data-label">{{settingsService.powerObservable | async | number: '1.1-1'}}</span>
@@ -28,11 +37,9 @@
 
     <div *ngIf="settingsService.mengerSponge.isEnabled">
       <div *ngFor="let attribute of settingsService.mengerSponge.attributes">
-        <!--<setting-attribute [attribute]="attribute"></setting-attribute>-->
+        <setting-attribute [attribute]="attribute"></setting-attribute>
       </div>
     </div>
-
-
   </div>
 
   <div class="options-pane">

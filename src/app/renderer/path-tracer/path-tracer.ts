@@ -38,20 +38,15 @@ export default class PathTracer {
       resolution: { type: VEC2_TYPE, value: [512, 512] },
 
       // Fractal uniforms
+      u_fractalType: { type: FLOAT_TYPE, value: 0.0 },
       u_power: { type: FLOAT_TYPE, value: 10.0 },
       u_bailout: { type: FLOAT_TYPE, value: 10.0 },
       u_minDistance: { type: FLOAT_TYPE, value: 0.001 },
       u_maxIterations: { type: FLOAT_TYPE, value: 300 },
 
-      // // Menger sponge
-      // u_halfSpongeScale: { type: FLOAT_TYPE, value: 0.5 },
-
       // Material uniforms
       u_materialType: { type: FLOAT_TYPE, value: 0.0 },
       u_materialColor: { type: VEC3_TYPE, value: [0.9, 0.9, 0.9] },
-
-      // Light uniforms
-      u_globalLightPower: { type: FLOAT_TYPE, value: 3.0 },
 
       // Camera
       u_cameraYaw: { type: FLOAT_TYPE, value: 0.0},
@@ -91,7 +86,7 @@ export default class PathTracer {
 
       this._pathTracerUniforms['u_dome_texture'].value = lightSphereTexture
     }
-    lightSphereImage.src = "./assets/sky2.jpg";
+    lightSphereImage.src = "./assets/sky-3.jpg";
 
     this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
     this._refreshScreen = false
@@ -101,6 +96,9 @@ export default class PathTracer {
 
   public render() {
     if (this._shouldRender) {
+      this._frameBuffer.scaleFactor = this._settingsService.scaledDown ? 0.5 : 1.0
+      this._pathTracerUniforms['resolution'].value = this._settingsService.scaledDown ? [this._frameBuffer.sizeX * 0.5, this._frameBuffer.sizeY * 0.5] : [this._frameBuffer.sizeX, this._frameBuffer.sizeY]
+
       this._pathTracerUniforms['u_accumulated_texture'].value = this._frameBuffer.texture
 
       this._pathTracerUniforms['u_cameraYaw'].value = this._camera.yawRotation
@@ -112,11 +110,17 @@ export default class PathTracer {
 
       this._frameBuffer.render();
 
-      if (this._camera.hasChanged || this._refreshScreen || this._pathTracerShader.needsUpdate) {
+      if (this._settingsService.refreshScreen) {
+        this._settingsService.refreshScreen = false;
+        this._frameBuffer.resetTextures()
+        this._pathTracerUniforms['samples'].value = 0.0
+      }
+      else if (this._camera.hasChanged || this._refreshScreen || this._pathTracerShader.needsUpdate) {
         this._pathTracerUniforms['samples'].value = 0.0
         this._camera.hasChanged = false
         this._refreshScreen = false
         this._pathTracerShader.needsUpdate = false
+        this._settingsService.scaleDown()
       }
       else {
         this._pathTracerUniforms['samples'].value += 1.0
@@ -126,7 +130,7 @@ export default class PathTracer {
   }
 
   private setupSettingsListeners() {
-    this._settingsService.resolutionObservable.subscribe((resolution: GLM.IArray) => {
+    this._settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => {
       this._pathTracerUniforms['resolution'].value = resolution
       this._frameBuffer.setWindowSize(resolution[0], resolution[1])
       this._frameBuffer.resetTextures()
@@ -153,6 +157,10 @@ export default class PathTracer {
       this._refreshScreen = true
     })
     this._settingsService.shouldRenderSub.asObservable().subscribe(val => this._shouldRender = val)
+    this._settingsService.fractalTypeSub.asObservable().subscribe(val => {
+      this._pathTracerUniforms['u_fractalType'].value = val
+      this._refreshScreen = true
+    })
     // this._settingsService.globalLightPowerSub.asObservable().subscribe(val => {
     //   this._pathTracerUniforms['u_globalLightPower'].value = val
     //   this._refreshScreen = true

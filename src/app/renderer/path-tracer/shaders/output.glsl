@@ -6,6 +6,7 @@ in vec2 v_texCoord;
 out vec4 outColor;
 
 // Fractal uniforms
+uniform float u_fractalType;
 uniform float u_power;
 uniform float u_minDistance;
 uniform float u_maxIterations;
@@ -23,6 +24,11 @@ uniform vec3 u_materialColor;
 // Global light uniforms
 uniform float u_globalLightPower;
 uniform float u_globalLightContrast;
+
+// Render effect settings
+uniform float u_fogEnabled;
+uniform float u_fogDistance;
+uniform vec3 u_fogColor;
 
 // Renderer uniforms
 uniform float time;
@@ -480,7 +486,7 @@ bool pointInsideBox(vec3 bottom, vec3 top, vec3 point) {
   return (bottom.x < point.x && bottom.y < point.y && bottom.z < point.z && top.x > point.x && top.y > point.y && top.z > point.z);
 }
 
-float boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {
+float boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {
   vec3 dirfrac = vec3(1,1,1) / r.direction;
 
   vec3 t1 = (bottom - r.start_position) * dirfrac;
@@ -516,7 +522,7 @@ void getObjectAtIndex(int index, inout Object object_1) {
   object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);
 }
 
-float boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {
+float boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {
   vec3 dirfrac = vec3(1,1,1) / r.direction;
 
   vec3 t1 = (bottom - r.start_position) * dirfrac;
@@ -565,25 +571,25 @@ void getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) 
   node_0.node_index = index;
 }
 
-void processLeaf(BVHNode node, inout Collision closest_collision_2327752062, Ray ray, float triangle_start_index_2327752062, Object object_0) {
-  float triangle_count_2327752062 = node.extra_data1;
-  float start_triangle_index = node.extra_data2 + triangle_start_index_2327752062;
+void processLeaf(BVHNode node, inout Collision closest_collision_2352739786, Ray ray, float triangle_start_index_2352739786, Object object_0) {
+  float triangle_count_2352739786 = node.extra_data1;
+  float start_triangle_index = node.extra_data2 + triangle_start_index_2352739786;
 
   float current_index = start_triangle_index;
-  float end_index = start_triangle_index + triangle_count_2327752062;
+  float end_index = start_triangle_index + triangle_count_2352739786;
 
   Collision collision;
-  for (float idx = 0.0; idx < triangle_count_2327752062; idx++) {
+  for (float idx = 0.0; idx < triangle_count_2352739786; idx++) {
     Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));
 
-    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_2327752062.distance) == 1.0) {
-      closest_collision_2327752062 = collision;
+    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_2352739786.distance) == 1.0) {
+      closest_collision_2352739786 = collision;
     }
   }
 }
 
-void traverseObjectTree(Ray ray, inout Collision closest_collision_2327752062, Object object) {
-  float start_index_2327752062 = object.object_bvh_start_index;
+void traverseObjectTree(Ray ray, inout Collision closest_collision_2352739786, Object object) {
+  float start_index_2352739786 = object.object_bvh_start_index;
   float triangle_start_index = object.triangle_start_index;
 
   Collision collision;
@@ -601,17 +607,17 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2327752062, O
     float box_index = stack[--stackIdx];
 
     // Fetch node data
-    getNodeData(box_index, start_index_2327752062, ray, node);
+    getNodeData(box_index, start_index_2352739786, ray, node);
 
     if (node.is_leaf == 0.0) {
       // Check collision with bounding box
       float collision_distance = 0.0;
 
-      getNodeData(node.extra_data1, start_index_2327752062, ray, left_node);
-      getNodeData(node.extra_data2, start_index_2327752062, ray, right_node);
+      getNodeData(node.extra_data1, start_index_2352739786, ray, left_node);
+      getNodeData(node.extra_data2, start_index_2352739786, ray, right_node);
 
-      left_node.distance = boundingBoxCollision_0(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);
-      right_node.distance = boundingBoxCollision_0(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);
+      left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);
+      right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);
 
       float near_distance = min(left_node.distance, right_node.distance);
       float far_distance = max(left_node.distance, right_node.distance);
@@ -620,11 +626,11 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2327752062, O
       float near_child = mix(node.extra_data1, node.extra_data2, mixer);
       float far_child = mix(node.extra_data2, node.extra_data1, mixer);
 
-      if (far_distance < closest_collision_2327752062.distance) {
+      if (far_distance < closest_collision_2352739786.distance) {
         stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index
         stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index
       }
-      else if (near_distance < closest_collision_2327752062.distance) {
+      else if (near_distance < closest_collision_2352739786.distance) {
         stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index
       }
 
@@ -632,7 +638,7 @@ void traverseObjectTree(Ray ray, inout Collision closest_collision_2327752062, O
       if (stackIdx > 31) return;
     }
     else {
-      processLeaf(node, closest_collision_2327752062, ray, triangle_start_index, object);
+      processLeaf(node, closest_collision_2352739786, ray, triangle_start_index, object);
     }
   }
 }
@@ -665,6 +671,78 @@ vec3 lightSphereContribution(Ray ray) {
 
 // Fractal uniform
 
+float mandelbulbDe(vec3 pos) {
+  int Iterations = 10;
+
+  vec3 z = pos;
+  float dr = 1.0;
+  float r = 0.0;
+
+  for (int i = 0; i < Iterations; i++) {
+    r = length(z);
+    if (r > 3.0)
+      break;
+
+    // Convert to polar coordinates
+    float theta = acos(z.z/r);
+    float phi = atan(z.y, z.x);
+    dr = pow(r, u_power - 1.0) * u_power * dr + 1.0;
+
+    // Scale and rotate the point
+    float zr = pow(r, u_power);
+    theta = theta * u_power;
+    phi = phi * u_power;
+
+    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+    z += pos;
+  }
+
+  float mandelBulbDistance = 0.5 * log(r) * r / dr;
+  return mandelBulbDistance;
+}
+
+float mengerSpongeDe(vec3 w) {
+  int Iterations = 5;
+  vec3 offset = vec3(u_spongeOffset);
+  float scale = u_spongeScale;
+
+  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]
+
+  vec3 v = abs(w - u_halfSpongeScale) - u_halfSpongeScale;
+  float d1 = max(v.x, max(v.y, v.z));     // distance to the box
+  float d = d1;
+  float p = 1.0;
+  vec3 cd = v;
+
+  for (int i = 0; i < Iterations; i++) {
+    vec3 a = mod(3.0 * w * p, 3.0);
+    p *= 3.0;
+
+    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;
+
+    // distance inside the 3 axis aligned square tubes
+    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;
+
+    // intersection
+    d = max(d, d1);
+  }
+
+  // The distance estimate, min distance, and fractional iteration count
+  return d * 2.0;
+}
+
+float distanceEstimator(vec3 pos) {
+  if (u_fractalType == 0.0) {
+    return mandelbulbDe(pos);
+  }
+
+  if (u_fractalType == 1.0) {
+    return mengerSpongeDe(pos);
+  }
+
+  return 0.0;
+}
+
 //float distanceEstimator(vec3 pos) {
 //  int Iterations = 10;
 //
@@ -695,35 +773,35 @@ vec3 lightSphereContribution(Ray ray) {
 //  return mandelBulbDistance;
 //}
 
-float distanceEstimator(vec3 w) {
-  int Iterations = 5;
-  vec3 offset = vec3(u_spongeOffset);
-  float scale = u_spongeScale;
-
-  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]
-
-  vec3 v = abs(w - u_halfSpongeScale) - u_halfSpongeScale;
-  float d1 = max(v.x, max(v.y, v.z));     // distance to the box
-  float d = d1;
-  float p = 1.0;
-  vec3 cd = v;
-
-  for (int i = 0; i < Iterations; i++) {
-    vec3 a = mod(3.0 * w * p, 3.0);
-    p *= 3.0;
-
-    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;
-
-    // distance inside the 3 axis aligned square tubes
-    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;
-
-    // intersection
-    d = max(d, d1);
-  }
-
-  // The distance estimate, min distance, and fractional iteration count
-  return d * 2.0;
-}
+//float distanceEstimator(vec3 w) {
+//  int Iterations = 5;
+//  vec3 offset = vec3(spongeOffset);
+//  float scale = spongeScale;
+//
+//  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]
+//
+//  vec3 v = abs(w - halfSpongeScale) - halfSpongeScale;
+//  float d1 = max(v.x, max(v.y, v.z));     // distance to the box
+//  float d = d1;
+//  float p = 1.0;
+//  vec3 cd = v;
+//
+//  for (int i = 0; i < Iterations; i++) {
+//    vec3 a = mod(3.0 * w * p, 3.0);
+//    p *= 3.0;
+//
+//    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;
+//
+//    // distance inside the 3 axis aligned square tubes
+//    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;
+//
+//    // intersection
+//    d = max(d, d1);
+//  }
+//
+//  // The distance estimate, min distance, and fractional iteration count
+//  return d * 2.0;
+//}
 
 //float distanceEstimator(vec3 z) {
 //  int Iterations = 20;
@@ -843,6 +921,7 @@ bool rayMarch(Ray ray, inout Collision collision_1) {
     if (distance < u_minDistance) {
       collision_1.position = p;
       collision_1.normal = calculateNormal(p);
+      collision_1.distance = totalDistance;
       return true;
     }
   }
@@ -850,8 +929,14 @@ bool rayMarch(Ray ray, inout Collision collision_1) {
   return false;
 }
 
+vec3 applyFog(vec3 color, float distance) {
+  float fogAmount = 1.0 - exp( -distance * u_fogDistance );
+  return mix(color, u_fogColor, fogAmount);
+}
+
 vec3 pathTrace(Ray ray) {
   vec3 mask = vec3(1,1,1);
+  float fogDistance = 0.0;
   vec3 accumulated_color = vec3(0,0,0);
   Collision collision;
   Material collision_material = Material(u_materialColor, int(u_materialType), 0.0, 1.0, 1.0);
@@ -862,22 +947,30 @@ vec3 pathTrace(Ray ray) {
     if (!rayMarch(ray, collision)) {
       vec3 lightSphereColor = lightSphereContribution(ray);
       if (iteration == 0.0) {
-        return vec3(0.3);
+        return u_fogColor;
       }
       else {
         float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;
         accumulated_color += mask * lightSphereColor * lightPower;
       }
-      return accumulated_color;
+
+      return applyFog(accumulated_color, fogDistance);
     }
 
     vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);
-    mask *= BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;
+    vec3 color = BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;
+    mask *= color;
+
+    float collisionDistance = length(ray.start_position - collision.position);
+
+    if (iteration == 0.0 && u_fogEnabled == 1.0) {
+      fogDistance = collisionDistance; //clamp(collisionDistance / fogDistance, 0.0, 1.0);
+    }
 
     ray = Ray(collision.position + next_dir * 0.001, next_dir);
   }
 
-  return accumulated_color;
+  return applyFog(accumulated_color, fogDistance);
 
 //  if (rayMarch(ray, collision)) {
 //    return vec3(0.8);
@@ -887,18 +980,6 @@ vec3 pathTrace(Ray ray) {
 //  }
 //  return vec3(1.0 - steps / maxSteps);
 }
-
-//vec3 pathTrace(Ray ray) {
-//  float totalDistance = 0.0;
-//  float steps;
-//  vec3 p;
-//  for (steps = 0.0; steps < maxIterations; steps++) {
-//    p = ray.start_position + totalDistance * ray.direction;
-//    float distance = distanceEstimator(p);
-//    totalDistance += distance;
-//  }
-//  return vec3(1.0 - steps / maxIterations);
-//}
 
 void main( void ) {
     vec3 traceColor = vec3(0,0,0);

@@ -12,6 +12,8 @@ export class FractalOptionsComponent {
   selelectedMaterial: number = 0
   materialColor: string = '#ffffff'
 
+  fractals = [{ id: 0, name: 'Mandelbulb' }, { id: 1, name: 'Mengersponge' }]
+
   constructor(public settingsService: SettingsService) {
   }
 

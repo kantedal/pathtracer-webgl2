@@ -11,7 +11,7 @@ export class BottomBarComponent {
   private _resolutionHeight: number
 
   constructor(public settingsService: SettingsService) {
-    settingsService.resolutionObservable.subscribe((res: GLM.IArray) => {
+    settingsService.resolutionSub.asObservable().subscribe((res: GLM.IArray) => {
       this._resolutionWidth = res[0]
       this._resolutionHeight = res[1]
     })

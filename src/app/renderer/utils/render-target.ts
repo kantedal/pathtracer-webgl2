@@ -3,20 +3,23 @@ import createProgram from "./createProgram";
 import {gl} from "./render-context";
 
 export default class RenderTarget {
+
   public _program: WebGLProgram;
   protected _positionAttribLocation: number;
   protected _positionBuffer: WebGLBuffer;
   protected _texCoordAttribLocation: number;
   protected _texCoordBuffer: WebGLBuffer;
+  private _scaleFactor: number
 
   constructor(
     protected _shader: Shader,
-    protected _sizeX: number,
-    protected _sizeY: number
+    private _sizeX: number,
+    private _sizeY: number
   ) {
-    console.log(this._sizeX, this._sizeY)
     this._program = createProgram(gl, this._shader);
     this._shader.program = this._program;
+
+    this._scaleFactor = 1.0
 
     let positions = new Float32Array([
       -1.0, -1.0,
@@ -77,4 +80,9 @@ export default class RenderTarget {
     this._sizeX = sizeX
     this._sizeY = sizeY
   }
+
+  get scaleFactor(): number { return this._scaleFactor; }
+  set scaleFactor(value: number) { this._scaleFactor = value; }
+  get sizeX(): number { return this._sizeX }
+  get sizeY(): number { return this._sizeY }
 }
