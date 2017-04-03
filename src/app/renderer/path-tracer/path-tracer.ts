@@ -9,8 +9,7 @@ import {gl} from "../utils/render-context";
  Shader imports
  */
 const pathTracerVert = require('raw-loader!glslify!./shaders/path-tracer.vert');
-//const pathTracerFrag = require('raw-loader!glslify-loader!./shaders/path-tracer.frag');
-const pathTracerFrag = require('raw-loader!./shaders/output.glsl');
+const pathTracerFrag = require('raw-loader!./shaders/ray-marcher.glsl');
 
 export default class PathTracer {
   private _camera: Camera
@@ -44,10 +43,6 @@ export default class PathTracer {
       u_minDistance: { type: FLOAT_TYPE, value: 0.001 },
       u_maxIterations: { type: FLOAT_TYPE, value: 300 },
 
-      // Material uniforms
-      u_materialType: { type: FLOAT_TYPE, value: 0.0 },
-      u_materialColor: { type: VEC3_TYPE, value: [0.9, 0.9, 0.9] },
-
       // Camera
       u_cameraYaw: { type: FLOAT_TYPE, value: 0.0},
       u_cameraPitch: { type: FLOAT_TYPE, value: 0.0},
@@ -61,7 +56,6 @@ export default class PathTracer {
     for (let attributeSub of this._settingsService.mengerSponge.attributes) {
       let attr = attributeSub.getValue()
       this._pathTracerUniforms[attr.uniformName] = {type: attr.uniformType, value: attr.value}
-      console.log(this._pathTracerUniforms)
     }
 
     this._pathTracerShader.uniforms = this._pathTracerUniforms
@@ -148,14 +142,6 @@ export default class PathTracer {
       this._pathTracerUniforms['u_maxIterations'].value = val
       this._refreshScreen = true
     })
-    this._settingsService.materialColorSub.asObservable().subscribe(val => {
-      this._pathTracerUniforms['u_materialColor'].value = val
-      this._refreshScreen = true
-    })
-    this._settingsService.materialTypeSub.asObservable().subscribe(val => {
-      this._pathTracerUniforms['u_materialType'].value = val
-      this._refreshScreen = true
-    })
     this._settingsService.shouldRenderSub.asObservable().subscribe(val => this._shouldRender = val)
     this._settingsService.fractalTypeSub.asObservable().subscribe(val => {
       this._pathTracerUniforms['u_fractalType'].value = val
@@ -171,6 +157,6 @@ export default class PathTracer {
     }
   }
 
-
-  get renderTexture(): WebGLTexture { return this._frameBuffer.texture; }
+  get frameBuffer(): PingPongFBO { return this._frameBuffer }
+  get renderTexture(): WebGLTexture { return this._frameBuffer.texture }
 }

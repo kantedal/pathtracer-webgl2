@@ -1,0 +1,108 @@
+<div class="right-pane">
+  <div class="scroll">
+    <div class="options-pane">
+      <div class="info-header">
+        Fractal settings
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Fractal type</div>
+        <md-select [(ngModel)]="selelectedMaterial" class="dropdown" (change)="settingsService.fractalTypeSub.next($event.value)">
+          <md-option *ngFor="let fractal of fractals" [value]="fractal.id">
+            {{ fractal.name }}
+          </md-option>
+        </md-select>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Shape</div>
+        <md-slider min="1" max="19" step="0.1" value="10.0" (input)="powerUpdate($event)"></md-slider>
+        <span class="data-label">{{settingsService.powerObservable | async | number: '1.1-1'}}</span>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Detail level</div>
+        <md-slider min="100" max="10000" step="1" value="1000" (input)="detailLevelUpdate($event)"></md-slider>
+        <span class="data-label">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Max iterations</div>
+        <md-slider min="1" max="1000" step="1" value="300" (input)="maxIterationsUpdate($event)"></md-slider>
+        <span class="data-label">{{settingsService.maxIterationsObservable | async | number: '1.0-0'}}</span>
+      </div>
+
+      <!--
+        Menger sponge attributes
+      -->
+
+      <div *ngIf="settingsService.mengerSponge.isEnabled">
+        <div *ngFor="let attribute of settingsService.mengerSponge.attributes">
+          <setting-attribute [attribute]="attribute"></setting-attribute>
+        </div>
+      </div>
+    </div>
+
+    <div class="options-pane">
+      <div class="info-header">
+        Material settings
+      </div>
+
+      <div *ngFor="let attribute of settingsService.materialSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+
+      <!--<div class="property-box">-->
+        <!--<div class="property-header">Material type</div>-->
+        <!--<md-select [(ngModel)]="selelectedMaterial" class="dropdown" (change)="materialTypeChange($event)">-->
+          <!--<md-option *ngFor="let material of materials" [value]="material.id">-->
+            <!--{{ material.name }}-->
+          <!--</md-option>-->
+        <!--</md-select>-->
+      <!--</div>-->
+
+
+      <!--<div class="property-box">-->
+        <!--<div class="property-header">Color</div>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="color-input" [(ngModel)]="redClr" mdInput (change)="updateColor()" type="number">-->
+        <!--</md-input-container>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="color-input" [(ngModel)]="greenClr" mdInput (change)="updateColor()" type="number">-->
+        <!--</md-input-container>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="color-input" [(ngModel)]="blueClr" mdInput (change)="updateColor()" type="number">-->
+        <!--</md-input-container>-->
+        <!--&lt;!&ndash;<input class="color-picker" [cpPosition]="'left'" [(colorPicker)]="materialColor" [style.background]="materialColor" (colorPickerChange)="materialColorChanged($event)"/>&ndash;&gt;-->
+      <!--</div>-->
+    </div>
+  </div>
+  <!--<div class="options-pane">-->
+    <!--<div class="info-header">-->
+      <!--Render settings-->
+    <!--</div>-->
+
+    <!--<div class="property-box">-->
+      <!--<div class="property-header">Resolution</div>-->
+      <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+        <!--<input class="resolution-input" [(ngModel)]="_resolutionWidth" mdInput (change)="resolutionUpdate()" type="number" #resolutionWidth>-->
+      <!--</md-input-container>-->
+      <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+        <!--<input class="resolution-input" [(ngModel)]="_resolutionHeight" mdInput (change)="resolutionUpdate()" type="number" #resolutionHeight>-->
+      <!--</md-input-container>-->
+    <!--</div>-->
+
+    <!--<div class="property-box">-->
+      <!--<div class="property-header">Detail level</div>-->
+      <!--<md-slider min="100" max="10000" step="1" value="1000" (input)="detailLevelUpdate($event)"></md-slider>-->
+      <!--<span class="data-label">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->
+    <!--</div>-->
+
+    <!--<div class="property-box">-->
+      <!--<div class="property-header">Max iterations</div>-->
+      <!--<md-slider min="1" max="1000" step="1" value="300" (input)="maxIterationsUpdate($event)"></md-slider>-->
+      <!--<span class="data-label">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->
+    <!--</div>-->
+  <!--</div>-->
+
+</div>

@@ -34,7 +34,7 @@ vec3 pathTrace(Ray ray) {
   float fogDistance = 0.0;
   vec3 accumulated_color = vec3(0,0,0);
   Collision collision;
-  Material collision_material = Material(materialColor, int(materialType), 0.0, 1.0, 1.0);
+  Material collision_material = Material(materialColor, int(materialType), 0.0, materialExtra1, materialExtra2);
 
   for (float iteration = 0.0; iteration < 3.0; iteration++) {
     float distribution = 1.0;

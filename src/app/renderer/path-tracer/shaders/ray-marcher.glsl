@@ -20,6 +20,8 @@ uniform float u_spongeOffset;
 // Material uniforms
 uniform float u_materialType;
 uniform vec3 u_materialColor;
+uniform float u_materialExtra1;
+uniform float u_materialExtra2;
 
 // Global light uniforms
 uniform float u_globalLightPower;
@@ -407,7 +409,7 @@ float getTriangleIndex(float stackIdx) {
   return triangle_index_slot.x;
 }
 
-float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_0, float closest_collision_distance) {
+float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_1, float closest_collision_distance) {
   vec3 v0_0 = object_position + triangle.v0;
 
   //Begin calculating determinant - also used to calculate u parameter
@@ -425,17 +427,17 @@ float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, ino
 
   float inv_det = 1.0 / det;
 
-  collision_0.position = ray.start_position + inv_det * t * ray.direction;
-  collision_0.distance = length(ray.start_position - collision_0.position);
+  collision_1.position = ray.start_position + inv_det * t * ray.direction;
+  collision_1.distance = length(ray.start_position - collision_1.position);
 
-  if (closest_collision_distance < collision_0.distance) return -1.0;
+  if (closest_collision_distance < collision_1.distance) return -1.0;
 
-  collision_0.material_index = triangle.material_index;
+  collision_1.material_index = triangle.material_index;
 
   u = u * inv_det;
   v = v * inv_det;
-  collision_0.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;
-  collision_0.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;
+  collision_1.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;
+  collision_1.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;
 
   return 1.0;
 }
@@ -909,7 +911,7 @@ vec3 calculateNormal(vec3 pos) {
 //  return normalize(vec3(dx1 - dx2, dy1 - dy2, dz1 - dz2));
 //}
 
-bool rayMarch(Ray ray, inout Collision collision_1) {
+bool rayMarch(Ray ray, inout Collision collision_0) {
   float totalDistance = 0.0;
   float steps;
   vec3 p;
@@ -919,9 +921,9 @@ bool rayMarch(Ray ray, inout Collision collision_1) {
     totalDistance += distance;
 
     if (distance < u_minDistance) {
-      collision_1.position = p;
-      collision_1.normal = calculateNormal(p);
-      collision_1.distance = totalDistance;
+      collision_0.position = p;
+      collision_0.normal = calculateNormal(p);
+      collision_0.distance = totalDistance;
       return true;
     }
   }
@@ -939,7 +941,7 @@ vec3 pathTrace(Ray ray) {
   float fogDistance = 0.0;
   vec3 accumulated_color = vec3(0,0,0);
   Collision collision;
-  Material collision_material = Material(u_materialColor, int(u_materialType), 0.0, 1.0, 1.0);
+  Material collision_material = Material(u_materialColor, int(u_materialType), 0.0, u_materialExtra1, u_materialExtra2);
 
   for (float iteration = 0.0; iteration < 3.0; iteration++) {
     float distribution = 1.0;
@@ -982,12 +984,12 @@ vec3 pathTrace(Ray ray) {
 }
 
 void main( void ) {
-    vec3 traceColor = vec3(0,0,0);
-    Ray ray = createRay(gl_FragCoord.xy, 0);
-    traceColor += pathTrace(ray);
+  vec3 traceColor = vec3(0,0,0);
+  Ray ray = createRay(gl_FragCoord.xy, 0);
+  traceColor += pathTrace(ray);
 
-    vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;
+  vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;
 
-    vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));
-    outColor = vec4(mixedTraceColor, 1.0);
+  vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));
+  outColor = vec4(mixedTraceColor, 1.0);
 }

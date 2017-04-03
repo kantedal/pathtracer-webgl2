@@ -11,14 +11,37 @@
     ></md-slider>
     <span class="data-label">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>
   </div>
+
   <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_COLORPICKER'">
+    <div class="property-header">
+      {{attribute.getValue().name}}
+      <div class="color-circle" [style.background-color]="'rgba(' + redClr + ',' + greenClr + ',' + blueClr + ',1)'"></div>
+    </div>
+
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="redClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="greenClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="blueClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+    <!--<input-->
+      <!--class="color-picker"-->
+      <!--[cpPosition]="'right'"-->
+      <!--[(colorPicker)]="color"-->
+      <!--[style.background]="color"-->
+      <!--(colorPickerChange)="updateAttribute(hexToRgb($event))"/>-->
+  </div>
+
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_DROPDOWN'">
     <div class="property-header">{{attribute.getValue().name}}</div>
-    <input
-      class="color-picker"
-      [cpPosition]="'right'"
-      [(colorPicker)]="color"
-      [style.background]="color"
-      (colorPickerChange)="updateAttribute(hexToRgb($event))"/>
+    <md-select [(ngModel)]="dropdownSelection" class="dropdown" (change)="updateDropdown()">
+      <md-option *ngFor="let type of attribute.getValue().uiAttributes.alternatives" [value]="type.id">
+        {{ type.name }}
+      </md-option>
+    </md-select>
   </div>
 
   <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_TOGGLE'">

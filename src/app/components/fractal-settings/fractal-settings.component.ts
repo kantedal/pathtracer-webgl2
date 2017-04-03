@@ -4,10 +4,10 @@ const hexRgb = require('hex-rgb');
 
 @Component({
   selector: 'fractal-options',
-  templateUrl: './fractal-options.html',
-  styleUrls: ['./fractal-options.css']
+  templateUrl: 'fractal-settings.html',
+  styleUrls: ['fractal-settings.css']
 })
-export class FractalOptionsComponent {
+export class FractalSettingsComponent {
   materials = [{ id: 0, name: 'Diffuse' }, { id: 5, name: 'Glossy' },  { id: 1, name: 'Specular' }, { id: 2, name: 'Transmission' }]
   selelectedMaterial: number = 0
   materialColor: string = '#ffffff'

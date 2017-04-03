@@ -4,6 +4,8 @@ import {MengerSponge} from './fractal-settings/menger-sponge'
 import LightSettings from './light-settings'
 import Shader from '../utils/shader'
 import {RenderEffectsSetting} from "./render-effects-settings";
+import MaterialSettings from "./material-settings";
+import {BloomSettings} from "./post-effects-settings/bloom-settings";
 
 @Injectable()
 export class SettingsService {
@@ -12,13 +14,16 @@ export class SettingsService {
   scaleDownTimer;
 
   // Renderer attributes
+  renderTypeSub: BehaviorSubject<number> = new BehaviorSubject(0)
   shouldRenderSub: BehaviorSubject<boolean> = new BehaviorSubject(false)
   resolutionSub: BehaviorSubject<GLM.IArray>
   zoomSub: BehaviorSubject<number> = new BehaviorSubject(3.0)
 
   // Lighting attributes
-  lightSettings: LightSettings = new LightSettings()
-  renderEffectSettings: RenderEffectsSetting = new RenderEffectsSetting()
+  lightSettings = new LightSettings()
+  renderEffectSettings = new RenderEffectsSetting()
+  bloomSettings = new BloomSettings()
+  materialSettings = new MaterialSettings()
 
   // Fractals
   fractalTypeSub: BehaviorSubject<number> = new BehaviorSubject(0)
@@ -43,6 +48,7 @@ export class SettingsService {
   public connectShader(shader: Shader) {
     this.lightSettings.connectShader(shader)
     this.renderEffectSettings.connectShader(shader)
+    this.materialSettings.connectShader(shader)
   }
 
 

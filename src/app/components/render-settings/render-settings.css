@@ -1,0 +1,20 @@
+.resolution-input {
+  color: #fff;
+  font-weight: 200;
+  font-size: 12px;
+  width: 80px;
+  text-align: center;
+}
+
+.dropdown {
+  color: #fff;
+  width: calc(100% - 10px);
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 5px;
+}
+
+.pane-button {
+  width: 100%;
+  opacity: 0.7;
+}

@@ -4,12 +4,17 @@ import RenderView from "./render-view/render-view"
 import PathTracer from "./path-tracer/path-tracer"
 import * as moment from "moment"
 import {SettingsService} from "./settings/settings.service"
+import {BloomProgram} from "./bloom-program/bloom-program";
+import {CompositionProgram} from "./composition-program/composition-program";
 const Stats = require('stats-js')
 
 
 @Injectable()
 export class RenderService {
+  private _canvas: any
   private _pathTracer: PathTracer
+  private _bloomProgram: BloomProgram
+  private _compositionProgram: CompositionProgram
   private _renderView: RenderView
   private _stats: any;
 
@@ -20,6 +25,7 @@ export class RenderService {
   constructor(public settingsService: SettingsService) {}
 
   public init(canvas: ElementRef) {
+    this._canvas = canvas
     initContext(canvas)
 
     canvas.nativeElement.width = window.innerWidth
@@ -39,6 +45,8 @@ export class RenderService {
     document.body.appendChild(this._stats.domElement)
 
     this._pathTracer = new PathTracer(this.settingsService)
+    this._bloomProgram = new BloomProgram()
+    this._compositionProgram = new CompositionProgram()
     this._renderView = new RenderView(this.settingsService)
 
     this._startTime = moment().valueOf();
@@ -61,4 +69,8 @@ export class RenderService {
       requestAnimationFrame(this.render)
     //}
   }
+
+  get canvas(): any { return this._canvas }
+  get renderTexture(): WebGLTexture { return this._pathTracer.renderTexture }
+  get textureData(): any { return this._pathTracer.frameBuffer.textureData }
 }

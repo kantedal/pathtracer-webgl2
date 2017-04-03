@@ -3,11 +3,12 @@ import {SettingsService} from "../../renderer/settings/settings.service";
 const hexRgb = require('hex-rgb');
 
 @Component({
-  selector: 'render-options',
-  templateUrl: './render-options.html',
-  styleUrls: ['./render-options.css']
+  selector: 'object-settings',
+  templateUrl: './object-settings.html',
+  styleUrls: ['./object-settings.css']
 })
-export class RenderOptionsComponent {
+export class RenderSettingsComponent {
+
   private _resolutionWidth: number
   private _resolutionHeight: number
 
@@ -25,4 +26,5 @@ export class RenderOptionsComponent {
   zoomSliderUpdate(event) {
     this.settingsService.zoom = event.value / 100.0
   }
+
 }

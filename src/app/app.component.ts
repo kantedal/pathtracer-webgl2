@@ -16,6 +16,7 @@ export class AppComponent implements AfterViewInit {
   ) {}
 
   ngAfterViewInit(): void {
+    this.renderCanvas.nativeElement.oncontextmenu = (e) => e.preventDefault()
     this.renderService.init(this.renderCanvas)
   }
 }

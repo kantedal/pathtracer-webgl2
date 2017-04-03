@@ -1,14 +1,5 @@
 .property-box {
 }
-
-.dropdown {
-  color: #fff;
-  width: calc(100% - 10px);
-  padding-left: 5px;
-  padding-right: 5px;
-  margin-top: 5px;
-}
-
 .color-picker {
   border: none;
   border-radius: 4px;
@@ -17,4 +8,12 @@
   padding-right: 5px;
   margin-top: 10px;
   opacity: 0.3;
+}
+
+.dropdown {
+  color: #fff;
+  width: calc(100% - 10px);
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 5px;
 }
