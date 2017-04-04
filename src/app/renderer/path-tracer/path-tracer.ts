@@ -62,11 +62,25 @@ export default class PathTracer {
 
     this._settingsService.connectShader(this._pathTracerShader)
 
+    // let lightSphereImage = new Image();
+    // lightSphereImage.onload = () =>
+    // lightSphereImage.src = "./assets/sky-3.jpg";
+
+    this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
+    this._refreshScreen = false
+
+    this.loadDomeTexture("./assets/sky-3.jpg")
+
+    this.setupSettingsListeners();
+  }
+
+  public loadDomeTexture(url: any) {
+    //console.log(image)
+    let lightSphereTexture = gl.createTexture();
+    let lightSphereLocation = gl.getUniformLocation(this._frameBuffer._program, "u_dome_texture");
+
     let lightSphereImage = new Image();
     lightSphereImage.onload = () => {
-      let lightSphereTexture = gl.createTexture();
-      let lightSphereLocation = gl.getUniformLocation(this._frameBuffer._program, "u_dome_texture");
-
       gl.useProgram(this._frameBuffer._program);
       gl.activeTexture(gl.TEXTURE2);
       gl.bindTexture(gl.TEXTURE_2D, lightSphereTexture);
@@ -77,15 +91,10 @@ export default class PathTracer {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, lightSphereImage);
       gl.uniform1i(lightSphereLocation, 2);
       gl.bindTexture(gl.TEXTURE_2D, null);
-
-      this._pathTracerUniforms['u_dome_texture'].value = lightSphereTexture
     }
-    lightSphereImage.src = "./assets/sky-3.jpg";
+    lightSphereImage.src = url
 
-    this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
-    this._refreshScreen = false
-
-    this.setupSettingsListeners();
+    this._pathTracerUniforms['u_dome_texture'].value = lightSphereTexture
   }
 
   public render() {

@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {SettingsService} from "../../renderer/settings/settings.service";
+import {SettingsService} from "../../../renderer/settings/settings.service";
 const hexRgb = require('hex-rgb');
 
 @Component({

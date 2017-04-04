@@ -13,6 +13,7 @@ export default class FBO extends RenderTarget {
   }
 
   public render() {
+    gl.viewport(0, 0, this.sizeX * this.scaleFactor, this.sizeY * this.scaleFactor)
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this._program);
 
@@ -41,8 +42,13 @@ export default class FBO extends RenderTarget {
     gl.texParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this._sizeX, this._sizeY, 0, gl.RGBA, gl.FLOAT, null);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this.sizeX, this.sizeY, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
+  }
+
+  public resize(sizeX: number, sizeY: number) {
+    this.setWindowSize(sizeX, sizeY)
+    this.resetTexture()
   }
 
   get texture(): WebGLTexture { return this._texture; }

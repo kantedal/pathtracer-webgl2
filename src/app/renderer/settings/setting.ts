@@ -48,4 +48,12 @@ export class Setting {
   protected addAttribute(attribute: ISettingAttribute) {
     this.attributes.push(new BehaviorSubject(attribute))
   }
+
+  getAttribute(name: string): ISettingAttribute {
+    for (let attribute of this.attributes) {
+      if (attribute.getValue().uniformName == name) {
+        return attribute.getValue();
+      }
+    }
+  }
 }

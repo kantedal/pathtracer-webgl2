@@ -45,8 +45,8 @@ export class RenderService {
     document.body.appendChild(this._stats.domElement)
 
     this._pathTracer = new PathTracer(this.settingsService)
-    this._bloomProgram = new BloomProgram()
-    this._compositionProgram = new CompositionProgram()
+    this._bloomProgram = new BloomProgram(this.settingsService)
+    this._compositionProgram = new CompositionProgram(this.settingsService)
     this._renderView = new RenderView(this.settingsService)
 
     this._startTime = moment().valueOf();
@@ -57,7 +57,13 @@ export class RenderService {
     this._stats.begin();
 
     this._pathTracer.render()
-    this._renderView.render(this._pathTracer.renderTexture)
+
+    if (this.settingsService.bloomSettings.getAttribute('u_bloomEnabled').value == 1.0) {
+      this._bloomProgram.render(this._pathTracer.renderTexture)
+    }
+
+    this._compositionProgram.render(this._pathTracer.renderTexture, this._bloomProgram.renderTexture)
+    this._renderView.render(this._compositionProgram.renderTexture)
 
     this._stats.end();
 
@@ -68,6 +74,10 @@ export class RenderService {
     // else {
       requestAnimationFrame(this.render)
     //}
+  }
+
+  public newDomeImage(image: any) {
+    this._pathTracer.loadDomeTexture(image)
   }
 
   get canvas(): any { return this._canvas }

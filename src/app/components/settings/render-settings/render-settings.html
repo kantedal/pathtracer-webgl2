@@ -1,10 +1,6 @@
 <div class="left-pane">
   <div class="scroll">
-    <div class="options-pane">
-      <div class="info-header">
-        Render settings
-      </div>
-
+    <settings-container title="Render settings" [expanded]="true">
       <div class="property-box">
         <div class="property-header">Render type</div>
         <md-select [(ngModel)]="renderType" class="dropdown" (change)="settingsService.renderTypeSub.next($event.value)">
@@ -36,33 +32,31 @@
           <button (click)="settingsService.shouldRender = true" md-icon-button><md-icon style="color: #fff">play_arrow</md-icon></button>
         </span>
         <span *ngIf="settingsService.shouldRenderSub.asObservable() | async">
-          <button  (click)="settingsService.shouldRender = false" md-icon-button><md-icon style="color: #fff">pause</md-icon></button>
+          <button (click)="settingsService.shouldRender = false" md-icon-button><md-icon style="color: #fff">pause</md-icon></button>
         </span>
       </div>
-    </div>
+    </settings-container>
 
-    <div class="options-pane">
-      <div class="info-header">
-        Render effects
-      </div>
-      <div *ngFor="let attribute of settingsService.renderEffectSettings.attributes">
-        <setting-attribute [attribute]="attribute"></setting-attribute>
-      </div>
-    </div>
-
-    <div class="options-pane">
-      <div class="info-header">
-        Lightning
-      </div>
+    <settings-container title="Lightning" [expanded]="true">
       <div *ngFor="let attribute of settingsService.lightSettings.attributes">
         <setting-attribute [attribute]="attribute"></setting-attribute>
       </div>
-    </div>
+      <input style="color: #fff; width: 170px; font-weight: 200" type="file" (change)="imageUpload($event)" />
+    </settings-container>
+
+    <settings-container title="Render effects" [expanded]="false">
+      <div *ngFor="let attribute of settingsService.renderEffectSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+    </settings-container>
+
+    <settings-container title="Post effects" [expanded]="false">
+      <div *ngFor="let attribute of settingsService.bloomSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+    </settings-container>
 
     <div class="options-pane">
-      <!--<div class="info-header">-->
-        <!--Download image-->
-      <!--</div>-->
       <button class="pane-button" (click)="downloadImage()" md-raised-button>Save image</button>
     </div>
   </div>

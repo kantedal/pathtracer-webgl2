@@ -48,6 +48,7 @@ canvas:active {
   border-radius: 3px;
   width: 170px;
   background: rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 .info-header {

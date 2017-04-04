@@ -49,6 +49,7 @@ export class SettingsService {
     this.lightSettings.connectShader(shader)
     this.renderEffectSettings.connectShader(shader)
     this.materialSettings.connectShader(shader)
+    this.bloomSettings.connectShader(shader)
   }
 
 

@@ -949,7 +949,7 @@ vec3 pathTrace(Ray ray) {
     if (!rayMarch(ray, collision)) {
       vec3 lightSphereColor = lightSphereContribution(ray);
       if (iteration == 0.0) {
-        return u_fogColor;
+        return lightSphereColor; //fogColor;
       }
       else {
         float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;

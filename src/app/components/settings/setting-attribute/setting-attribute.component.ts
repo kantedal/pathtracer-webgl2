@@ -1,13 +1,13 @@
-import {Component, Input, AfterViewInit} from '@angular/core'
-import {ISettingAttribute, UI_TYPE_SLIDER, UI_TYPE_TOGGLE, UI_TYPE_TEXTFIELD, UI_TYPE_COLORPICKER} from '../../renderer/settings/setting'
-import {BehaviorSubject} from 'rxjs'
+import {Component, Input, AfterViewInit} from "@angular/core";
+import {BehaviorSubject} from "rxjs";
+import {ISettingAttribute, UI_TYPE_COLORPICKER} from "../../../renderer/settings/setting";
 const hexRgb = require('hex-rgb');
 const rgbHex = require('rgb-hex');
 
 @Component({
   selector: 'setting-attribute',
-  templateUrl: './setting-attribute.html',
-  styleUrls: ['./setting-attribute.css']
+  templateUrl: 'setting-attribute.html',
+  styleUrls: ['setting-attribute.css']
 })
 export class SettingAttributeComponent implements AfterViewInit {
   @Input() attribute: BehaviorSubject<ISettingAttribute>

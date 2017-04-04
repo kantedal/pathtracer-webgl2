@@ -9,7 +9,7 @@ export class BloomSettings extends Setting {
       name: 'Bloom enabled',
       uiType: UI_TYPE_TOGGLE,
       value: 0.0,
-      uniformName: 'u_bloomEnabled ',
+      uniformName: 'u_bloomEnabled',
       uniformType: FLOAT_TYPE
     })
 
@@ -27,7 +27,7 @@ export class BloomSettings extends Setting {
     })
 
     this.addAttribute({
-      name: 'Fog amount',
+      name: 'Bloom iterations',
       uiType: UI_TYPE_SLIDER,
       uiAttributes: {
         minValue: 0.0,

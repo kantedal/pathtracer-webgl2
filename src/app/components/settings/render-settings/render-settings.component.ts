@@ -1,6 +1,6 @@
-import {Component} from "@angular/core";
-import {SettingsService} from "../../renderer/settings/settings.service";
-import {RenderService} from "../../renderer/render.service";
+import {Component, ElementRef} from "@angular/core";
+import {SettingsService} from "../../../renderer/settings/settings.service";
+import {RenderService} from "../../../renderer/render.service";
 const hexRgb = require('hex-rgb');
 
 @Component({
@@ -50,6 +50,18 @@ export class RenderSettingsComponent {
     download.href = canvas.toDataURL()
     download.download = 'pathtracer-image.png';
     download.click();
+  }
+
+  imageUpload(event) {
+    let image = new Image()
+    let reader = new FileReader()
+
+    reader.onload = (e: any) => {
+      image.src = e.target.result
+      this.renderService.newDomeImage(e.target.result)
+    }
+
+    reader.readAsDataURL(event.target.files[0]);
   }
 
 }
