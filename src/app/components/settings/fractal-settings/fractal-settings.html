@@ -1,10 +1,6 @@
 <div class="right-pane">
   <div class="scroll">
-    <div class="options-pane">
-      <div class="info-header">
-        Fractal settings
-      </div>
-
+    <settings-container title="Fractal settings" [expanded]="true">
       <div class="property-box">
         <div class="property-header">Fractal type</div>
         <md-select [(ngModel)]="selelectedMaterial" class="dropdown" (change)="settingsService.fractalTypeSub.next($event.value)">
@@ -41,12 +37,9 @@
           <setting-attribute [attribute]="attribute"></setting-attribute>
         </div>
       </div>
-    </div>
+    </settings-container>
 
-    <div class="options-pane">
-      <div class="info-header">
-        Material settings
-      </div>
+    <settings-container title="Material settings" [expanded]="true">
 
       <div *ngFor="let attribute of settingsService.materialSettings.attributes">
         <setting-attribute [attribute]="attribute"></setting-attribute>
@@ -75,8 +68,7 @@
         <!--</md-input-container>-->
         <!--&lt;!&ndash;<input class="color-picker" [cpPosition]="'left'" [(colorPicker)]="materialColor" [style.background]="materialColor" (colorPickerChange)="materialColorChanged($event)"/>&ndash;&gt;-->
       <!--</div>-->
-    </div>
-  </div>
+    </settings-container>
   <!--<div class="options-pane">-->
     <!--<div class="info-header">-->
       <!--Render settings-->
@@ -105,4 +97,5 @@
     <!--</div>-->
   <!--</div>-->
 
+  </div>
 </div>

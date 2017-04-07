@@ -1,6 +1,6 @@
-import {Component, Input, AfterViewInit} from "@angular/core";
+import {Component, Input, AfterContentChecked} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
-import {ISettingAttribute, UI_TYPE_COLORPICKER} from "../../../renderer/settings/setting";
+import {ISettingAttribute, UI_TYPE_COLORPICKER, UI_TYPE_TOGGLE} from "../../../renderer/settings/setting";
 const hexRgb = require('hex-rgb');
 const rgbHex = require('rgb-hex');
 
@@ -9,7 +9,7 @@ const rgbHex = require('rgb-hex');
   templateUrl: 'setting-attribute.html',
   styleUrls: ['setting-attribute.css']
 })
-export class SettingAttributeComponent implements AfterViewInit {
+export class SettingAttributeComponent implements AfterContentChecked {
   @Input() attribute: BehaviorSubject<ISettingAttribute>
 
   // Color attributes
@@ -20,6 +20,9 @@ export class SettingAttributeComponent implements AfterViewInit {
 
   // Dropdown attributes
   dropdownSelection = 0
+
+  // Toggle attributes
+  enabled: boolean = true
 
   constructor() {}
 
@@ -42,9 +45,17 @@ export class SettingAttributeComponent implements AfterViewInit {
     this.updateAttribute(this.dropdownSelection)
   }
 
-  ngAfterViewInit(): void {
-    if (this.attribute.getValue().uiType == UI_TYPE_COLORPICKER) {
-      //this.color = '#' + rgbHex(255 * this.attribute.getValue().value[0], 255 * this.attribute.getValue().value[1], 255 * this.attribute.getValue().value[2])
+  ngAfterContentChecked(): void {
+    let attr = this.attribute.getValue()
+    switch (attr.uiType) {
+      case UI_TYPE_COLORPICKER:
+        this.redClr = attr.value[0] * 255
+        this.greenClr = attr.value[1] * 255
+        this.blueClr = attr.value[2] * 255
+        break
+      case UI_TYPE_TOGGLE:
+        this.enabled = attr.value == 1.0
+        break
     }
   }
 }

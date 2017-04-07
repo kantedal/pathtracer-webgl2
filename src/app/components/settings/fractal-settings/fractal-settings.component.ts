@@ -3,7 +3,7 @@ import {SettingsService} from "../../../renderer/settings/settings.service";
 const hexRgb = require('hex-rgb');
 
 @Component({
-  selector: 'fractal-options',
+  selector: 'fractal-settings',
   templateUrl: 'fractal-settings.html',
   styleUrls: ['fractal-settings.css']
 })

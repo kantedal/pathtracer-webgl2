@@ -46,7 +46,7 @@
 
   <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_TOGGLE'">
     <span style="height: 50px;">
-       <md-slide-toggle class="property-toggle" (change)="updateAttribute($event.checked ? 1.0 : 0.0)">
+       <md-slide-toggle [checked]="enabled" class="property-toggle" (change)="updateAttribute($event.checked ? 1.0 : 0.0)">
          {{attribute.getValue().name}}
        </md-slide-toggle>
     </span>

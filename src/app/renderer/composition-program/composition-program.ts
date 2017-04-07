@@ -22,6 +22,7 @@ export class CompositionProgram {
       u_bloomTexture: { type: TEXTURE_TYPE, value: null }
     }
     this._compositionProgram = new FBO(this._compositionShader, renderSize[0], renderSize[1])
+    this._compositionProgram.enableWriteToTexture();
 
     settingsService.connectShader(this._compositionShader)
     settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => this._compositionProgram.resize(resolution[0], resolution[1]))
@@ -34,4 +35,5 @@ export class CompositionProgram {
   }
 
   get renderTexture(): WebGLTexture { return this._compositionProgram.texture }
+  get textureData(): Uint8Array { return this._compositionProgram.textureData }
 }

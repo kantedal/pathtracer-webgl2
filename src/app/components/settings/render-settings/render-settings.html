@@ -41,7 +41,12 @@
       <div *ngFor="let attribute of settingsService.lightSettings.attributes">
         <setting-attribute [attribute]="attribute"></setting-attribute>
       </div>
-      <input style="color: #fff; width: 170px; font-weight: 200" type="file" (change)="imageUpload($event)" />
+
+      <div class="property-box">
+        <div class="property-header">Custom light dome texture</div>
+        <input style="color: #fff; width: 170px; margin-top: 10px; font-weight: 200" type="file" (change)="imageUpload($event)" />
+      </div>
+
     </settings-container>
 
     <settings-container title="Render effects" [expanded]="false">

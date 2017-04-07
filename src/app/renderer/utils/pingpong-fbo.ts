@@ -34,7 +34,7 @@ export default class PingPongFBO extends RenderTarget {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6)
 
-    gl.readPixels(0, 0, this.sizeX, this.sizeY, gl.RGBA, gl.UNSIGNED_BYTE, this._textureData);
+    //gl.readPixels(0, 0, this.sizeX, this.sizeY, gl.RGBA, gl.UNSIGNED_BYTE, this._textureData);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 

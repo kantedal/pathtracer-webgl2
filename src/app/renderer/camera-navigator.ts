@@ -8,6 +8,10 @@ export class CameraNavigator {
   private startCameraPosition: GLM.IArray
   private startMousePosition: any
 
+  zoomFactor: number = 6.0
+  rotationYFactor: number = -1.0;
+
+
   startYaw: number = 0.0
   startPitch: number = 0.0
 
@@ -25,7 +29,7 @@ export class CameraNavigator {
     let right = vec3.create()
     let rotMat = mat3.create()
 
-    let delta = 0.02
+    let delta = 0.02 * this.zoomFactor
     window.onkeydown = e => {
       switch (e.key) {
         case 'w':
@@ -80,11 +84,11 @@ export class CameraNavigator {
       mat3.multiply(rotMat, this.rotationMatrixVector(vec3.fromValues(0,1,0), this.camera.yawRotation), this.rotationMatrixVector(vec3.fromValues(0,0,1), this.camera.pitchRotation))
       vec3.transformMat3(dir, this.camera.direction, rotMat)
       if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
-        vec3.scale(dir, dir, 0.05);
+        vec3.scale(dir, dir, 0.05 * this.zoomFactor);
         vec3.add(this.camera.position, this.camera.position, dir);
       }
       else {
-        vec3.scale(dir, dir, -0.05);
+        vec3.scale(dir, dir, -0.05 * this.zoomFactor);
         vec3.add(this.camera.position, this.camera.position, dir);
       }
       this.camera.hasChanged = true;
@@ -100,7 +104,7 @@ export class CameraNavigator {
     this.renderCanvas.mousemove((event) => {
       if (this.leftMouseDown) {
         let rotationX = ((event.clientX / window.innerWidth - 0.5) - this.startMousePosition.x) * 4.0
-        let rotationY = ((event.clientY / window.innerHeight - 0.5) - this.startMousePosition.y) * 4.0
+        let rotationY = ((event.clientY / window.innerHeight - 0.5) - this.startMousePosition.y) * 4.0 * this.rotationYFactor
         this.camera.yawRotation = this.startYaw + rotationX
         this.camera.pitchRotation = this.startPitch + rotationY
 

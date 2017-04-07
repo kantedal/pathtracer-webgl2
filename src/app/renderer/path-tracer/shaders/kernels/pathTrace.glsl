@@ -40,9 +40,9 @@ vec3 pathTrace(Ray ray) {
     float distribution = 1.0;
 
     if (!rayMarch(ray, collision)) {
-      vec3 lightSphereColor = lightSphereContribution(ray);
+      vec3 lightSphereColor = mix(globalLightColor, lightSphereContribution(ray), imageBasedLightning);
       if (iteration == 0.0) {
-        return lightSphereColor; //fogColor;
+        return mix(fogColor, lightSphereColor, fillBackgroundWithLight);
       }
       else {
         float lightPower = (globalLightPower - 0.5) * globalLightContrast + 0.5;

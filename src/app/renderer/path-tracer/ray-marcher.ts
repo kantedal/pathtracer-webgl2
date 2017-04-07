@@ -11,7 +11,7 @@ import {gl} from "../utils/render-context";
 const pathTracerVert = require('raw-loader!glslify!./shaders/path-tracer.vert');
 const pathTracerFrag = require('raw-loader!./shaders/ray-marcher.glsl');
 
-export default class PathTracer {
+export default class RayMarcher {
   private _camera: Camera
   private _navigator: CameraNavigator
   private _frameBuffer: PingPongFBO
@@ -23,6 +23,8 @@ export default class PathTracer {
   constructor(private _settingsService: SettingsService) {
     this._camera = new Camera(vec3.fromValues(-2,0,0), vec3.fromValues(1,0,0))
     this._navigator = new CameraNavigator(this._camera, _settingsService)
+    this._navigator.rotationYFactor = 1.0
+    this._navigator.zoomFactor = 1.0
 
     this._pathTracerShader = new Shader(pathTracerVert, pathTracerFrag);
     this._pathTracerUniforms = {
@@ -61,10 +63,6 @@ export default class PathTracer {
     this._pathTracerShader.uniforms = this._pathTracerUniforms
 
     this._settingsService.connectShader(this._pathTracerShader)
-
-    // let lightSphereImage = new Image();
-    // lightSphereImage.onload = () =>
-    // lightSphereImage.src = "./assets/sky-3.jpg";
 
     this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
     this._refreshScreen = false

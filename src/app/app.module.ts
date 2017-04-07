@@ -12,8 +12,9 @@ import {SettingsService} from "./renderer/settings/settings.service";
 import {TopBarComponent} from "./components/top-bar/top-bar.component";
 import {RenderSettingsComponent} from "./components/settings/render-settings/render-settings.component";
 import {SettingAttributeComponent} from "./components/settings/setting-attribute/setting-attribute.component";
-import {FractalSettingsComponent} from "./components/settings/fractal-settings/fractal-settings.component";
 import {SettingsContainerComponent} from "./components/settings/settings-container/settings-container.component";
+import {FractalSettingsComponent} from "./components/settings/fractal-settings/fractal-settings.component";
+import {SceneService} from "./renderer/scene.service";
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {SettingsContainerComponent} from "./components/settings/settings-contain
   ],
   providers: [
     RenderService,
-    SettingsService
+    SettingsService,
+    SceneService
   ],
   bootstrap: [AppComponent]
 })

@@ -4,6 +4,8 @@ import {gl} from "./render-context";
 
 export default class FBO extends RenderTarget {
   private _texture: WebGLTexture;
+  private _textureData: Uint8Array;
+  private _writeToTexture: boolean = false;
   private _framebuffer: WebGLFramebuffer;
 
   constructor(shader: Shader, sizeX: number, sizeY: number) {
@@ -32,6 +34,10 @@ export default class FBO extends RenderTarget {
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
 
+    if (this._writeToTexture) {
+      gl.readPixels(0, 0, this.sizeX, this.sizeY, gl.RGBA, gl.UNSIGNED_BYTE, this._textureData);
+    }
+
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
   }
 
@@ -44,6 +50,8 @@ export default class FBO extends RenderTarget {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, this.sizeX, this.sizeY, 0, gl.RGBA, gl.FLOAT, null);
     gl.bindTexture(gl.TEXTURE_2D, null);
+
+    this._textureData = new Uint8Array(this.sizeX * this.sizeY * 4);
   }
 
   public resize(sizeX: number, sizeY: number) {
@@ -51,5 +59,10 @@ export default class FBO extends RenderTarget {
     this.resetTexture()
   }
 
+  public enableWriteToTexture() {
+    this._writeToTexture = true
+  }
+
   get texture(): WebGLTexture { return this._texture; }
+  get textureData(): Uint8Array { return this._textureData }
 }

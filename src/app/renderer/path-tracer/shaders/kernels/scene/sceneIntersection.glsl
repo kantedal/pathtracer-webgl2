@@ -3,7 +3,7 @@
 
 bool sceneIntersection(Ray ray, inout Collision collision) {
   Collision closest_collision;
-  closest_collision.distance = 1000.0;
+  closest_collision.distance = 10000.0;
 
   Object object;
   int collision_count = 0;
