@@ -1,0 +1,14 @@
+.spinner {
+  margin: auto;
+  z-index: 1000;
+  width: 100px;
+  height: 100px;
+  margin-top: 300px;
+}
+.loader {
+  position: absolute;
+  background: rgba(0,0,0,0.6);
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+}

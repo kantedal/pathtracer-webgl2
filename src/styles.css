@@ -85,3 +85,15 @@ canvas:active {
 color-picker {
 
 }
+
+.mat-dialog-container {
+  font-weight: 200;
+  background: rgba(0,0,0,0.2);
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  color: #fff;
+}
+
+.mat-spinner path {
+  stroke: #ffc107;
+  stroke-width: 6px;
+}

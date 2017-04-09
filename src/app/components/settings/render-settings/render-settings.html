@@ -1,5 +1,20 @@
 <div class="left-pane">
   <div class="scroll">
+    <settings-container title="Render status" [expanded]="true">
+      <div class="property-box">
+        <span class="property-header">Start/stop render</span>
+        <span *ngIf="!(settingsService.shouldRenderSub.asObservable() | async)">
+          <button (click)="settingsService.shouldRender = true" md-icon-button><md-icon style="color: #fff">play_arrow</md-icon></button>
+        </span>
+        <span *ngIf="settingsService.shouldRenderSub.asObservable() | async">
+          <button (click)="settingsService.shouldRender = false" md-icon-button><md-icon style="color: #fff">pause</md-icon></button>
+        </span>
+      </div>
+      <div class="property-box" style="margin-top: 10px">
+        <span class="property-header">Rendered samples</span>
+        <span class="property-header" style="font-weight: 400">{{renderService.samples}}</span>
+      </div>
+    </settings-container>
     <settings-container title="Render settings" [expanded]="true">
       <div class="property-box">
         <div class="property-header">Render type</div>
@@ -24,16 +39,6 @@
         <div class="property-header">Render view zoom</div>
         <md-slider min="20" max="300" step="0.1" value="100.0" (input)="zoomSliderUpdate($event)" #zoomSlider></md-slider>
         <span class="data-label">{{settingsService.zoomSub.asObservable() | async }}x</span>
-      </div>
-
-      <div class="property-box">
-        <span class="property-header">Start/stop render</span>
-        <span *ngIf="!(settingsService.shouldRenderSub.asObservable() | async)">
-          <button (click)="settingsService.shouldRender = true" md-icon-button><md-icon style="color: #fff">play_arrow</md-icon></button>
-        </span>
-        <span *ngIf="settingsService.shouldRenderSub.asObservable() | async">
-          <button (click)="settingsService.shouldRender = false" md-icon-button><md-icon style="color: #fff">pause</md-icon></button>
-        </span>
       </div>
     </settings-container>
 

@@ -6,14 +6,14 @@ import Shader from '../utils/shader'
 import {RenderEffectsSetting} from "./render-effects-settings";
 import MaterialSettings from "./material-settings";
 import {BloomSettings} from "./post-effects-settings/bloom-settings";
+import {Object3d} from "../path-tracer/models/primitives/object3d";
 
 @Injectable()
 export class SettingsService {
   refreshScreen: boolean = false;
-  scaledDown: boolean = false;
-  scaleDownTimer;
 
   // Renderer attributes
+  isLoadingSub: BehaviorSubject<boolean> = new BehaviorSubject(false)
   renderTypeSub: BehaviorSubject<number> = new BehaviorSubject(0)
   shouldRenderSub: BehaviorSubject<boolean> = new BehaviorSubject(false)
   resolutionSub: BehaviorSubject<GLM.IArray>
@@ -37,6 +37,9 @@ export class SettingsService {
   // Material attributes
   materialTypeSub: BehaviorSubject<number> = new BehaviorSubject(5)
   materialColorSub: BehaviorSubject<GLM.IArray> = new BehaviorSubject(vec3.fromValues(1.0, 1.0, 1.0))
+
+  // Ray tracing attributes
+  selectedObjectSub: BehaviorSubject<Object3d> = new BehaviorSubject(null)
 
   constructor() {
     this.resolutionSub = new BehaviorSubject(vec2.fromValues(256, 256))

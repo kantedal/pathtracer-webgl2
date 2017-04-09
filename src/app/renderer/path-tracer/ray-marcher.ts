@@ -21,7 +21,7 @@ export default class RayMarcher {
   private _shouldRender = true
 
   constructor(private _settingsService: SettingsService) {
-    this._camera = new Camera(vec3.fromValues(-2,0,0), vec3.fromValues(1,0,0))
+    this._camera = new Camera(this._settingsService, vec3.fromValues(-2,0,0), vec3.fromValues(1,0,0))
     this._navigator = new CameraNavigator(this._camera, _settingsService)
     this._navigator.rotationYFactor = 1.0
     this._navigator.zoomFactor = 1.0
@@ -97,8 +97,8 @@ export default class RayMarcher {
 
   public render() {
     if (this._shouldRender) {
-      this._frameBuffer.scaleFactor = this._settingsService.scaledDown ? 0.5 : 1.0
-      this._pathTracerUniforms['resolution'].value = this._settingsService.scaledDown ? [this._frameBuffer.sizeX * 0.5, this._frameBuffer.sizeY * 0.5] : [this._frameBuffer.sizeX, this._frameBuffer.sizeY]
+      this._frameBuffer.scaleFactor = 1.0
+      this._pathTracerUniforms['resolution'].value = [this._frameBuffer.sizeX, this._frameBuffer.sizeY]
 
       this._pathTracerUniforms['u_accumulated_texture'].value = this._frameBuffer.texture
 
@@ -121,7 +121,6 @@ export default class RayMarcher {
         this._camera.hasChanged = false
         this._refreshScreen = false
         this._pathTracerShader.needsUpdate = false
-        this._settingsService.scaleDown()
       }
       else {
         this._pathTracerUniforms['samples'].value += 1.0
@@ -166,4 +165,5 @@ export default class RayMarcher {
 
   get frameBuffer(): PingPongFBO { return this._frameBuffer }
   get renderTexture(): WebGLTexture { return this._frameBuffer.texture }
+  get samples(): number { return this._pathTracerUniforms['samples'].value }
 }

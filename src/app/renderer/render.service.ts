@@ -52,9 +52,9 @@ export class RenderService {
     this._stats.domElement.style.top = '0px'
     document.body.appendChild(this._stats.domElement)
 
-    this.sceneService.init(canvas)
-    this.sceneService.loadScene().then((sceneTextures: ISceneTextures) => {
-      this._rayTracer = new RayTracer(this.settingsService, sceneTextures)
+    this.sceneService.init()
+    this.sceneService.loadScene(1).then((sceneTextures: ISceneTextures) => {
+      this._rayTracer = new RayTracer(this.settingsService, this.sceneService, sceneTextures)
       this._startTime = moment().valueOf()
       this._sceneLoaded = true
     })
@@ -99,7 +99,24 @@ export class RenderService {
     this._rayTracer.loadDomeTexture(image)
   }
 
+  public loadNewScene(sceneId: number) {
+    this.sceneService.loadScene(sceneId).then((sceneTextures: ISceneTextures) => {
+      this._rayTracer = new RayTracer(this.settingsService, this.sceneService, sceneTextures)
+      this._startTime = moment().valueOf()
+      this._sceneLoaded = true
+    })
+  }
+
   get canvas(): any { return this._canvas }
   get renderTexture(): WebGLTexture { return this._compositionProgram.renderTexture }
   get textureData(): any { return this._compositionProgram.textureData }
+  get rayTracer(): RayTracer { return this._rayTracer }
+  get samples(): number {
+    if (this._rayTracer != null) {
+      let rayTracing = this.settingsService.renderTypeSub.getValue() == 0;
+      return rayTracing ? this._rayTracer.samples : this._rayMarcher.samples
+    }
+
+    return 0
+  }
 }

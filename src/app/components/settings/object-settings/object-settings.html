@@ -1,0 +1,127 @@
+<div class="right-pane" *ngIf="rayTracingMode">
+  <div class="scroll">
+    <settings-container title="Scene settings" [expanded]="true">
+      <div class="property-header">Default scenes</div>
+      <md-select [(ngModel)]="sceneId" class="dropdown" (change)="sceneUpdate()">
+        <md-option *ngFor="let type of defaultScenes" [value]="type.id">
+          {{ type.name }}
+        </md-option>
+      </md-select>
+    </settings-container>
+
+    <div *ngIf="rayTracingMode && selectedObject != null">
+      <settings-container title="Object settings" [expanded]="true">
+        <div class="vec3-header">Position</div>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="position[0]" mdInput (change)="positionUpdate()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="position[1]" mdInput (change)="positionUpdate()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="position[2]" mdInput (change)="positionUpdate()" type="number">
+        </md-input-container>
+
+        <div class="vec3-header">Scale</div>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="scale[0]" mdInput (change)="scaleUpdate()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="scale[1]" mdInput (change)="scaleUpdate()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="scale[2]" mdInput (change)="scaleUpdate()" type="number">
+        </md-input-container>
+
+        <div class="vec3-header">Rotation</div>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="rotation[0]" mdInput (change)="updateColor()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="rotation[1]" mdInput (change)="updateColor()" type="number">
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="vec3-input" [(ngModel)]="rotation[2]" mdInput (change)="updateRotation()" type="number">
+        </md-input-container>
+      </settings-container>
+
+      <settings-container title="Object material" [expanded]="true">
+        <div class="property-header">Material type</div>
+        <md-select [(ngModel)]="materialType" class="dropdown" (change)="materialUpdate()">
+          <md-option *ngFor="let type of materials" [value]="type.id">
+            {{ type.name }}
+          </md-option>
+        </md-select>
+
+        <!-- MATERIAL COLOR -->
+        <div>
+          <div class="property-header">
+            Material color
+            <div class="color-circle" [style.background-color]="'rgba(' + materialColor[0] + ',' + materialColor[1] + ',' + materialColor[2] + ',1)'"></div>
+          </div>
+
+          <md-input-container dividerColor="accent" mdSuffix="px">
+            <input class="color-input" [(ngModel)]="materialColor[0]" mdInput (change)="materialUpdate()" type="number">
+          </md-input-container>
+          <md-input-container dividerColor="accent" mdSuffix="px">
+            <input class="color-input" [(ngModel)]="materialColor[1]" mdInput (change)="materialUpdate()" type="number">
+          </md-input-container>
+          <md-input-container dividerColor="accent" mdSuffix="px">
+            <input class="color-input" [(ngModel)]="materialColor[2]" mdInput (change)="materialUpdate()" type="number">
+          </md-input-container>
+        </div>
+
+
+        <!-- DIFFUSE MATERIAL -->
+        <div *ngIf="materialType == 0">
+          <div class="property-header">Albedo</div>
+          <md-slider
+            min="0"
+            max="20"
+            step="0.01"
+            value="{{materialExtraParameter1}}"
+            (input)="materialExtraParameter1 = $event.value; materialUpdate()"
+          ></md-slider>
+          <span class="data-label">{{materialExtraParameter1 | number: '1.2-2'}}</span>
+
+          <div class="property-header">Roughness</div>
+          <md-slider
+            min="0"
+            max="20"
+            step="0.01"
+            value="{{materialExtraParameter2}}"
+            (input)="materialExtraParameter2 = $event.value; materialUpdate()"
+          ></md-slider>
+          <span class="data-label">{{materialExtraParameter2 | number: '1.2-2'}}</span>
+        </div>
+
+        <!-- GLOSSY MATERIAL -->
+        <div *ngIf="materialType == 5">
+          <div class="property-header">Shininess</div>
+          <md-slider
+            min="0"
+            max="100"
+            step="0.01"
+            value="{{materialExtraParameter1}}"
+            (input)="materialExtraParameter1 = $event.value; materialUpdate()"
+          ></md-slider>
+          <span class="data-label">{{materialExtraParameter1 | number: '1.2-2'}}</span>
+        </div>
+
+        <!-- Emission MATERIAL -->
+        <div *ngIf="materialType == 2">
+          <div class="property-header">Emission rate</div>
+          <md-slider
+            min="0"
+            max="100"
+            step="0.01"
+            value="{{materialEmission}}"
+            (input)="materialEmission = $event.value; materialUpdate()"
+          ></md-slider>
+          <span class="data-label">{{materialEmission | number: '1.2-2'}}</span>
+        </div>
+      </settings-container>
+    </div>
+
+  </div>
+</div>

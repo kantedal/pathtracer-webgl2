@@ -1,4 +1,6 @@
 import Ray from "./ray";
+import {SettingsService} from "../../settings/settings.service";
+import {rotationMatrixVector} from "../../utils/rotation-matrix-vector";
 
 export default class Camera {
   private _position: GLM.IArray
@@ -7,20 +9,22 @@ export default class Camera {
   private _hasChanged: boolean
   private _camera_right: GLM.IArray
   private _camera_up: GLM.IArray
+  private _resolution: GLM.IArray
   yawRotation: number = 0.0;
   pitchRotation: number = 0.0;
 
-  constructor(position: GLM.IArray, look_at: GLM.IArray) {
+  constructor(settingsService: SettingsService, position: GLM.IArray, look_at: GLM.IArray) {
     this._position = position
     this._look_at = look_at
     this._direction = vec3.fromValues(0,0,0)
     this._hasChanged = false
+    settingsService.resolutionSub.asObservable().subscribe((res: GLM.IArray) => this._resolution = res)
     this.update()
   }
 
   public createRayFromPixel(pixel_position: GLM.IArray) {
-    let width = 512.0
-    let height = 512.0
+    let width = this._resolution[0]
+    let height = this._resolution[1]
 
     let i = (pixel_position[0] / width) - 0.5
     let j = (pixel_position[1] / height) - 0.5
@@ -31,10 +35,15 @@ export default class Camera {
     let dir_pos = vec3.fromValues(0,0,0)
     let image_point = vec3.fromValues(0,0,0)
 
+    let rotMat = mat3.create()
+    let dir = vec3.create()
+    mat3.multiply(rotMat, rotationMatrixVector(vec3.fromValues(0,1,0), this.yawRotation), rotationMatrixVector(vec3.fromValues(0,0,1), this.pitchRotation))
+    vec3.transformMat3(dir, this._direction, rotMat)
+
     vec3.scale(camera_right, this._camera_right, i * 1.5)
     vec3.scale(camera_up, this._camera_up, j * 1.5)
     vec3.add(right_up, camera_right, camera_up)
-    vec3.add(dir_pos, this._position, this._direction)
+    vec3.add(dir_pos, this._position, dir)
     vec3.add(image_point, right_up, dir_pos)
 
     let direction = vec3.fromValues(0,0,0)

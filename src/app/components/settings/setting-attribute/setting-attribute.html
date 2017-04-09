@@ -27,12 +27,6 @@
     <md-input-container dividerColor="accent" mdSuffix="px">
       <input class="color-input" [(ngModel)]="blueClr" mdInput (change)="updateColor()" type="number">
     </md-input-container>
-    <!--<input-->
-      <!--class="color-picker"-->
-      <!--[cpPosition]="'right'"-->
-      <!--[(colorPicker)]="color"-->
-      <!--[style.background]="color"-->
-      <!--(colorPickerChange)="updateAttribute(hexToRgb($event))"/>-->
   </div>
 
   <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_DROPDOWN'">

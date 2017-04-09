@@ -1,5 +1,12 @@
+<div class="loader" *ngIf="settingsService.isLoadingSub | async">
+  <md-spinner class="spinner"></md-spinner>
+</div>
+
 <canvas width="512" height="512" id="renderCanvas" #renderCanvas></canvas>
 <top-bar></top-bar>
 <fractal-settings></fractal-settings>
+<object-settings></object-settings>
 <render-options></render-options>
 <!--<bottom-bar></bottom-bar>-->
+
+<!--<loading-dialog></loading-dialog>-->

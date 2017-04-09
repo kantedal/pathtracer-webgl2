@@ -6,6 +6,7 @@ import {SettingsService} from "../settings/settings.service";
 import Camera from "./models/camera";
 import {CameraNavigator} from "../camera-navigator";
 import {gl} from "../utils/render-context";
+import {SceneService} from "../scene.service";
 
 /*
  Shader imports
@@ -15,39 +16,46 @@ const pathTracerVert = require('raw-loader!glslify!./shaders/path-tracer.vert');
 const pathTracerFrag = require('raw-loader!./shaders/ray-tracer.glsl');
 
 export default class RayTracer {
-  private _camera: Camera
   private _navigator: CameraNavigator
   private _pathTracerShader: Shader
   private _frameBuffer: PingPongFBO
   private _pathTracerUniforms: {[name: string]: IUniform}
-  private _refreshScreen: boolean;
+  private _refreshScreen: boolean
   private _shouldRender = true
+
+  // Data textures
+  private _triangleTexture: DataTexture;
+  private _lightTexture: DataTexture;
+  private _materialTexture: DataTexture;
+  private _objectsTexture: DataTexture;
+  private _objectsBVHTexture: DataTexture;
+  private _triangleIndexTexture: DataTexture;
 
   constructor(
     private _settingsService: SettingsService,
+    private _sceneService: SceneService,
     sceneTextures: ISceneTextures
   ) {
-    this._camera = new Camera(vec3.fromValues(10.90, 3.51, 4.00), vec3.fromValues(1.59, 3.79, 2.27))
-    this._navigator = new CameraNavigator(this._camera, _settingsService)
+    this._navigator = new CameraNavigator(this._sceneService.camera, _settingsService)
 
-    let triangleTexture = new DataTexture(2048, 2048, sceneTextures.triangles, "u_triangle_texture")
-    let lightTexture = new DataTexture(128, 128, sceneTextures.light_triangles, "u_light_texture")
-    let materialTexture = new DataTexture(512, 512, sceneTextures.materials, "u_material_texture")
-    let triangleIndexTexture = new DataTexture(1024, 1024, sceneTextures.triangle_indices, "u_triangle_index_texture")
-    let objectBVHTexture = new DataTexture(2048, 2048, sceneTextures.objects_bvh, "u_objects_bvh_texture")
-    let objectsTexture = new DataTexture(512, 512, sceneTextures.objects, "u_objects_texture")
+    this._triangleTexture = new DataTexture(2048, 2048, sceneTextures.triangles, "u_triangle_texture")
+    this._lightTexture = new DataTexture(128, 128, sceneTextures.light_triangles, "u_light_texture")
+    this._materialTexture = new DataTexture(512, 512, sceneTextures.materials, "u_material_texture")
+    this._triangleIndexTexture = new DataTexture(1024, 1024, sceneTextures.triangle_indices, "u_triangle_index_texture")
+    this._objectsBVHTexture = new DataTexture(2048, 2048, sceneTextures.objects_bvh, "u_objects_bvh_texture")
+    this._objectsTexture = new DataTexture(512, 512, sceneTextures.objects, "u_objects_texture")
 
     this._pathTracerShader = new Shader(pathTracerVert, pathTracerFrag);
     this._pathTracerUniforms = {
       // Data textures
       u_accumulated_texture: { type: TEXTURE_TYPE, value: null },
       u_dome_texture: { type: TEXTURE_TYPE, value: null},
-      u_triangle_texture: { type: TEXTURE_TYPE, value: triangleTexture.texture },
-      u_light_texture: { type: TEXTURE_TYPE, value: lightTexture.texture },
-      u_material_texture: { type: TEXTURE_TYPE, value: materialTexture.texture },
-      u_triangle_index_texture: { type: TEXTURE_TYPE, value: triangleIndexTexture.texture },
-      u_objects_bvh_texture: { type: TEXTURE_TYPE, value: objectBVHTexture.texture },
-      u_objects_texture: { type: TEXTURE_TYPE, value: objectsTexture.texture },
+      u_triangle_texture: { type: TEXTURE_TYPE, value: this._triangleTexture.texture },
+      u_light_texture: { type: TEXTURE_TYPE, value: this._lightTexture.texture },
+      u_material_texture: { type: TEXTURE_TYPE, value: this._materialTexture.texture },
+      u_triangle_index_texture: { type: TEXTURE_TYPE, value: this._triangleIndexTexture.texture },
+      u_objects_bvh_texture: { type: TEXTURE_TYPE, value: this._objectsBVHTexture.texture },
+      u_objects_texture: { type: TEXTURE_TYPE, value: this._objectsTexture.texture },
 
       // Uniforms
       time: { type: FLOAT_TYPE, value: 1.0 },
@@ -61,10 +69,10 @@ export default class RayTracer {
       // Camera
       u_cameraYaw: { type: FLOAT_TYPE, value: 0.0},
       u_cameraPitch: { type: FLOAT_TYPE, value: 0.0},
-      camera_position: { type: VEC3_TYPE, value: this._camera.position },
-      camera_direction: { type: VEC3_TYPE, value: this._camera.direction },
-      camera_right: { type: VEC3_TYPE, value: this._camera.camera_right },
-      camera_up: { type: VEC3_TYPE, value: this._camera.camera_up },
+      camera_position: { type: VEC3_TYPE, value: this._sceneService.camera.position },
+      camera_direction: { type: VEC3_TYPE, value: this._sceneService.camera.direction },
+      camera_right: { type: VEC3_TYPE, value: this._sceneService.camera.camera_right },
+      camera_up: { type: VEC3_TYPE, value: this._sceneService.camera.camera_up },
     };
     this._pathTracerShader.uniforms = this._pathTracerUniforms
     this._settingsService.connectShader( this._pathTracerShader)
@@ -119,18 +127,18 @@ export default class RayTracer {
     if (this._shouldRender) {
       this._pathTracerUniforms['u_accumulated_texture'].value = this._frameBuffer.texture
 
-      this._pathTracerUniforms['u_cameraYaw'].value = this._camera.yawRotation
-      this._pathTracerUniforms['u_cameraPitch'].value = this._camera.pitchRotation
-      this._pathTracerUniforms['camera_position'].value = this._camera.position
-      this._pathTracerUniforms['camera_direction'].value = this._camera.direction
-      this._pathTracerUniforms['camera_right'].value = this._camera.camera_right
-      this._pathTracerUniforms['camera_up'].value = this._camera.camera_up
+      this._pathTracerUniforms['u_cameraYaw'].value = this._sceneService.camera.yawRotation
+      this._pathTracerUniforms['u_cameraPitch'].value = this._sceneService.camera.pitchRotation
+      this._pathTracerUniforms['camera_position'].value = this._sceneService.camera.position
+      this._pathTracerUniforms['camera_direction'].value = this._sceneService.camera.direction
+      this._pathTracerUniforms['camera_right'].value = this._sceneService.camera.camera_right
+      this._pathTracerUniforms['camera_up'].value = this._sceneService.camera.camera_up
 
       this._frameBuffer.render();
 
-      if (this._camera.hasChanged || this._refreshScreen || this._pathTracerShader.needsUpdate) {
+      if (this._sceneService.camera.hasChanged || this._refreshScreen || this._pathTracerShader.needsUpdate) {
         this._pathTracerUniforms['samples'].value = 0.0
-        this._camera.hasChanged = false
+        this._sceneService.camera.hasChanged = false
         this._pathTracerShader.needsUpdate = false
         this._refreshScreen = false
       }
@@ -142,4 +150,15 @@ export default class RayTracer {
   }
 
   get renderTexture(): WebGLTexture { return this._frameBuffer.texture; }
+  get pathTracerUniforms(): {[p: string]: IUniform} { return this._pathTracerUniforms }
+  set pathTracerUniforms(value: {[p: string]: IUniform}) { this._pathTracerUniforms = value }
+  set refreshScreen(value: boolean) { this._refreshScreen = value; }
+
+  get triangleIndexTexture(): DataTexture { return this._triangleIndexTexture; }
+  get objectsBVHTexture(): DataTexture { return this._objectsBVHTexture; }
+  get objectsTexture(): DataTexture { return this._objectsTexture; }
+  get materialTexture(): DataTexture { return this._materialTexture; }
+  get lightTexture(): DataTexture { return this._lightTexture; }
+  get triangleTexture(): DataTexture { return this._triangleTexture; }
+  get samples(): number { return this._pathTracerUniforms['samples'].value }
 }
