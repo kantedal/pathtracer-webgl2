@@ -23,7 +23,8 @@ export default class DataTexture {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB32F, this._width, this._height, 0, gl.RGB, gl.FLOAT, this._data);
   }
 
-  get texture() { return this._texture; }
-  get width(): number { return this._width; }
-  get height(): number { return this._height; }
+  get texture() { return this._texture }
+  get width(): number { return this._width }
+  get height(): number { return this._height }
+  get textureData(): Float32Array { return this._data }
 }

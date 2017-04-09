@@ -1,0 +1,73 @@
+<div class="left-pane">
+  <div class="scroll">
+    <settings-container title="Render status" [expanded]="true">
+      <div class="property-box">
+        <span class="property-header">Start/stop render</span>
+        <span *ngIf="!(settingsService.shouldRenderSub.asObservable() | async)">
+          <button (click)="settingsService.shouldRender = true" md-icon-button><md-icon style="color: #fff">play_arrow</md-icon></button>
+        </span>
+        <span *ngIf="settingsService.shouldRenderSub.asObservable() | async">
+          <button (click)="settingsService.shouldRender = false" md-icon-button><md-icon style="color: #fff">pause</md-icon></button>
+        </span>
+      </div>
+      <div class="property-box" style="margin-top: 10px">
+        <span class="property-header">Rendered samples</span>
+        <span class="property-header" style="font-weight: 400">{{renderService.samples}}</span>
+      </div>
+    </settings-container>
+    <settings-container title="Render settings" [expanded]="true">
+      <div class="property-box">
+        <div class="property-header">Render type</div>
+        <md-select [(ngModel)]="renderType" class="dropdown" (change)="settingsService.renderTypeSub.next($event.value)">
+          <md-option *ngFor="let renderType of renderTypes" [value]="renderType.id">
+            {{ renderType.name }}
+          </md-option>
+        </md-select>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Resolution</div>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="resolution-input" [(ngModel)]="resolutionWidth" mdInput (change)="resolutionUpdate()" type="number" #resolutionWidth>
+        </md-input-container>
+        <md-input-container dividerColor="accent" mdSuffix="px">
+          <input class="resolution-input" [(ngModel)]="resolutionHeight" mdInput (change)="resolutionUpdate()" type="number" #resolutionHeight>
+        </md-input-container>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Render view zoom</div>
+        <md-slider min="20" max="300" step="0.1" value="100.0" (input)="zoomSliderUpdate($event)" #zoomSlider></md-slider>
+        <span class="data-label">{{settingsService.zoomSub.asObservable() | async }}x</span>
+      </div>
+    </settings-container>
+
+    <settings-container title="Lightning" [expanded]="true">
+      <div *ngFor="let attribute of settingsService.lightSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+
+      <div class="property-box">
+        <div class="property-header">Custom light dome texture</div>
+        <input style="color: #fff; width: 170px; margin-top: 10px; font-weight: 200" type="file" (change)="imageUpload($event)" />
+      </div>
+
+    </settings-container>
+
+    <settings-container title="Render effects" [expanded]="false">
+      <div *ngFor="let attribute of settingsService.renderEffectSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+    </settings-container>
+
+    <settings-container title="Post effects" [expanded]="false">
+      <div *ngFor="let attribute of settingsService.bloomSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
+      </div>
+    </settings-container>
+
+    <div class="options-pane">
+      <button class="pane-button" (click)="downloadImage()" md-raised-button>Save image</button>
+    </div>
+  </div>
+</div>

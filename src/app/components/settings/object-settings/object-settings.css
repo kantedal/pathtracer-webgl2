@@ -1,0 +1,59 @@
+.vec3-input {
+  color: #fff;
+  font-weight: 200;
+  font-size: 12px;
+  width: 50px;
+  text-align: center;
+}
+
+.vec3-header {
+  font-family: Roboto, serif;
+  font-size: 12px;
+  font-weight: 200;
+  line-height: 12px;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.dropdown {
+  color: #fff;
+  width: calc(100% - 10px);
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 5px;
+}
+
+.color-picker {
+  border: none;
+  border-radius: 4px;
+  width: calc(100% - 10px);
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 10px;
+  opacity: 0.3;
+}
+
+.property-toggle {
+  color: #fff;
+  width: 50px;
+  font-weight: 200;
+  font-family: Roboto, serif;
+  font-size: 12px;
+}
+
+.color-input {
+  color: #fff;
+  font-weight: 200;
+  font-size: 12px;
+  width: 40px;
+  text-align: center;
+}
+
+.color-circle {
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  background: yellow;
+  display: inline-block;
+  margin-left: 10px;
+}

@@ -1,3 +1,5 @@
+.property-box {
+}
 .color-picker {
   border: none;
   border-radius: 4px;
@@ -8,10 +10,10 @@
   opacity: 0.3;
 }
 
-.property-toggle {
+.dropdown {
   color: #fff;
-  width: 50px;
-  font-weight: 200;
-  font-family: Roboto, serif;
-  font-size: 12px;
+  width: calc(100% - 10px);
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 5px;
 }

@@ -1,41 +1,49 @@
-import 'hammerjs';
-
-import { BrowserModule } from '@angular/platform-browser'
-import { NgModule } from '@angular/core'
-import { FormsModule } from '@angular/forms'
-import { HttpModule } from '@angular/http'
-import { MaterialModule } from '@angular/material'
-import {ColorPickerModule} from 'angular2-color-picker';
-
-import { AppComponent } from './app.component'
-import {RenderService} from "./renderer/render.service"
-import {BottomBarComponent} from "./components/bottom-bar/bottom-bar.component"
-import {SettingsService} from "./renderer/settings/settings.service"
+import "hammerjs";
+import {BrowserModule} from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {HttpModule} from "@angular/http";
+import {MaterialModule, MdDialogModule} from "@angular/material";
+import {AppComponent} from "./app.component";
+import {RenderService} from "./renderer/render.service";
+import {BottomBarComponent} from "./components/bottom-bar/bottom-bar.component";
+import {SettingsService} from "./renderer/settings/settings.service";
 import {TopBarComponent} from "./components/top-bar/top-bar.component";
-import {FractalOptionsComponent} from "./components/fractal-options/fractal-options.component";
-import {RenderOptionsComponent} from "./components/render-options/render-options.component";
-import {SettingAttributeComponent} from './components/setting-attribute/setting-attribute.component'
-
+import {RenderSettingsComponent} from "./components/settings/render-settings/render-settings.component";
+import {SettingAttributeComponent} from "./components/settings/setting-attribute/setting-attribute.component";
+import {SettingsContainerComponent} from "./components/settings/settings-container/settings-container.component";
+import {FractalSettingsComponent} from "./components/settings/fractal-settings/fractal-settings.component";
+import {SceneService} from "./renderer/scene.service";
+import {ObjectSettingsComponent} from "./components/settings/object-settings/object-settings.component";
+import {LoadingDialogComponent} from "./components/loading-dialog/loading-dialog.component";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
     AppComponent,
     TopBarComponent,
-    FractalOptionsComponent,
-    RenderOptionsComponent,
+    FractalSettingsComponent,
+    RenderSettingsComponent,
     BottomBarComponent,
-    SettingAttributeComponent
+    SettingAttributeComponent,
+    SettingsContainerComponent,
+    ObjectSettingsComponent,
+    LoadingDialogComponent
+  ],
+  entryComponents: [
+    LoadingDialogComponent
   ],
   imports: [
+    BrowserAnimationsModule,
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule,
-    ColorPickerModule
+    MaterialModule
   ],
   providers: [
     RenderService,
-    SettingsService
+    SettingsService,
+    SceneService
   ],
   bootstrap: [AppComponent]
 })

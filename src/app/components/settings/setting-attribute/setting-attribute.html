@@ -1,0 +1,52 @@
+<div class="property-box">
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_SLIDER'">
+    <div class="property-header">{{attribute.getValue().name}}</div>
+
+    <md-slider
+      min="{{attribute.getValue().uiAttributes.minValue}}"
+      max="{{attribute.getValue().uiAttributes.maxValue}}"
+      step="{{attribute.getValue().uiAttributes.stepSize}}"
+      value="{{(attribute | async ).value}}"
+      (input)="updateAttribute($event.value)"
+    ></md-slider>
+    <span class="data-label">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>
+  </div>
+
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_COLORPICKER'">
+    <div class="property-header">
+      {{attribute.getValue().name}}
+      <div class="color-circle" [style.background-color]="'rgba(' + redClr + ',' + greenClr + ',' + blueClr + ',1)'"></div>
+    </div>
+
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="redClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="greenClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="color-input" [(ngModel)]="blueClr" mdInput (change)="updateColor()" type="number">
+    </md-input-container>
+  </div>
+
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_DROPDOWN'">
+    <div class="property-header">{{attribute.getValue().name}}</div>
+    <md-select [(ngModel)]="dropdownSelection" class="dropdown" (change)="updateDropdown()">
+      <md-option *ngFor="let type of attribute.getValue().uiAttributes.alternatives" [value]="type.id">
+        {{ type.name }}
+      </md-option>
+    </md-select>
+  </div>
+
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_TOGGLE'" style="margin-top: 10px;">
+    <span style="height: 50px;">
+       <md-slide-toggle [checked]="enabled" class="property-toggle" (change)="updateAttribute($event.checked ? 1.0 : 0.0)">
+         <span style="padding-left: 35px;">
+            {{attribute.getValue().name}}
+         </span>
+       </md-slide-toggle>
+    </span>
+
+  </div>
+
+</div>

@@ -34,15 +34,15 @@ vec3 pathTrace(Ray ray) {
   float fogDistance = 0.0;
   vec3 accumulated_color = vec3(0,0,0);
   Collision collision;
-  Material collision_material = Material(materialColor, int(materialType), 0.0, 1.0, 1.0);
+  Material collision_material = Material(materialColor, int(materialType), 0.0, materialExtra1, materialExtra2);
 
   for (float iteration = 0.0; iteration < 3.0; iteration++) {
     float distribution = 1.0;
 
     if (!rayMarch(ray, collision)) {
-      vec3 lightSphereColor = lightSphereContribution(ray);
+      vec3 lightSphereColor = mix(globalLightColor, lightSphereContribution(ray), imageBasedLightning);
       if (iteration == 0.0) {
-        return fogColor;
+        return mix(fogColor, lightSphereColor, fillBackgroundWithLight);
       }
       else {
         float lightPower = (globalLightPower - 0.5) * globalLightContrast + 0.5;

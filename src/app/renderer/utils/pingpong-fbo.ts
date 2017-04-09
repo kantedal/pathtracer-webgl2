@@ -4,6 +4,7 @@ import {gl} from "./render-context";
 
 export default class PingPongFBO extends RenderTarget {
   private _textures: WebGLTexture[];
+  private _textureData: Uint8Array;
   private _currentTexture: number;
   private _framebuffer: WebGLFramebuffer;
 
@@ -31,7 +32,9 @@ export default class PingPongFBO extends RenderTarget {
 
     this._shader.update();
 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    gl.drawArrays(gl.TRIANGLES, 0, 6)
+
+    //gl.readPixels(0, 0, this.sizeX, this.sizeY, gl.RGBA, gl.UNSIGNED_BYTE, this._textureData);
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
@@ -61,8 +64,11 @@ export default class PingPongFBO extends RenderTarget {
     gl.bindTexture(gl.TEXTURE_2D, null);
 
     this._currentTexture = 0;
+
+    this._textureData = new Uint8Array(this.sizeX * this.sizeY * 4);
   }
 
-  get texture(): WebGLTexture { return this._textures[1 - this._currentTexture]; }
-  get lastTexture(): WebGLTexture { return this._textures[1 - this._currentTexture]; }
+  get texture(): WebGLTexture { return this._textures[1 - this._currentTexture] }
+  get lastTexture(): WebGLTexture { return this._textures[1 - this._currentTexture] }
+  get textureData(): Uint8Array { return this._textureData }
 }

@@ -1,6 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
+canvas {
+  cursor: crosshair;
+}
+
+canvas:active {
+  cursor: move;
+}
 
 .mat-select-value {
   color: #fff;
@@ -16,6 +23,8 @@
   left: 0;
   top: 0;
   height: 100%;
+  overflow: hidden;
+  width: 215px;
 }
 
 .right-pane {
@@ -23,6 +32,14 @@
   right: 0;
   top: 0;
   height: 100%;
+  overflow: hidden;
+  width: 202px;
+}
+
+.scroll {
+  height: 100%;
+  overflow-y: scroll;
+  width: 230px;
 }
 
 .options-pane {
@@ -31,6 +48,7 @@
   border-radius: 3px;
   width: 170px;
   background: rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 .info-header {
@@ -62,4 +80,20 @@
   font-family: Roboto, "Helvetica Neue", sans-serif !important;
   font-size: 12px !important;
   font-weight: 200 !important;
+}
+
+color-picker {
+
+}
+
+.mat-dialog-container {
+  font-weight: 200;
+  background: rgba(0,0,0,0.2);
+  font-family: Roboto, "Helvetica Neue", sans-serif !important;
+  color: #fff;
+}
+
+.mat-spinner path {
+  stroke: #ffc107;
+  stroke-width: 6px;
 }

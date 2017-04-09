@@ -4,21 +4,26 @@ import {MengerSponge} from './fractal-settings/menger-sponge'
 import LightSettings from './light-settings'
 import Shader from '../utils/shader'
 import {RenderEffectsSetting} from "./render-effects-settings";
+import MaterialSettings from "./material-settings";
+import {BloomSettings} from "./post-effects-settings/bloom-settings";
+import {Object3d} from "../path-tracer/models/primitives/object3d";
 
 @Injectable()
 export class SettingsService {
   refreshScreen: boolean = false;
-  scaledDown: boolean = false;
-  scaleDownTimer;
 
   // Renderer attributes
+  isLoadingSub: BehaviorSubject<boolean> = new BehaviorSubject(false)
+  renderTypeSub: BehaviorSubject<number> = new BehaviorSubject(0)
   shouldRenderSub: BehaviorSubject<boolean> = new BehaviorSubject(false)
   resolutionSub: BehaviorSubject<GLM.IArray>
   zoomSub: BehaviorSubject<number> = new BehaviorSubject(3.0)
 
   // Lighting attributes
-  lightSettings: LightSettings = new LightSettings()
-  renderEffectSettings: RenderEffectsSetting = new RenderEffectsSetting()
+  lightSettings = new LightSettings()
+  renderEffectSettings = new RenderEffectsSetting()
+  bloomSettings = new BloomSettings()
+  materialSettings = new MaterialSettings()
 
   // Fractals
   fractalTypeSub: BehaviorSubject<number> = new BehaviorSubject(0)
@@ -33,6 +38,9 @@ export class SettingsService {
   materialTypeSub: BehaviorSubject<number> = new BehaviorSubject(5)
   materialColorSub: BehaviorSubject<GLM.IArray> = new BehaviorSubject(vec3.fromValues(1.0, 1.0, 1.0))
 
+  // Ray tracing attributes
+  selectedObjectSub: BehaviorSubject<Object3d> = new BehaviorSubject(null)
+
   constructor() {
     this.resolutionSub = new BehaviorSubject(vec2.fromValues(256, 256))
     this._powerObservable = new BehaviorSubject(10.0)
@@ -43,6 +51,8 @@ export class SettingsService {
   public connectShader(shader: Shader) {
     this.lightSettings.connectShader(shader)
     this.renderEffectSettings.connectShader(shader)
+    this.materialSettings.connectShader(shader)
+    this.bloomSettings.connectShader(shader)
   }
 
 

@@ -129,6 +129,8 @@ export default class Shader {
     this.updateUniforms();
   }
 
+  get uniforms() { return this._uniforms }
+
   set program(value: WebGLProgram) {
     this._program = value;
     this.updateUniforms();

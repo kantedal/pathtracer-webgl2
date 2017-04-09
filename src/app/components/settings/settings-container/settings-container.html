@@ -1,0 +1,13 @@
+<div class="options-pane" [ngStyle]="{'height': expanded ? '' : '20px'}">
+  <div (click)="expanded = !expanded" class="expand-button" md-button>
+    <button *ngIf="!expanded" md-icon-button>
+      <md-icon style="">keyboard_arrow_down</md-icon>
+    </button>
+    <button *ngIf="expanded" md-icon-button>
+      <md-icon style="">keyboard_arrow_up</md-icon>
+    </button>
+  </div>
+
+  <div class="info-header">{{title}}</div>
+  <ng-content></ng-content>
+</div>

@@ -1,13 +1,14 @@
 import {Component} from "@angular/core";
-import {SettingsService} from "../../renderer/settings/settings.service";
+import {SettingsService} from "../../../renderer/settings/settings.service";
 const hexRgb = require('hex-rgb');
 
 @Component({
-  selector: 'fractal-options',
-  templateUrl: './fractal-options.html',
-  styleUrls: ['./fractal-options.css']
+  selector: 'fractal-settings',
+  templateUrl: 'fractal-settings.html',
+  styleUrls: ['fractal-settings.css']
 })
-export class FractalOptionsComponent {
+export class FractalSettingsComponent {
+  rayMarchingMode: boolean = false
   materials = [{ id: 0, name: 'Diffuse' }, { id: 5, name: 'Glossy' },  { id: 1, name: 'Specular' }, { id: 2, name: 'Transmission' }]
   selelectedMaterial: number = 0
   materialColor: string = '#ffffff'
@@ -15,6 +16,9 @@ export class FractalOptionsComponent {
   fractals = [{ id: 0, name: 'Mandelbulb' }, { id: 1, name: 'Mengersponge' }]
 
   constructor(public settingsService: SettingsService) {
+    this.settingsService.renderTypeSub.asObservable().subscribe((type: number) => {
+      this.rayMarchingMode = type == 1.0
+    })
   }
 
   powerUpdate(event) {
