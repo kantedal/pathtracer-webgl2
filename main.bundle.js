@@ -907,7 +907,7 @@ var ObjectSettingsComponent = (function () {
         this.materials = [{ id: 0, name: 'Diffuse' }, { id: 2, name: 'Emission' }, { id: 5, name: 'Glossy' }, { id: 1, name: 'Specular' }, { id: 3, name: 'Transmission' }];
         this.selelectedMaterial = 0;
         this.defaultScenes = [{ id: 1, name: 'HDR teapot and bunny' }, { id: 2, name: 'HDR stanford dragon' }, { id: 3, name: 'Room teapot and bunny' }, { id: 4, name: 'Room stanford dragon' }];
-        this.sceneId = 1;
+        this.sceneId = 3;
         this.settingsService.renderTypeSub.asObservable().subscribe(function (type) { return _this.rayTracingMode = type == 0.0; });
         this.settingsService.selectedObjectSub.asObservable().subscribe(function (object) {
             _this.selectedObject = object;
@@ -1075,12 +1075,14 @@ var RenderSettingsComponent = (function () {
         canvas.height = this.resolutionHeight;
         var context = canvas.getContext('2d');
         var textureData = new Uint8ClampedArray(this.resolutionWidth * this.resolutionHeight * 4);
+        var w = this.resolutionWidth;
+        var h = this.resolutionHeight;
         for (var x = 0; x < this.resolutionWidth; x++) {
             for (var y = 0; y < this.resolutionHeight; y++) {
-                textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth)] = this.renderService.textureData[4 * (y + x * this.resolutionWidth)];
-                textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 1] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 1];
-                textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 2] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 2];
-                textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 3] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 3];
+                textureData[4 * (w * x + y) + 0] = this.renderService.textureData[4 * (w * (w - x) + y) + 0];
+                textureData[4 * (w * x + y) + 1] = this.renderService.textureData[4 * (w * (w - x) + y) + 1];
+                textureData[4 * (w * x + y) + 2] = this.renderService.textureData[4 * (w * (w - x) + y) + 2];
+                textureData[4 * (w * x + y) + 3] = this.renderService.textureData[4 * (w * (w - x) + y) + 3];
             }
         }
         // Copy the pixels to a 2D canvas
@@ -2833,6 +2835,11 @@ var RayMarcher = (function () {
         this.loadDomeTexture("./assets/sky-3.jpg");
         this.setupSettingsListeners();
     }
+    RayMarcher.prototype.init = function () {
+        this._navigator = new __WEBPACK_IMPORTED_MODULE_3__camera_navigator__["a" /* CameraNavigator */](this._camera, this._settingsService);
+        this._navigator.rotationYFactor = 1.0;
+        this._navigator.zoomFactor = 1.0;
+    };
     RayMarcher.prototype.loadDomeTexture = function (url) {
         var _this = this;
         //console.log(image)
@@ -3005,6 +3012,9 @@ var RayTracer = (function () {
         this.setupSettingsListeners();
         this._refreshScreen = false;
     }
+    RayTracer.prototype.init = function () {
+        this._navigator = new __WEBPACK_IMPORTED_MODULE_3__camera_navigator__["a" /* CameraNavigator */](this._sceneService.camera, this._settingsService);
+    };
     RayTracer.prototype.loadDomeTexture = function (url) {
         var _this = this;
         //console.log(image)w
@@ -4236,7 +4246,7 @@ module.exports = "<div class=\"right-pane\" *ngIf=\"rayTracingMode\">\n  <div cl
 /***/ 400:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"left-pane\">\n  <div class=\"scroll\">\n    <settings-container title=\"Render status\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <span class=\"property-header\">Start/stop render</span>\n        <span *ngIf=\"!(settingsService.shouldRenderSub.asObservable() | async)\">\n          <button (click)=\"settingsService.shouldRender = true\" md-icon-button><md-icon style=\"color: #fff\">play_arrow</md-icon></button>\n        </span>\n        <span *ngIf=\"settingsService.shouldRenderSub.asObservable() | async\">\n          <button (click)=\"settingsService.shouldRender = false\" md-icon-button><md-icon style=\"color: #fff\">pause</md-icon></button>\n        </span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 10px\">\n        <span class=\"property-header\">Rendered samples</span>\n        <span class=\"property-header\" style=\"font-weight: 400\">{{renderService.samples}}</span>\n      </div>\n    </settings-container>\n    <settings-container title=\"Render settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render type</div>\n        <md-select [(ngModel)]=\"renderType\" class=\"dropdown\" (change)=\"settingsService.renderTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let renderType of renderTypes\" [value]=\"renderType.id\">\n            {{ renderType.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Resolution</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render view zoom</div>\n        <md-slider min=\"20\" max=\"300\" step=\"0.1\" value=\"100.0\" (input)=\"zoomSliderUpdate($event)\" #zoomSlider></md-slider>\n        <span class=\"data-label\">{{settingsService.zoomSub.asObservable() | async }}x</span>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Lightning\" [expanded]=\"true\">\n      <div *ngFor=\"let attribute of settingsService.lightSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Custom light dome texture</div>\n        <input style=\"color: #fff; width: 170px; margin-top: 10px; font-weight: 200\" type=\"file\" (change)=\"imageUpload($event)\" />\n      </div>\n\n    </settings-container>\n\n    <settings-container title=\"Render effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.renderEffectSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Post effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.bloomSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <div class=\"options-pane\">\n      <button class=\"pane-button\" (click)=\"downloadImage()\" md-raised-button>Save image</button>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"left-pane\">\n  <div class=\"scroll\">\n    <settings-container title=\"Render status\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <span class=\"property-header\">Start/stop render</span>\n        <span *ngIf=\"!(settingsService.shouldRenderSub.asObservable() | async)\">\n          <button (click)=\"settingsService.shouldRender = true\" md-icon-button><md-icon style=\"color: #fff\">play_arrow</md-icon></button>\n        </span>\n        <span *ngIf=\"settingsService.shouldRenderSub.asObservable() | async\">\n          <button (click)=\"settingsService.shouldRender = false\" md-icon-button><md-icon style=\"color: #fff\">pause</md-icon></button>\n        </span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 10px\">\n        <span class=\"property-header\">Rendered samples</span>\n        <span class=\"property-header\" style=\"font-weight: 400\">{{renderService.samples}}</span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 20px\">\n        <div class=\"property-header\">Move with <b>w, a, s, d</b></div>\n      </div>\n    </settings-container>\n    <settings-container title=\"Render settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render type</div>\n        <md-select [(ngModel)]=\"renderType\" class=\"dropdown\" (change)=\"settingsService.renderTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let renderType of renderTypes\" [value]=\"renderType.id\">\n            {{ renderType.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Resolution</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render view zoom</div>\n        <md-slider min=\"20\" max=\"300\" step=\"0.1\" value=\"100.0\" (input)=\"zoomSliderUpdate($event)\" #zoomSlider></md-slider>\n        <span class=\"data-label\">{{settingsService.zoomSub.asObservable() | async }}x</span>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Lightning\" [expanded]=\"true\">\n      <div *ngFor=\"let attribute of settingsService.lightSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Custom light dome texture</div>\n        <input style=\"color: #fff; width: 170px; margin-top: 10px; font-weight: 200\" type=\"file\" (change)=\"imageUpload($event)\" />\n      </div>\n\n    </settings-container>\n\n    <settings-container title=\"Render effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.renderEffectSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Post effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.bloomSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <div class=\"options-pane\">\n      <button class=\"pane-button\" (click)=\"downloadImage()\" md-raised-button>Save image</button>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -4316,6 +4326,7 @@ var RenderService = (function () {
         var _this = this;
         this.settingsService = settingsService;
         this.sceneService = sceneService;
+        this._rayTracingEnabled = true;
         this._samples = 0;
         this._sceneLoaded = false;
         this.render = function () {
@@ -4363,6 +4374,17 @@ var RenderService = (function () {
             _this._rayTracer = new __WEBPACK_IMPORTED_MODULE_4__path_tracer_ray_tracer__["a" /* default */](_this.settingsService, _this.sceneService, sceneTextures);
             _this._startTime = __WEBPACK_IMPORTED_MODULE_5_moment__().valueOf();
             _this._sceneLoaded = true;
+        });
+        this.settingsService.renderTypeSub.asObservable().subscribe(function (renderType) {
+            _this._rayTracingEnabled = renderType == 0;
+            console.log(_this._rayTracingEnabled);
+            if (_this._rayTracingEnabled && _this._rayTracer != null) {
+                _this._rayTracer.init();
+            }
+            else if (!_this._rayTracingEnabled) {
+                console.log('init hej hej');
+                _this._rayMarcher.init();
+            }
         });
         this._rayMarcher = new __WEBPACK_IMPORTED_MODULE_3__path_tracer_ray_marcher__["a" /* default */](this.settingsService);
         this._bloomProgram = new __WEBPACK_IMPORTED_MODULE_7__bloom_program_bloom_program__["a" /* BloomProgram */](this.settingsService);
