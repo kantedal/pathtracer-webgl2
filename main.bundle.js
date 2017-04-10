@@ -4359,7 +4359,7 @@ var RenderService = (function () {
         this._stats.domElement.style.top = '0px';
         document.body.appendChild(this._stats.domElement);
         this.sceneService.init();
-        this.sceneService.loadScene(1).then(function (sceneTextures) {
+        this.sceneService.loadScene(3).then(function (sceneTextures) {
             _this._rayTracer = new __WEBPACK_IMPORTED_MODULE_4__path_tracer_ray_tracer__["a" /* default */](_this.settingsService, _this.sceneService, sceneTextures);
             _this._startTime = __WEBPACK_IMPORTED_MODULE_5_moment__().valueOf();
             _this._sceneLoaded = true;
