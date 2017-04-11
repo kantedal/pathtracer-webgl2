@@ -396,6 +396,7 @@ var AppComponent = (function () {
         this.settingsService = settingsService;
         this.sceneService = sceneService;
         this.dialog = dialog;
+        //this.renderCanvas.nativeElement._bloomEnabled = false
     }
     AppComponent.prototype.ngAfterViewInit = function () {
         this.renderCanvas.nativeElement.oncontextmenu = function (e) { return e.preventDefault(); };
