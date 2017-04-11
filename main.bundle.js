@@ -168,152 +168,6 @@ var PingPongFBO = (function (_super) {
 
 /***/ }),
 
-/***/ 11:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__render_context__ = __webpack_require__(25);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FLOAT_TYPE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return INTEGER_TYPE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return VEC2_TYPE; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return VEC3_TYPE; });
-/* unused harmony export VEC4_TYPE */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return TEXTURE_TYPE; });
-
-var FLOAT_TYPE = 0;
-var INTEGER_TYPE = 1;
-var VEC2_TYPE = 2;
-var VEC3_TYPE = 3;
-var VEC4_TYPE = 4;
-var TEXTURE_TYPE = 5;
-var Shader = (function () {
-    function Shader(vertexSource, fragmentSource) {
-        this.needsUpdate = false;
-        this._vertexShader = this.createShader(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].VERTEX_SHADER, vertexSource);
-        this._fragmentShader = this.createShader(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].FRAGMENT_SHADER, fragmentSource);
-        this._uniforms = {};
-    }
-    Shader.prototype.update = function () {
-        var textureCount = 0;
-        for (var uniformName in this._uniforms) {
-            var uniform = this._uniforms[uniformName];
-            switch (uniform.type) {
-                case FLOAT_TYPE:
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1f(uniform.location, uniform.value);
-                    break;
-                case VEC2_TYPE:
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform2fv(uniform.location, uniform.value);
-                    break;
-                case VEC3_TYPE:
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform3fv(uniform.location, uniform.value);
-                    break;
-                case INTEGER_TYPE:
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1i(uniform.location, uniform.value);
-                    break;
-                case TEXTURE_TYPE:
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1i(uniform.location, textureCount);
-                    switch (textureCount) {
-                        case 0:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE0);
-                            break;
-                        case 1:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE1);
-                            break;
-                        case 2:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE2);
-                            break;
-                        case 3:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE3);
-                            break;
-                        case 4:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE4);
-                            break;
-                        case 5:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE5);
-                            break;
-                        case 6:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE6);
-                            break;
-                        case 7:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE7);
-                            break;
-                        case 8:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE8);
-                            break;
-                        case 9:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE9);
-                            break;
-                        case 10:
-                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE10);
-                            break;
-                    }
-                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE_2D, uniform.value);
-                    textureCount++;
-                    break;
-            }
-        }
-    };
-    Shader.prototype.updateTexture = function (data) {
-    };
-    Shader.prototype.createShader = function (type, source) {
-        var shader = __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].createShader(type);
-        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].shaderSource(shader, source);
-        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].compileShader(shader);
-        if (__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getShaderParameter(shader, __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].COMPILE_STATUS)) {
-            return shader;
-        }
-        console.warn(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getShaderInfoLog(shader));
-        //console.warn(gl.getShaderSource(shader))
-        //console.debug(gl.getShaderSource(shader))
-        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].deleteShader(shader);
-    };
-    Shader.prototype.updateUniforms = function () {
-        if (this._program) {
-            for (var name in this._uniforms) {
-                var uniform = this._uniforms[name];
-                uniform.location = __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getUniformLocation(this._program, name);
-            }
-        }
-    };
-    Shader.prototype.setUniform = function (id, data) {
-        this._uniforms[id] = data;
-        this.updateUniforms();
-        this.needsUpdate = true;
-    };
-    Object.defineProperty(Shader.prototype, "uniforms", {
-        get: function () { return this._uniforms; },
-        set: function (value) {
-            this._uniforms = value;
-            this.updateUniforms();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Shader.prototype, "program", {
-        set: function (value) {
-            this._program = value;
-            this.updateUniforms();
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Shader.prototype, "fragmentShader", {
-        get: function () { return this._fragmentShader; },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Shader.prototype, "vertexShader", {
-        get: function () { return this._vertexShader; },
-        enumerable: true,
-        configurable: true
-    });
-    return Shader;
-}());
-/* harmony default export */ __webpack_exports__["c"] = Shader;
-//# sourceMappingURL=shader.js.map
-
-/***/ }),
-
 /***/ 19:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -326,6 +180,7 @@ var Shader = (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__render_effects_settings__ = __webpack_require__(315);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__material_settings__ = __webpack_require__(313);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__post_effects_settings_bloom_settings__ = __webpack_require__(314);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__render_settings__ = __webpack_require__(316);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingsService; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -343,6 +198,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
+
 var SettingsService = (function () {
     function SettingsService() {
         this.refreshScreen = false;
@@ -351,7 +207,8 @@ var SettingsService = (function () {
         this.renderTypeSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](0);
         this.shouldRenderSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](true);
         this.zoomSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](1.5);
-        // Lighting attributes
+        // Uniform attributes
+        this.renderSettings = new __WEBPACK_IMPORTED_MODULE_7__render_settings__["a" /* default */]();
         this.lightSettings = new __WEBPACK_IMPORTED_MODULE_3__light_settings__["a" /* default */]();
         this.renderEffectSettings = new __WEBPACK_IMPORTED_MODULE_4__render_effects_settings__["a" /* RenderEffectsSetting */]();
         this.bloomSettings = new __WEBPACK_IMPORTED_MODULE_6__post_effects_settings_bloom_settings__["a" /* BloomSettings */]();
@@ -364,12 +221,12 @@ var SettingsService = (function () {
         this.materialColorSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](vec3.fromValues(1.0, 1.0, 1.0));
         // Ray tracing attributes
         this.selectedObjectSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](null);
-        this.resolutionSub = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](vec2.fromValues(512, 512));
         this._powerObservable = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](10.0);
         this._detailLevelObservable = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](1000);
         this._maxIterationsObservable = new __WEBPACK_IMPORTED_MODULE_1_rxjs__["BehaviorSubject"](300);
     }
     SettingsService.prototype.connectShader = function (shader) {
+        this.renderSettings.connectShader(shader);
         this.lightSettings.connectShader(shader);
         this.renderEffectSettings.connectShader(shader);
         this.materialSettings.connectShader(shader);
@@ -492,7 +349,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__ = __webpack_require__(283);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_app_module__ = __webpack_require__(286);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(319);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__environments_environment__ = __webpack_require__(320);
 ///<reference path="./typings/webgl2.d.ts" />
 ///<reference path="../node_modules/@types/node/index.d.ts" />
 ///<reference path="./typings/gl-matrix.d.ts" />
@@ -555,8 +412,8 @@ __decorate([
 AppComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'app-root',
-        template: __webpack_require__(395),
-        styles: [__webpack_require__(374)]
+        template: __webpack_require__(396),
+        styles: [__webpack_require__(375)]
     }),
     __metadata("design:paramtypes", [typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_render_service__["a" /* RenderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_render_service__["a" /* RenderService */]) === "function" && _b || Object, typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_2__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_3__renderer_scene_service__["a" /* SceneService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__renderer_scene_service__["a" /* SceneService */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_4__angular_material__["c" /* MdDialog */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_4__angular_material__["c" /* MdDialog */]) === "function" && _e || Object])
 ], AppComponent);
@@ -570,9 +427,9 @@ var _a, _b, _c, _d, _e;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hammerjs__ = __webpack_require__(383);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hammerjs__ = __webpack_require__(384);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_hammerjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_hammerjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_platform_browser__ = __webpack_require__(33);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__angular_core__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__angular_forms__ = __webpack_require__(92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_http__ = __webpack_require__(93);
@@ -677,20 +534,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var BottomBarComponent = (function () {
     function BottomBarComponent(settingsService) {
-        var _this = this;
         this.settingsService = settingsService;
-        settingsService.resolutionSub.asObservable().subscribe(function (res) {
-            _this._resolutionWidth = res[0];
-            _this._resolutionHeight = res[1];
-        });
     }
     return BottomBarComponent;
 }());
 BottomBarComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'bottom-bar',
-        template: __webpack_require__(396),
-        styles: [__webpack_require__(375)]
+        template: __webpack_require__(397),
+        styles: [__webpack_require__(376)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _a || Object])
 ], BottomBarComponent);
@@ -727,8 +579,8 @@ var LoadingDialogComponent = (function () {
 LoadingDialogComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'loading-dialog',
-        template: __webpack_require__(397),
-        styles: [__webpack_require__(376)]
+        template: __webpack_require__(398),
+        styles: [__webpack_require__(377)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__angular_material__["b" /* MdDialogRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__angular_material__["b" /* MdDialogRef */]) === "function" && _a || Object])
 ], LoadingDialogComponent);
@@ -791,8 +643,8 @@ var FractalSettingsComponent = (function () {
 FractalSettingsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'fractal-settings',
-        template: __webpack_require__(398),
-        styles: [__webpack_require__(377)]
+        template: __webpack_require__(399),
+        styles: [__webpack_require__(378)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _a || Object])
 ], FractalSettingsComponent);
@@ -1018,8 +870,8 @@ var ObjectSettingsComponent = (function () {
 ObjectSettingsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'object-settings',
-        template: __webpack_require__(399),
-        styles: [__webpack_require__(378)]
+        template: __webpack_require__(400),
+        styles: [__webpack_require__(379)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__renderer_render_service__["a" /* RenderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__renderer_render_service__["a" /* RenderService */]) === "function" && _b || Object])
 ], ObjectSettingsComponent);
@@ -1052,33 +904,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var hexRgb = __webpack_require__(50);
 var RenderSettingsComponent = (function () {
     function RenderSettingsComponent(settingsService, renderService) {
-        var _this = this;
         this.settingsService = settingsService;
         this.renderService = renderService;
         this.renderTypes = [{ id: 0, name: 'Ray tracing' }, { id: 1, name: 'Ray marching' }];
         this.renderType = 0;
-        settingsService.resolutionSub.asObservable().subscribe(function (res) {
-            _this.resolutionWidth = res[0];
-            _this.resolutionHeight = res[1];
-        });
+        this.resolutionSub = settingsService.renderSettings.getAttributeSub('resolution');
     }
-    RenderSettingsComponent.prototype.resolutionUpdate = function () {
-        this.settingsService.resolutionSub.next([this.resolutionWidth, this.resolutionHeight]);
-    };
     RenderSettingsComponent.prototype.zoomSliderUpdate = function (event) {
         this.settingsService.zoom = event.value / 100.0;
     };
     RenderSettingsComponent.prototype.downloadImage = function () {
         // Create a 2D canvas to store the result
+        var w = this.resolutionSub.getValue().value[0];
+        var h = this.resolutionSub.getValue().value[1];
         var canvas = document.createElement('canvas');
-        canvas.width = this.resolutionWidth;
-        canvas.height = this.resolutionHeight;
+        canvas.width = w;
+        canvas.height = h;
         var context = canvas.getContext('2d');
-        var textureData = new Uint8ClampedArray(this.resolutionWidth * this.resolutionHeight * 4);
-        var w = this.resolutionWidth;
-        var h = this.resolutionHeight;
-        for (var x = 0; x < this.resolutionWidth; x++) {
-            for (var y = 0; y < this.resolutionHeight; y++) {
+        console.log(w, h);
+        var textureData = new Uint8ClampedArray(w * h * 4);
+        for (var x = 0; x < w; x++) {
+            for (var y = 0; y < h; y++) {
                 textureData[4 * (w * x + y) + 0] = this.renderService.textureData[4 * (w * (w - x) + y) + 0];
                 textureData[4 * (w * x + y) + 1] = this.renderService.textureData[4 * (w * (w - x) + y) + 1];
                 textureData[4 * (w * x + y) + 2] = this.renderService.textureData[4 * (w * (w - x) + y) + 2];
@@ -1086,7 +932,7 @@ var RenderSettingsComponent = (function () {
             }
         }
         // Copy the pixels to a 2D canvas
-        var imageData = context.createImageData(this.resolutionWidth, this.resolutionHeight);
+        var imageData = context.createImageData(w, h);
         imageData.data.set(textureData);
         context.putImageData(imageData, 0, 0);
         var download = document.createElement('a');
@@ -1109,8 +955,8 @@ var RenderSettingsComponent = (function () {
 RenderSettingsComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'render-options',
-        template: __webpack_require__(400),
-        styles: [__webpack_require__(379)]
+        template: __webpack_require__(401),
+        styles: [__webpack_require__(380)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_2__renderer_render_service__["a" /* RenderService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__renderer_render_service__["a" /* RenderService */]) === "function" && _b || Object])
 ], RenderSettingsComponent);
@@ -1127,7 +973,7 @@ var _a, _b;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs__ = __webpack_require__(84);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_rxjs__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__renderer_settings_setting__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__renderer_settings_setting__ = __webpack_require__(30);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return SettingAttributeComponent; });
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
@@ -1142,7 +988,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var hexRgb = __webpack_require__(50);
-var rgbHex = __webpack_require__(406);
+var rgbHex = __webpack_require__(407);
 var SettingAttributeComponent = (function () {
     function SettingAttributeComponent() {
         // Color attributes
@@ -1150,6 +996,8 @@ var SettingAttributeComponent = (function () {
         this.redClr = 255;
         this.blueClr = 255;
         this.greenClr = 255;
+        // Vector attributes
+        this.vec = [0, 0, 0];
         // Dropdown attributes
         this.dropdownSelection = 0;
         // Toggle attributes
@@ -1162,6 +1010,9 @@ var SettingAttributeComponent = (function () {
     };
     SettingAttributeComponent.prototype.updateColor = function () {
         this.updateAttribute(vec3.fromValues(this.redClr / 255, this.greenClr / 255, this.blueClr / 255));
+    };
+    SettingAttributeComponent.prototype.updateVec2 = function () {
+        this.updateAttribute(vec2.fromValues(this.vec[0], this.vec[1]));
     };
     SettingAttributeComponent.prototype.hexToRgb = function (hex) {
         var color = hexRgb(hex);
@@ -1181,6 +1032,10 @@ var SettingAttributeComponent = (function () {
             case __WEBPACK_IMPORTED_MODULE_2__renderer_settings_setting__["e" /* UI_TYPE_TOGGLE */]:
                 this.enabled = attr.value == 1.0;
                 break;
+            case __WEBPACK_IMPORTED_MODULE_2__renderer_settings_setting__["f" /* UI_TYPE_VEC2 */]:
+                this.vec[0] = attr.value[0];
+                this.vec[1] = attr.value[1];
+                break;
         }
     };
     return SettingAttributeComponent;
@@ -1192,8 +1047,8 @@ __decorate([
 SettingAttributeComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'setting-attribute',
-        template: __webpack_require__(401),
-        styles: [__webpack_require__(380)]
+        template: __webpack_require__(402),
+        styles: [__webpack_require__(381)]
     }),
     __metadata("design:paramtypes", [])
 ], SettingAttributeComponent);
@@ -1235,8 +1090,8 @@ __decorate([
 SettingsContainerComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'settings-container',
-        template: __webpack_require__(402),
-        styles: [__webpack_require__(381)]
+        template: __webpack_require__(403),
+        styles: [__webpack_require__(382)]
     })
 ], SettingsContainerComponent);
 
@@ -1271,8 +1126,8 @@ var TopBarComponent = (function () {
 TopBarComponent = __decorate([
     __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__angular_core__["p" /* Component */])({
         selector: 'top-bar',
-        template: __webpack_require__(403),
-        styles: [__webpack_require__(382)]
+        template: __webpack_require__(404),
+        styles: [__webpack_require__(383)]
     }),
     __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1__renderer_settings_settings_service__["a" /* SettingsService */]) === "function" && _a || Object])
 ], TopBarComponent);
@@ -1286,7 +1141,7 @@ var _a;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_fbo__ = __webpack_require__(100);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BloomProgram; });
 
@@ -1296,34 +1151,35 @@ var _a;
 /*
  Shader imports
  */
-var thresholdFrag = __webpack_require__(391);
-var thresholdVert = __webpack_require__(392);
-var bloomVerticalFrag = __webpack_require__(389);
-var bloomHorizontalFrag = __webpack_require__(388);
-var bloomVert = __webpack_require__(390);
+var thresholdFrag = __webpack_require__(392);
+var thresholdVert = __webpack_require__(393);
+var bloomVerticalFrag = __webpack_require__(390);
+var bloomHorizontalFrag = __webpack_require__(389);
+var bloomVert = __webpack_require__(391);
 var BloomProgram = (function () {
     function BloomProgram(settingsService) {
         var _this = this;
         this.settingsService = settingsService;
-        var renderSize = settingsService.resolutionSub.getValue();
-        this._thresholdShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](thresholdVert, thresholdFrag);
+        var renderSize = settingsService.renderSettings.getAttributeSub('resolution').getValue().value;
+        this._thresholdShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](thresholdVert, thresholdFrag);
         this._thresholdShader.uniforms = {
-            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null }
+            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null }
         };
         this._thresholdProgram = new __WEBPACK_IMPORTED_MODULE_1__utils_fbo__["a" /* default */](this._thresholdShader, renderSize[0], renderSize[1]);
-        this._verticalBloomShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](bloomVert, bloomHorizontalFrag);
+        this._verticalBloomShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](bloomVert, bloomHorizontalFrag);
         this._verticalBloomShader.uniforms = {
-            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: settingsService.resolutionSub.getValue() },
-            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
+            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* VEC2_TYPE */], value: renderSize },
+            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
         };
         this._verticalBloomProgram = new __WEBPACK_IMPORTED_MODULE_1__utils_fbo__["a" /* default */](this._verticalBloomShader, renderSize[0], renderSize[1]);
-        this._horizontalBloomShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](bloomVert, bloomVerticalFrag);
+        this._horizontalBloomShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](bloomVert, bloomVerticalFrag);
         this._horizontalBloomShader.uniforms = {
-            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: settingsService.resolutionSub.getValue() },
-            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
+            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* VEC2_TYPE */], value: renderSize },
+            u_buffer_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
         };
         this._horizontalBloomProgram = new __WEBPACK_IMPORTED_MODULE_1__utils_fbo__["a" /* default */](this._horizontalBloomShader, renderSize[0], renderSize[1]);
-        settingsService.resolutionSub.asObservable().subscribe(function (resolution) {
+        settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) {
+            var resolution = attr.value;
             _this._thresholdProgram.resize(resolution[0], resolution[1]);
             _this._verticalBloomProgram.resize(resolution[0], resolution[1]);
             _this._horizontalBloomProgram.resize(resolution[0], resolution[1]);
@@ -1362,7 +1218,7 @@ var BloomProgram = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_fbo__ = __webpack_require__(100);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return CompositionProgram; });
 
 
@@ -1370,21 +1226,24 @@ var BloomProgram = (function () {
 /*
  Shader imports
  */
-var compositionFrag = __webpack_require__(393);
-var compositionVert = __webpack_require__(394);
+var compositionFrag = __webpack_require__(394);
+var compositionVert = __webpack_require__(395);
 var CompositionProgram = (function () {
     function CompositionProgram(settingsService) {
         var _this = this;
-        var renderSize = settingsService.resolutionSub.getValue();
-        this._compositionShader = new __WEBPACK_IMPORTED_MODULE_1__utils_shader__["c" /* default */](compositionVert, compositionFrag);
+        var renderSize = settingsService.renderSettings.getAttribute('resolution').value;
+        this._compositionShader = new __WEBPACK_IMPORTED_MODULE_1__utils_shader__["e" /* default */](compositionVert, compositionFrag);
         this._compositionShader.uniforms = {
-            u_mainTexture: { type: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
-            u_bloomTexture: { type: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["e" /* TEXTURE_TYPE */], value: null }
+            u_mainTexture: { type: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
+            u_bloomTexture: { type: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["f" /* TEXTURE_TYPE */], value: null }
         };
         this._compositionProgram = new __WEBPACK_IMPORTED_MODULE_0__utils_fbo__["a" /* default */](this._compositionShader, renderSize[0], renderSize[1]);
         this._compositionProgram.enableWriteToTexture();
         settingsService.connectShader(this._compositionShader);
-        settingsService.resolutionSub.asObservable().subscribe(function (resolution) { return _this._compositionProgram.resize(resolution[0], resolution[1]); });
+        settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) {
+            var res = attr.value;
+            _this._compositionProgram.resize(res[0], res[1]);
+        });
     }
     CompositionProgram.prototype.render = function (mainTexture, bloomTexture) {
         this._compositionShader.uniforms['u_mainTexture'].value = mainTexture;
@@ -1903,6 +1762,69 @@ var WorkBoundingBox = (function () {
 }());
 
 //# sourceMappingURL=bvh.js.map
+
+/***/ }),
+
+/***/ 30:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UI_TYPE_SLIDER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UI_TYPE_TOGGLE; });
+/* unused harmony export UI_TYPE_TEXTFIELD */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return UI_TYPE_VEC2; });
+/* unused harmony export UI_TYPE_VEC3 */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return UI_TYPE_DROPDOWN; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UI_TYPE_COLORPICKER; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Setting; });
+
+var UI_TYPE_SLIDER = 'UI_TYPE_SLIDER';
+var UI_TYPE_TOGGLE = 'UI_TYPE_TOGGLE';
+var UI_TYPE_TEXTFIELD = 'UI_TYPE_TEXTFIELD';
+var UI_TYPE_VEC2 = 'UI_TYPE_VEC2';
+var UI_TYPE_VEC3 = 'UI_TYPE_VEC3';
+var UI_TYPE_DROPDOWN = 'UI_TYPE_DROPDOWN';
+var UI_TYPE_COLORPICKER = 'UI_TYPE_COLORPICKER';
+var Setting = (function () {
+    function Setting() {
+        this.attributes = [];
+    }
+    Setting.prototype.connectShader = function (shader) {
+        for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
+            var attribute = _a[_i];
+            attribute.asObservable().subscribe(function (attr) { return shader.setUniform(attr.uniformName, { type: attr.uniformType, value: attr.value }); });
+        }
+    };
+    Setting.prototype.setAttribute = function (attributeSub, value) {
+        var newAttribute = attributeSub.getValue();
+        newAttribute.value = value;
+        attributeSub.next(newAttribute);
+    };
+    Setting.prototype.addAttribute = function (attribute) {
+        this.attributes.push(new __WEBPACK_IMPORTED_MODULE_0_rxjs__["BehaviorSubject"](attribute));
+    };
+    Setting.prototype.getAttribute = function (name) {
+        for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
+            var attribute = _a[_i];
+            if (attribute.getValue().uniformName == name) {
+                return attribute.getValue();
+            }
+        }
+    };
+    Setting.prototype.getAttributeSub = function (name) {
+        for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
+            var attribute = _a[_i];
+            if (attribute.getValue().uniformName == name) {
+                return attribute;
+            }
+        }
+    };
+    return Setting;
+}());
+
+//# sourceMappingURL=setting.js.map
 
 /***/ }),
 
@@ -2775,7 +2697,7 @@ var Scene = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pingpong_fbo__ = __webpack_require__(101);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__models_camera__ = __webpack_require__(95);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__camera_navigator__ = __webpack_require__(94);
@@ -2789,7 +2711,7 @@ var Scene = (function () {
  Shader imports
  */
 var pathTracerVert = __webpack_require__(228);
-var pathTracerFrag = __webpack_require__(404);
+var pathTracerFrag = __webpack_require__(405);
 var RayMarcher = (function () {
     function RayMarcher(_settingsService) {
         this._settingsService = _settingsService;
@@ -2798,16 +2720,14 @@ var RayMarcher = (function () {
         this._navigator = new __WEBPACK_IMPORTED_MODULE_3__camera_navigator__["a" /* CameraNavigator */](this._camera, _settingsService);
         this._navigator.rotationYFactor = 1.0;
         this._navigator.zoomFactor = 1.0;
-        this._pathTracerShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](pathTracerVert, pathTracerFrag);
+        this._pathTracerShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](pathTracerVert, pathTracerFrag);
         this._pathTracerUniforms = {
-            u_accumulated_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
-            u_dome_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
+            u_accumulated_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
+            u_dome_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
             // Render settings uniforms
             time: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 1.0 },
             samples: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
-            trace_depth: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* INTEGER_TYPE */], value: 3 },
             global_lightning_enabled: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
-            resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: [512, 512] },
             // Fractal uniforms
             u_fractalType: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
             u_power: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 10.0 },
@@ -2892,7 +2812,8 @@ var RayMarcher = (function () {
     };
     RayMarcher.prototype.setupSettingsListeners = function () {
         var _this = this;
-        this._settingsService.resolutionSub.asObservable().subscribe(function (resolution) {
+        this._settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) {
+            var resolution = attr.value;
             _this._pathTracerUniforms['resolution'].value = resolution;
             _this._frameBuffer.setWindowSize(resolution[0], resolution[1]);
             _this._frameBuffer.resetTextures();
@@ -2950,9 +2871,9 @@ var RayMarcher = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_pingpong_fbo__ = __webpack_require__(101);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_data_texture__ = __webpack_require__(317);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__utils_data_texture__ = __webpack_require__(318);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__camera_navigator__ = __webpack_require__(94);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils_render_context__ = __webpack_require__(25);
 
@@ -2965,7 +2886,7 @@ var RayMarcher = (function () {
  */
 var pathTracerVert = __webpack_require__(228);
 //const pathTracerFrag = require('raw-loader!glslify-loader!./shaders/path-tracer.frag');
-var pathTracerFrag = __webpack_require__(405);
+var pathTracerFrag = __webpack_require__(406);
 var RayTracer = (function () {
     function RayTracer(_settingsService, _sceneService, sceneTextures) {
         this._settingsService = _settingsService;
@@ -2978,25 +2899,23 @@ var RayTracer = (function () {
         this._triangleIndexTexture = new __WEBPACK_IMPORTED_MODULE_2__utils_data_texture__["a" /* default */](1024, 1024, sceneTextures.triangle_indices, "u_triangle_index_texture");
         this._objectsBVHTexture = new __WEBPACK_IMPORTED_MODULE_2__utils_data_texture__["a" /* default */](2048, 2048, sceneTextures.objects_bvh, "u_objects_bvh_texture");
         this._objectsTexture = new __WEBPACK_IMPORTED_MODULE_2__utils_data_texture__["a" /* default */](512, 512, sceneTextures.objects, "u_objects_texture");
-        this._pathTracerShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](pathTracerVert, pathTracerFrag);
+        this._pathTracerShader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](pathTracerVert, pathTracerFrag);
         this._pathTracerUniforms = {
             // Data textures
-            u_accumulated_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
-            u_dome_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
-            u_triangle_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._triangleTexture.texture },
-            u_light_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._lightTexture.texture },
-            u_material_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._materialTexture.texture },
-            u_triangle_index_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._triangleIndexTexture.texture },
-            u_objects_bvh_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._objectsBVHTexture.texture },
-            u_objects_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: this._objectsTexture.texture },
+            u_accumulated_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
+            u_dome_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
+            u_triangle_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._triangleTexture.texture },
+            u_light_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._lightTexture.texture },
+            u_material_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._materialTexture.texture },
+            u_triangle_index_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._triangleIndexTexture.texture },
+            u_objects_bvh_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._objectsBVHTexture.texture },
+            u_objects_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: this._objectsTexture.texture },
             // Uniforms
             time: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 1.0 },
             samples: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
-            trace_depth: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* INTEGER_TYPE */], value: 3 },
             global_lightning_enabled: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
-            triangle_count: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* INTEGER_TYPE */], value: sceneTextures.triangle_count },
-            object_count: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* INTEGER_TYPE */], value: sceneTextures.object_count },
-            resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: [512, 512] },
+            triangle_count: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* INTEGER_TYPE */], value: sceneTextures.triangle_count },
+            object_count: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* INTEGER_TYPE */], value: sceneTextures.object_count },
             // Camera
             u_cameraYaw: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
             u_cameraPitch: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
@@ -3038,7 +2957,8 @@ var RayTracer = (function () {
     };
     RayTracer.prototype.setupSettingsListeners = function () {
         var _this = this;
-        this._settingsService.resolutionSub.asObservable().subscribe(function (resolution) {
+        this._settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) {
+            var resolution = attr.value;
             _this._pathTracerUniforms['resolution'].value = resolution;
             _this._frameBuffer.setWindowSize(resolution[0], resolution[1]);
             _this._frameBuffer.resetTextures();
@@ -3182,7 +3102,7 @@ function LoadObjects(fileNames, callback, errorCallback) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_render_target__ = __webpack_require__(66);
 
 
@@ -3192,20 +3112,20 @@ function LoadObjects(fileNames, callback, errorCallback) {
 /*
  Shader imports
  */
-var baseRendererVert = __webpack_require__(387);
-var baseRendererFrag = __webpack_require__(386);
+var baseRendererVert = __webpack_require__(388);
+var baseRendererFrag = __webpack_require__(387);
 var RenderView = (function () {
     function RenderView(_settingsService) {
         var _this = this;
         this._settingsService = _settingsService;
-        var shader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* default */](baseRendererVert, baseRendererFrag);
+        var shader = new __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* default */](baseRendererVert, baseRendererFrag);
         this._uniforms = {
             u_time: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 0.0 },
             u_zoom: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["a" /* FLOAT_TYPE */], value: 1.0 },
-            u_rendererResolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: vec2.fromValues(512, 512) },
-            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: [window.innerWidth, window.innerHeight] },
-            u_mousePosition: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["d" /* VEC2_TYPE */], value: [0.0, 0.0] },
-            u_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["e" /* TEXTURE_TYPE */], value: null },
+            u_rendererResolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* VEC2_TYPE */], value: vec2.fromValues(512, 512) },
+            u_resolution: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* VEC2_TYPE */], value: [window.innerWidth, window.innerHeight] },
+            u_mousePosition: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["c" /* VEC2_TYPE */], value: [0.0, 0.0] },
+            u_texture: { type: __WEBPACK_IMPORTED_MODULE_0__utils_shader__["f" /* TEXTURE_TYPE */], value: null },
         };
         shader.uniforms = this._uniforms;
         this._renderTarget = new __WEBPACK_IMPORTED_MODULE_1__utils_render_target__["a" /* default */](shader, window.innerWidth, window.innerHeight);
@@ -3214,7 +3134,7 @@ var RenderView = (function () {
         this._settingsService.zoomSub.asObservable().subscribe(function (value) {
             _this._uniforms['u_zoom'].value = value;
         });
-        this._settingsService.resolutionSub.asObservable().subscribe(function (resolution) { return _this._uniforms['u_rendererResolution'].value = resolution; });
+        _settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) { return _this._uniforms['u_rendererResolution'].value = attr.value; });
     }
     RenderView.prototype.render = function (pathTracerTexture) {
         this._uniforms['u_time'].value += 0.01;
@@ -3244,8 +3164,8 @@ var RenderView = (function () {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(11);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting__ = __webpack_require__(33);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_shader__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setting__ = __webpack_require__(30);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MengerSponge; });
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3313,8 +3233,8 @@ var MengerSponge = (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3389,8 +3309,8 @@ var LightSettings = (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -3461,8 +3381,8 @@ var MaterialSettings = (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return BloomSettings; });
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3524,8 +3444,8 @@ var BloomSettings = (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(33);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return RenderEffectsSetting; });
 var __extends = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
@@ -3582,6 +3502,56 @@ var RenderEffectsSetting = (function (_super) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setting__ = __webpack_require__(30);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_shader__ = __webpack_require__(9);
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+
+
+var RenderSettings = (function (_super) {
+    __extends(RenderSettings, _super);
+    function RenderSettings() {
+        var _this = _super.call(this) || this;
+        _this.addAttribute({
+            name: 'Resolution',
+            uiType: __WEBPACK_IMPORTED_MODULE_0__setting__["f" /* UI_TYPE_VEC2 */],
+            value: vec2.fromValues(512, 512),
+            uniformName: 'resolution',
+            uniformType: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["c" /* VEC2_TYPE */]
+        });
+        _this.addAttribute({
+            name: 'Trace depth',
+            uiType: __WEBPACK_IMPORTED_MODULE_0__setting__["a" /* UI_TYPE_SLIDER */],
+            uiAttributes: {
+                minValue: 1,
+                maxValue: 10,
+                stepSize: 1
+            },
+            value: 3,
+            uniformName: 'trace_depth',
+            uniformType: __WEBPACK_IMPORTED_MODULE_1__utils_shader__["d" /* INTEGER_TYPE */]
+        });
+        return _this;
+    }
+    return RenderSettings;
+}(__WEBPACK_IMPORTED_MODULE_0__setting__["b" /* Setting */]));
+/* harmony default export */ __webpack_exports__["a"] = RenderSettings;
+//# sourceMappingURL=render-settings.js.map
+
+/***/ }),
+
+/***/ 317:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = createProgram;
 function createProgram(gl, shader) {
     var program = gl.createProgram();
@@ -3598,7 +3568,7 @@ function createProgram(gl, shader) {
 
 /***/ }),
 
-/***/ 317:
+/***/ 318:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3648,7 +3618,7 @@ var DataTexture = (function () {
 
 /***/ }),
 
-/***/ 318:
+/***/ 319:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3662,7 +3632,7 @@ var rotationMatrixVector = function (v, angle) {
 
 /***/ }),
 
-/***/ 319:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -3674,62 +3644,7 @@ var environment = {
 
 /***/ }),
 
-/***/ 33:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs__ = __webpack_require__(84);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_rxjs___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_rxjs__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return UI_TYPE_SLIDER; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return UI_TYPE_TOGGLE; });
-/* unused harmony export UI_TYPE_TEXTFIELD */
-/* unused harmony export UI_TYPE_VEC2 */
-/* unused harmony export UI_TYPE_VEC3 */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return UI_TYPE_DROPDOWN; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return UI_TYPE_COLORPICKER; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Setting; });
-
-var UI_TYPE_SLIDER = 'UI_TYPE_SLIDER';
-var UI_TYPE_TOGGLE = 'UI_TYPE_TOGGLE';
-var UI_TYPE_TEXTFIELD = 'UI_TYPE_TEXTFIELD';
-var UI_TYPE_VEC2 = 'UI_TYPE_VEC2';
-var UI_TYPE_VEC3 = 'UI_TYPE_VEC3';
-var UI_TYPE_DROPDOWN = 'UI_TYPE_DROPDOWN';
-var UI_TYPE_COLORPICKER = 'UI_TYPE_COLORPICKER';
-var Setting = (function () {
-    function Setting() {
-        this.attributes = [];
-    }
-    Setting.prototype.connectShader = function (shader) {
-        for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
-            var attribute = _a[_i];
-            attribute.asObservable().subscribe(function (attr) { return shader.setUniform(attr.uniformName, { type: attr.uniformType, value: attr.value }); });
-        }
-    };
-    Setting.prototype.setAttribute = function (attributeSub, value) {
-        var newAttribute = attributeSub.getValue();
-        newAttribute.value = value;
-        attributeSub.next(newAttribute);
-    };
-    Setting.prototype.addAttribute = function (attribute) {
-        this.attributes.push(new __WEBPACK_IMPORTED_MODULE_0_rxjs__["BehaviorSubject"](attribute));
-    };
-    Setting.prototype.getAttribute = function (name) {
-        for (var _i = 0, _a = this.attributes; _i < _a.length; _i++) {
-            var attribute = _a[_i];
-            if (attribute.getValue().uniformName == name) {
-                return attribute.getValue();
-            }
-        }
-    };
-    return Setting;
-}());
-
-//# sourceMappingURL=setting.js.map
-
-/***/ }),
-
-/***/ 374:
+/***/ 375:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3747,7 +3662,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 375:
+/***/ 376:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3765,7 +3680,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 376:
+/***/ 377:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3783,7 +3698,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 377:
+/***/ 378:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3801,7 +3716,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 378:
+/***/ 379:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3819,7 +3734,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 379:
+/***/ 380:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -3837,24 +3752,6 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 380:
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(16)();
-// imports
-
-
-// module
-exports.push([module.i, ".color-picker {\n  border: none;\n  border-radius: 4px;\n  width: calc(100% - 10px);\n  padding-left: 5px;\n  padding-right: 5px;\n  margin-top: 10px;\n  opacity: 0.3;\n}\n\n.property-toggle {\n  color: #fff;\n  width: 50px;\n  font-weight: 200;\n  font-family: Roboto, serif;\n  font-size: 12px;\n}\n\n.color-input {\n  color: #fff;\n  font-weight: 200;\n  font-size: 12px;\n  width: 40px;\n  text-align: center;\n}\n\n.color-circle {\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  background: yellow;\n  display: inline-block;\n  margin-left: 10px;\n}", ""]);
-
-// exports
-
-
-/*** EXPORTS FROM exports-loader ***/
-module.exports = module.exports.toString();
-
-/***/ }),
-
 /***/ 381:
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -3863,7 +3760,7 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
-exports.push([module.i, ".options-pane {\n  position: relative;\n  padding: 10px;\n  margin: 5px;\n  border-radius: 3px;\n  width: 170px;\n  background: rgba(0,0,0,0.2);\n  overflow: hidden;\n}\n\n.expand-button {\n  position: absolute;\n  top: 0px;\n  right: 0px;\n  color: #fff;\n  cursor: pointer;\n}", ""]);
+exports.push([module.i, ".color-picker {\n  border: none;\n  border-radius: 4px;\n  width: calc(100% - 10px);\n  padding-left: 5px;\n  padding-right: 5px;\n  margin-top: 10px;\n  opacity: 0.3;\n}\n\n.property-toggle {\n  color: #fff;\n  width: 50px;\n  font-weight: 200;\n  font-family: Roboto, serif;\n  font-size: 12px;\n}\n\n.color-input {\n  color: #fff;\n  font-weight: 200;\n  font-size: 12px;\n  width: 40px;\n  text-align: center;\n}\n\n.color-circle {\n  border-radius: 50%;\n  width: 10px;\n  height: 10px;\n  background: yellow;\n  display: inline-block;\n  margin-left: 10px;\n}\n\n.vec2-input {\n  color: #fff;\n  font-weight: 200;\n  font-size: 12px;\n  width: 70px;\n  text-align: center;\n}", ""]);
 
 // exports
 
@@ -3881,6 +3778,24 @@ exports = module.exports = __webpack_require__(16)();
 
 
 // module
+exports.push([module.i, ".options-pane {\n  position: relative;\n  padding: 10px;\n  margin: 5px;\n  border-radius: 3px;\n  width: 170px;\n  background: rgba(0,0,0,0.2);\n  overflow: hidden;\n}\n\n.expand-button {\n  position: absolute;\n  top: 0px;\n  right: 0px;\n  color: #fff;\n  cursor: pointer;\n}", ""]);
+
+// exports
+
+
+/*** EXPORTS FROM exports-loader ***/
+module.exports = module.exports.toString();
+
+/***/ }),
+
+/***/ 383:
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(16)();
+// imports
+
+
+// module
 exports.push([module.i, ".top-bar {\n  position: absolute;\n  width: 100%;\n  top: 0;\n  height: 50px;\n  background: rgba(0,0,0,0.0);\n  pointer-events: visible;\n}\n\n.header {\n  font-size: 35px;\n  font-weight: 200;\n  font-family: 'Permanent Marker', cursive;\n  line-height: 50px;\n  color: #fff;\n  width: 100%;\n  text-align: center;\n}", ""]);
 
 // exports
@@ -3891,7 +3806,7 @@ module.exports = module.exports.toString();
 
 /***/ }),
 
-/***/ 384:
+/***/ 385:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -4140,148 +4055,148 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 384;
+webpackContext.id = 385;
 
-
-/***/ }),
-
-/***/ 386:
-/***/ (function(module, exports) {
-
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nhighp float random_1_0(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform float u_time;\nuniform float u_zoom;\nuniform vec2 u_rendererResolution;\nuniform vec2 u_resolution;\nuniform vec2 u_mousePosition;\nuniform sampler2D u_texture;\n\nfloat distanceToBox(vec2 rendererResolution) {\n  vec2 min = (vec2(1.0) - rendererResolution / u_resolution) / 2.0 * u_resolution;\n  vec2 max = ((vec2(1.0) - rendererResolution / u_resolution) / 2.0 + rendererResolution / u_resolution) * u_resolution;\n  vec2 closestPos = clamp(gl_FragCoord.xy, min, max);\n\n  vec2 toBox = (closestPos - gl_FragCoord.xy);\n  return pow(abs(length(toBox)) / 500.0, 0.55 + 0.1 * sin(3.0 * u_time));\n}\n\nfloat boundingBoxCollision3d(vec3 origin, vec3 direction, vec2 rendererResolution) {\n  vec2 bottom2d = (vec2(1.0) - rendererResolution / u_resolution) / 2.0 * u_resolution;\n  vec2 top2d = ((vec2(1.0) - rendererResolution / u_resolution) / 2.0 + rendererResolution / u_resolution) * u_resolution;\n\n  vec3 bottom = vec3(bottom2d.x, bottom2d.y, 0.1);\n  vec3 top = vec3(top2d.x, top2d.y, 0.2);\n\n  vec3 dirfrac = vec3(1,1,1) / direction;\n\n  vec3 t1 = (bottom - origin) * dirfrac;\n  vec3 t2 = (top - origin) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  if (tmax < 0.0 || tmin > tmax) return 10000.0;\n\n  return tmin;\n}\n\nvoid main() {\n  vec3 mousePosition = vec3(u_mousePosition.x, u_resolution.y - u_mousePosition.y, 3.0);\n  vec3 backgroundPosition = vec3(gl_FragCoord.x, gl_FragCoord.y, 0.0);\n\n  vec3 background;\n  vec2 rendererResolution = u_rendererResolution * u_zoom;\n\n  vec2 rendererScale = (u_resolution / rendererResolution);\n  vec2 rendererOffset = (vec2(1.0) - rendererScale) / 2.0;\n  vec2 rendererSamplePosition = rendererOffset + v_texCoord * rendererScale;\n  vec3 rendererColor = texture(u_texture, rendererSamplePosition).xyz;\n\n  if (rendererSamplePosition.x > 1.0 || rendererSamplePosition.x < 0.0 || rendererSamplePosition.y > 1.0 || rendererSamplePosition.y < 0.0) {\n    float boxDistance = distanceToBox(rendererResolution);\n    float lightDistance = abs(length(backgroundPosition - mousePosition));\n\n    float lightIntesity = 1.0 - clamp(pow(lightDistance / 1500.0, 2.0), 0.0, 1.0);\n\n    vec3 toLight = normalize(mousePosition - backgroundPosition);\n    float distanceToBox = boundingBoxCollision3d(backgroundPosition, toLight, rendererResolution);\n\n    if (distanceToBox != 10000.0 && lightDistance > distanceToBox) {\n      lightIntesity *= clamp(pow(distanceToBox / 30.0, 1.0), 0.0, 1.0);\n    }\n\n    background = (0.2 * lightIntesity + 0.8) * (0.15 + boxDistance) * vec3(0.15 + 0.5 * (1.0 - length(vec2(0.5) - v_texCoord)));\n  }\n  else {\n    background = rendererColor;\n  }\n  outColor = vec4(background, 1.0);\n}"
 
 /***/ }),
 
 /***/ 387:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nhighp float random_1_0(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\n\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform float u_time;\nuniform float u_zoom;\nuniform vec2 u_rendererResolution;\nuniform vec2 u_resolution;\nuniform vec2 u_mousePosition;\nuniform sampler2D u_texture;\n\nfloat distanceToBox(vec2 rendererResolution) {\n  vec2 min = (vec2(1.0) - rendererResolution / u_resolution) / 2.0 * u_resolution;\n  vec2 max = ((vec2(1.0) - rendererResolution / u_resolution) / 2.0 + rendererResolution / u_resolution) * u_resolution;\n  vec2 closestPos = clamp(gl_FragCoord.xy, min, max);\n\n  vec2 toBox = (closestPos - gl_FragCoord.xy);\n  return pow(abs(length(toBox)) / 500.0, 0.55 + 0.1 * sin(3.0 * u_time));\n}\n\nfloat boundingBoxCollision3d(vec3 origin, vec3 direction, vec2 rendererResolution) {\n  vec2 bottom2d = (vec2(1.0) - rendererResolution / u_resolution) / 2.0 * u_resolution;\n  vec2 top2d = ((vec2(1.0) - rendererResolution / u_resolution) / 2.0 + rendererResolution / u_resolution) * u_resolution;\n\n  vec3 bottom = vec3(bottom2d.x, bottom2d.y, 0.1);\n  vec3 top = vec3(top2d.x, top2d.y, 0.2);\n\n  vec3 dirfrac = vec3(1,1,1) / direction;\n\n  vec3 t1 = (bottom - origin) * dirfrac;\n  vec3 t2 = (top - origin) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  if (tmax < 0.0 || tmin > tmax) return 10000.0;\n\n  return tmin;\n}\n\nvoid main() {\n  vec3 mousePosition = vec3(u_mousePosition.x, u_resolution.y - u_mousePosition.y, 3.0);\n  vec3 backgroundPosition = vec3(gl_FragCoord.x, gl_FragCoord.y, 0.0);\n\n  vec3 background;\n  vec2 rendererResolution = u_rendererResolution * u_zoom;\n\n  vec2 rendererScale = (u_resolution / rendererResolution);\n  vec2 rendererOffset = (vec2(1.0) - rendererScale) / 2.0;\n  vec2 rendererSamplePosition = rendererOffset + v_texCoord * rendererScale;\n  vec3 rendererColor = texture(u_texture, rendererSamplePosition).xyz;\n\n  if (rendererSamplePosition.x > 1.0 || rendererSamplePosition.x < 0.0 || rendererSamplePosition.y > 1.0 || rendererSamplePosition.y < 0.0) {\n    float boxDistance = distanceToBox(rendererResolution);\n    float lightDistance = abs(length(backgroundPosition - mousePosition));\n\n    float lightIntesity = 1.0 - clamp(pow(lightDistance / 1500.0, 2.0), 0.0, 1.0);\n\n    vec3 toLight = normalize(mousePosition - backgroundPosition);\n    float distanceToBox = boundingBoxCollision3d(backgroundPosition, toLight, rendererResolution);\n\n    if (distanceToBox != 10000.0 && lightDistance > distanceToBox) {\n      lightIntesity *= clamp(pow(distanceToBox / 30.0, 1.0), 0.0, 1.0);\n    }\n\n    background = (0.2 * lightIntesity + 0.8) * (0.15 + boxDistance) * vec3(0.15 + 0.5 * (1.0 - length(vec2(0.5) - v_texCoord)));\n  }\n  else {\n    background = rendererColor;\n  }\n  outColor = vec4(background, 1.0);\n}"
 
 /***/ }),
 
 /***/ 388:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform vec2 u_resolution;\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n  float offset[5];\n  offset[0] = -2.0;\n  offset[1] = -1.0;\n  offset[2] = 0.0;\n  offset[3] = 1.0;\n  offset[4] = 2.0;\n\n  float weightInverse[5];\n  weightInverse[0] = 0.0625;\n  weightInverse[1] = 0.25;\n  weightInverse[2] = 0.375;\n  weightInverse[3] = 0.25;\n  weightInverse[4] = 0.0625;\n  vec3 color = vec3(0.0, 0.0, 0.0);\n\n  for (int x = 0; x < 5; x++) {\n    color += vec3(texture(u_buffer_texture, v_texCoord + vec2(offset[x] / u_resolution.x, 0))) * weightInverse[x];\n  }\n\n\toutColor = vec4(color, 1.0);\n }\n"
+module.exports = "#version 300 es\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
 
 /***/ }),
 
 /***/ 389:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform vec2 u_resolution;\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n  float offset[5];\n  offset[0] = -2.0;\n  offset[1] = -1.0;\n  offset[2] = 0.0;\n  offset[3] = 1.0;\n  offset[4] = 2.0;\n\n  float weightInverse[5];\n  weightInverse[0] = 0.0625;\n  weightInverse[1] = 0.25;\n  weightInverse[2] = 0.375;\n  weightInverse[3] = 0.25;\n  weightInverse[4] = 0.0625;\n  vec3 color = vec3(0.0, 0.0, 0.0);\n\n  for (int x = 0; x < 5; x++) {\n    color += vec3(texture(u_buffer_texture, v_texCoord + vec2(0.0, offset[x] / u_resolution.y))) * weightInverse[x];\n  }\n\n\toutColor = vec4(color, 1.0);\n }\n"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform vec2 u_resolution;\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n  float offset[5];\n  offset[0] = -2.0;\n  offset[1] = -1.0;\n  offset[2] = 0.0;\n  offset[3] = 1.0;\n  offset[4] = 2.0;\n\n  float weightInverse[5];\n  weightInverse[0] = 0.0625;\n  weightInverse[1] = 0.25;\n  weightInverse[2] = 0.375;\n  weightInverse[3] = 0.25;\n  weightInverse[4] = 0.0625;\n  vec3 color = vec3(0.0, 0.0, 0.0);\n\n  for (int x = 0; x < 5; x++) {\n    color += vec3(texture(u_buffer_texture, v_texCoord + vec2(offset[x] / u_resolution.x, 0))) * weightInverse[x];\n  }\n\n\toutColor = vec4(color, 1.0);\n }\n"
 
 /***/ }),
 
 /***/ 390:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform vec2 u_resolution;\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n  float offset[5];\n  offset[0] = -2.0;\n  offset[1] = -1.0;\n  offset[2] = 0.0;\n  offset[3] = 1.0;\n  offset[4] = 2.0;\n\n  float weightInverse[5];\n  weightInverse[0] = 0.0625;\n  weightInverse[1] = 0.25;\n  weightInverse[2] = 0.375;\n  weightInverse[3] = 0.25;\n  weightInverse[4] = 0.0625;\n  vec3 color = vec3(0.0, 0.0, 0.0);\n\n  for (int x = 0; x < 5; x++) {\n    color += vec3(texture(u_buffer_texture, v_texCoord + vec2(0.0, offset[x] / u_resolution.y))) * weightInverse[x];\n  }\n\n\toutColor = vec4(color, 1.0);\n }\n"
 
 /***/ }),
 
 /***/ 391:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n\tvec3 color = vec3(texture(u_buffer_texture, v_texCoord));\n\n  float bloomThreshold = 0.7;\n  if (color.r < bloomThreshold) color.r = 0.0;\n  if (color.g < bloomThreshold) color.g = 0.0;\n  if (color.b < bloomThreshold) color.b = 0.0;\n\n  outColor = vec4(color, 1.0);\n}\n"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
 
 /***/ }),
 
 /***/ 392:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform sampler2D u_buffer_texture;\n\nvoid main() {\n\tvec3 color = vec3(texture(u_buffer_texture, v_texCoord));\n\n  float bloomThreshold = 0.7;\n  if (color.r < bloomThreshold) color.r = 0.0;\n  if (color.g < bloomThreshold) color.g = 0.0;\n  if (color.b < bloomThreshold) color.b = 0.0;\n\n  outColor = vec4(color, 1.0);\n}\n"
 
 /***/ }),
 
 /***/ 393:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform sampler2D u_mainTexture;\nuniform sampler2D u_bloomTexture;\n\nuniform float u_bloomEnabled;\nuniform float u_bloomAlpha;\n\nvoid main() {\n  vec3 mainColor = texture(u_mainTexture, v_texCoord).xyz;\n  vec3 bloomColor = u_bloomAlpha * mix(texture(u_bloomTexture, v_texCoord).xyz, vec3(0.0), 1.0 - u_bloomEnabled);\n\toutColor = vec4(mainColor + bloomColor, 1.0);\n}\n"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
 
 /***/ }),
 
 /***/ 394:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\nuniform sampler2D u_mainTexture;\nuniform sampler2D u_bloomTexture;\n\nuniform float u_bloomEnabled;\nuniform float u_bloomAlpha;\n\nvoid main() {\n  vec3 mainColor = texture(u_mainTexture, v_texCoord).xyz;\n  vec3 bloomColor = u_bloomAlpha * mix(texture(u_bloomTexture, v_texCoord).xyz, vec3(0.0), 1.0 - u_bloomEnabled);\n\toutColor = vec4(mainColor + bloomColor, 1.0);\n}\n"
 
 /***/ }),
 
 /***/ 395:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"loader\" *ngIf=\"settingsService.isLoadingSub | async\">\n  <md-spinner class=\"spinner\"></md-spinner>\n</div>\n\n<canvas width=\"512\" height=\"512\" id=\"renderCanvas\" #renderCanvas></canvas>\n<top-bar></top-bar>\n<fractal-settings></fractal-settings>\n<object-settings></object-settings>\n<render-options></render-options>\n<!--<bottom-bar></bottom-bar>-->\n\n<!--<loading-dialog></loading-dialog>-->"
+module.exports = "#version 300 es\nprecision mediump float;\n#define GLSLIFY 1\n\nin vec2 a_texCoord;\nin vec4 a_position;\n\nout vec2 v_texCoord;\n\nvoid main() {\n  gl_Position = a_position;\n  v_texCoord = a_texCoord;\n}"
 
 /***/ }),
 
 /***/ 396:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"bottom-bar\">\n</div>"
+module.exports = "<div class=\"loader\" *ngIf=\"settingsService.isLoadingSub | async\">\n  <md-spinner class=\"spinner\"></md-spinner>\n</div>\n\n<canvas width=\"512\" height=\"512\" id=\"renderCanvas\" #renderCanvas></canvas>\n<top-bar></top-bar>\n<fractal-settings></fractal-settings>\n<object-settings></object-settings>\n<render-options></render-options>\n<!--<bottom-bar></bottom-bar>-->\n\n<!--<loading-dialog></loading-dialog>-->"
 
 /***/ }),
 
 /***/ 397:
 /***/ (function(module, exports) {
 
-module.exports = "<h1 style=\"font-weight: 200\" md-dialog-title>Loading scene..</h1>\n<div md-dialog-content>\n  <md-spinner class=\"spinner\"></md-spinner>\n</div>"
+module.exports = "<div class=\"bottom-bar\">\n</div>"
 
 /***/ }),
 
 /***/ 398:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"right-pane\" *ngIf=\"rayMarchingMode\">\n  <div class=\"scroll\">\n    <settings-container title=\"Fractal settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Fractal type</div>\n        <md-select [(ngModel)]=\"selelectedMaterial\" class=\"dropdown\" (change)=\"settingsService.fractalTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let fractal of fractals\" [value]=\"fractal.id\">\n            {{ fractal.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Shape</div>\n        <md-slider min=\"1\" max=\"19\" step=\"0.1\" value=\"10.0\" (input)=\"powerUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.powerObservable | async | number: '1.1-1'}}</span>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Detail level</div>\n        <md-slider min=\"100\" max=\"10000\" step=\"1\" value=\"1000\" (input)=\"detailLevelUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Max iterations</div>\n        <md-slider min=\"1\" max=\"1000\" step=\"1\" value=\"300\" (input)=\"maxIterationsUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.maxIterationsObservable | async | number: '1.0-0'}}</span>\n      </div>\n\n      <!--\n        Menger sponge attributes\n      -->\n\n      <div *ngIf=\"settingsService.mengerSponge.isEnabled\">\n        <div *ngFor=\"let attribute of settingsService.mengerSponge.attributes\">\n          <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n        </div>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Material settings\" [expanded]=\"true\">\n\n      <div *ngFor=\"let attribute of settingsService.materialSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Material type</div>-->\n        <!--<md-select [(ngModel)]=\"selelectedMaterial\" class=\"dropdown\" (change)=\"materialTypeChange($event)\">-->\n          <!--<md-option *ngFor=\"let material of materials\" [value]=\"material.id\">-->\n            <!--{{ material.name }}-->\n          <!--</md-option>-->\n        <!--</md-select>-->\n      <!--</div>-->\n\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Color</div>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"redClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"greenClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"blueClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--&lt;!&ndash;<input class=\"color-picker\" [cpPosition]=\"'left'\" [(colorPicker)]=\"materialColor\" [style.background]=\"materialColor\" (colorPickerChange)=\"materialColorChanged($event)\"/>&ndash;&gt;-->\n      <!--</div>-->\n    </settings-container>\n  <!--<div class=\"options-pane\">-->\n    <!--<div class=\"info-header\">-->\n      <!--Render settings-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Resolution</div>-->\n      <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n        <!--<input class=\"resolution-input\" [(ngModel)]=\"_resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\" #resolutionWidth>-->\n      <!--</md-input-container>-->\n      <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n        <!--<input class=\"resolution-input\" [(ngModel)]=\"_resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\" #resolutionHeight>-->\n      <!--</md-input-container>-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Detail level</div>-->\n      <!--<md-slider min=\"100\" max=\"10000\" step=\"1\" value=\"1000\" (input)=\"detailLevelUpdate($event)\"></md-slider>-->\n      <!--<span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Max iterations</div>-->\n      <!--<md-slider min=\"1\" max=\"1000\" step=\"1\" value=\"300\" (input)=\"maxIterationsUpdate($event)\"></md-slider>-->\n      <!--<span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->\n    <!--</div>-->\n  <!--</div>-->\n\n  </div>\n</div>"
+module.exports = "<h1 style=\"font-weight: 200\" md-dialog-title>Loading scene..</h1>\n<div md-dialog-content>\n  <md-spinner class=\"spinner\"></md-spinner>\n</div>"
 
 /***/ }),
 
 /***/ 399:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"right-pane\" *ngIf=\"rayTracingMode\">\n  <div class=\"scroll\">\n    <settings-container title=\"Scene settings\" [expanded]=\"true\">\n      <div class=\"property-header\">Default scenes</div>\n      <md-select [(ngModel)]=\"sceneId\" class=\"dropdown\" (change)=\"sceneUpdate()\">\n        <md-option *ngFor=\"let type of defaultScenes\" [value]=\"type.id\">\n          {{ type.name }}\n        </md-option>\n      </md-select>\n    </settings-container>\n\n    <div *ngIf=\"rayTracingMode && selectedObject != null\">\n      <settings-container title=\"Object settings\" [expanded]=\"true\">\n        <div class=\"vec3-header\">Position</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[0]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[1]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[2]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n\n        <div class=\"vec3-header\">Scale</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[0]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[1]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[2]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n\n        <div class=\"vec3-header\">Rotation</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[0]\" mdInput (change)=\"updateColor()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[1]\" mdInput (change)=\"updateColor()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[2]\" mdInput (change)=\"updateRotation()\" type=\"number\">\n        </md-input-container>\n      </settings-container>\n\n      <settings-container title=\"Object material\" [expanded]=\"true\">\n        <div class=\"property-header\">Material type</div>\n        <md-select [(ngModel)]=\"materialType\" class=\"dropdown\" (change)=\"materialUpdate()\">\n          <md-option *ngFor=\"let type of materials\" [value]=\"type.id\">\n            {{ type.name }}\n          </md-option>\n        </md-select>\n\n        <!-- MATERIAL COLOR -->\n        <div>\n          <div class=\"property-header\">\n            Material color\n            <div class=\"color-circle\" [style.background-color]=\"'rgba(' + materialColor[0] + ',' + materialColor[1] + ',' + materialColor[2] + ',1)'\"></div>\n          </div>\n\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[0]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[1]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[2]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n        </div>\n\n\n        <!-- DIFFUSE MATERIAL -->\n        <div *ngIf=\"materialType == 0\">\n          <div class=\"property-header\">Albedo</div>\n          <md-slider\n            min=\"0\"\n            max=\"20\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter1}}\"\n            (input)=\"materialExtraParameter1 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter1 | number: '1.2-2'}}</span>\n\n          <div class=\"property-header\">Roughness</div>\n          <md-slider\n            min=\"0\"\n            max=\"20\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter2}}\"\n            (input)=\"materialExtraParameter2 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter2 | number: '1.2-2'}}</span>\n        </div>\n\n        <!-- GLOSSY MATERIAL -->\n        <div *ngIf=\"materialType == 5\">\n          <div class=\"property-header\">Shininess</div>\n          <md-slider\n            min=\"0\"\n            max=\"100\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter1}}\"\n            (input)=\"materialExtraParameter1 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter1 | number: '1.2-2'}}</span>\n        </div>\n\n        <!-- Emission MATERIAL -->\n        <div *ngIf=\"materialType == 2\">\n          <div class=\"property-header\">Emission rate</div>\n          <md-slider\n            min=\"0\"\n            max=\"100\"\n            step=\"0.01\"\n            value=\"{{materialEmission}}\"\n            (input)=\"materialEmission = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialEmission | number: '1.2-2'}}</span>\n        </div>\n      </settings-container>\n    </div>\n\n  </div>\n</div>"
+module.exports = "<div class=\"right-pane\" *ngIf=\"rayMarchingMode\">\n  <div class=\"scroll\">\n    <settings-container title=\"Fractal settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Fractal type</div>\n        <md-select [(ngModel)]=\"selelectedMaterial\" class=\"dropdown\" (change)=\"settingsService.fractalTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let fractal of fractals\" [value]=\"fractal.id\">\n            {{ fractal.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Shape</div>\n        <md-slider min=\"1\" max=\"19\" step=\"0.1\" value=\"10.0\" (input)=\"powerUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.powerObservable | async | number: '1.1-1'}}</span>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Detail level</div>\n        <md-slider min=\"100\" max=\"10000\" step=\"1\" value=\"1000\" (input)=\"detailLevelUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Max iterations</div>\n        <md-slider min=\"1\" max=\"1000\" step=\"1\" value=\"300\" (input)=\"maxIterationsUpdate($event)\"></md-slider>\n        <span class=\"data-label\">{{settingsService.maxIterationsObservable | async | number: '1.0-0'}}</span>\n      </div>\n\n      <!--\n        Menger sponge attributes\n      -->\n\n      <div *ngIf=\"settingsService.mengerSponge.isEnabled\">\n        <div *ngFor=\"let attribute of settingsService.mengerSponge.attributes\">\n          <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n        </div>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Material settings\" [expanded]=\"true\">\n\n      <div *ngFor=\"let attribute of settingsService.materialSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Material type</div>-->\n        <!--<md-select [(ngModel)]=\"selelectedMaterial\" class=\"dropdown\" (change)=\"materialTypeChange($event)\">-->\n          <!--<md-option *ngFor=\"let material of materials\" [value]=\"material.id\">-->\n            <!--{{ material.name }}-->\n          <!--</md-option>-->\n        <!--</md-select>-->\n      <!--</div>-->\n\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Color</div>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"redClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"greenClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"color-input\" [(ngModel)]=\"blueClr\" mdInput (change)=\"updateColor()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--&lt;!&ndash;<input class=\"color-picker\" [cpPosition]=\"'left'\" [(colorPicker)]=\"materialColor\" [style.background]=\"materialColor\" (colorPickerChange)=\"materialColorChanged($event)\"/>&ndash;&gt;-->\n      <!--</div>-->\n    </settings-container>\n  <!--<div class=\"options-pane\">-->\n    <!--<div class=\"info-header\">-->\n      <!--Render settings-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Resolution</div>-->\n      <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n        <!--<input class=\"resolution-input\" [(ngModel)]=\"_resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\" #resolutionWidth>-->\n      <!--</md-input-container>-->\n      <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n        <!--<input class=\"resolution-input\" [(ngModel)]=\"_resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\" #resolutionHeight>-->\n      <!--</md-input-container>-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Detail level</div>-->\n      <!--<md-slider min=\"100\" max=\"10000\" step=\"1\" value=\"1000\" (input)=\"detailLevelUpdate($event)\"></md-slider>-->\n      <!--<span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->\n    <!--</div>-->\n\n    <!--<div class=\"property-box\">-->\n      <!--<div class=\"property-header\">Max iterations</div>-->\n      <!--<md-slider min=\"1\" max=\"1000\" step=\"1\" value=\"300\" (input)=\"maxIterationsUpdate($event)\"></md-slider>-->\n      <!--<span class=\"data-label\">{{settingsService.detailLevelObservable | async | number: '1.0-0'}}</span>-->\n    <!--</div>-->\n  <!--</div>-->\n\n  </div>\n</div>"
 
 /***/ }),
 
 /***/ 400:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"left-pane\">\n  <div class=\"scroll\">\n    <settings-container title=\"Render status\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <span class=\"property-header\">Start/stop render</span>\n        <span *ngIf=\"!(settingsService.shouldRenderSub.asObservable() | async)\">\n          <button (click)=\"settingsService.shouldRender = true\" md-icon-button><md-icon style=\"color: #fff\">play_arrow</md-icon></button>\n        </span>\n        <span *ngIf=\"settingsService.shouldRenderSub.asObservable() | async\">\n          <button (click)=\"settingsService.shouldRender = false\" md-icon-button><md-icon style=\"color: #fff\">pause</md-icon></button>\n        </span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 10px\">\n        <span class=\"property-header\">Rendered samples</span>\n        <span class=\"property-header\" style=\"font-weight: 400\">{{renderService.samples}}</span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 20px\">\n        <div class=\"property-header\">Move with <b>w, a, s, d</b></div>\n      </div>\n    </settings-container>\n    <settings-container title=\"Render settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render type</div>\n        <md-select [(ngModel)]=\"renderType\" class=\"dropdown\" (change)=\"settingsService.renderTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let renderType of renderTypes\" [value]=\"renderType.id\">\n            {{ renderType.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Resolution</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"resolution-input\" [(ngModel)]=\"resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">\n        </md-input-container>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render view zoom</div>\n        <md-slider min=\"20\" max=\"300\" step=\"0.1\" value=\"100.0\" (input)=\"zoomSliderUpdate($event)\" #zoomSlider></md-slider>\n        <span class=\"data-label\">{{settingsService.zoomSub.asObservable() | async }}x</span>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Lightning\" [expanded]=\"true\">\n      <div *ngFor=\"let attribute of settingsService.lightSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Custom light dome texture</div>\n        <input style=\"color: #fff; width: 170px; margin-top: 10px; font-weight: 200\" type=\"file\" (change)=\"imageUpload($event)\" />\n      </div>\n\n    </settings-container>\n\n    <settings-container title=\"Render effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.renderEffectSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Post effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.bloomSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <div class=\"options-pane\">\n      <button class=\"pane-button\" (click)=\"downloadImage()\" md-raised-button>Save image</button>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"right-pane\" *ngIf=\"rayTracingMode\">\n  <div class=\"scroll\">\n    <settings-container title=\"Scene settings\" [expanded]=\"true\">\n      <div class=\"property-header\">Default scenes</div>\n      <md-select [(ngModel)]=\"sceneId\" class=\"dropdown\" (change)=\"sceneUpdate()\">\n        <md-option *ngFor=\"let type of defaultScenes\" [value]=\"type.id\">\n          {{ type.name }}\n        </md-option>\n      </md-select>\n    </settings-container>\n\n    <div *ngIf=\"rayTracingMode && selectedObject != null\">\n      <settings-container title=\"Object settings\" [expanded]=\"true\">\n        <div class=\"vec3-header\">Position</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[0]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[1]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"position[2]\" mdInput (change)=\"positionUpdate()\" type=\"number\">\n        </md-input-container>\n\n        <div class=\"vec3-header\">Scale</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[0]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[1]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"scale[2]\" mdInput (change)=\"scaleUpdate()\" type=\"number\">\n        </md-input-container>\n\n        <div class=\"vec3-header\">Rotation</div>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[0]\" mdInput (change)=\"updateColor()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[1]\" mdInput (change)=\"updateColor()\" type=\"number\">\n        </md-input-container>\n        <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n          <input class=\"vec3-input\" [(ngModel)]=\"rotation[2]\" mdInput (change)=\"updateRotation()\" type=\"number\">\n        </md-input-container>\n      </settings-container>\n\n      <settings-container title=\"Object material\" [expanded]=\"true\">\n        <div class=\"property-header\">Material type</div>\n        <md-select [(ngModel)]=\"materialType\" class=\"dropdown\" (change)=\"materialUpdate()\">\n          <md-option *ngFor=\"let type of materials\" [value]=\"type.id\">\n            {{ type.name }}\n          </md-option>\n        </md-select>\n\n        <!-- MATERIAL COLOR -->\n        <div>\n          <div class=\"property-header\">\n            Material color\n            <div class=\"color-circle\" [style.background-color]=\"'rgba(' + materialColor[0] + ',' + materialColor[1] + ',' + materialColor[2] + ',1)'\"></div>\n          </div>\n\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[0]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[1]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n          <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n            <input class=\"color-input\" [(ngModel)]=\"materialColor[2]\" mdInput (change)=\"materialUpdate()\" type=\"number\">\n          </md-input-container>\n        </div>\n\n\n        <!-- DIFFUSE MATERIAL -->\n        <div *ngIf=\"materialType == 0\">\n          <div class=\"property-header\">Albedo</div>\n          <md-slider\n            min=\"0\"\n            max=\"20\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter1}}\"\n            (input)=\"materialExtraParameter1 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter1 | number: '1.2-2'}}</span>\n\n          <div class=\"property-header\">Roughness</div>\n          <md-slider\n            min=\"0\"\n            max=\"20\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter2}}\"\n            (input)=\"materialExtraParameter2 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter2 | number: '1.2-2'}}</span>\n        </div>\n\n        <!-- GLOSSY MATERIAL -->\n        <div *ngIf=\"materialType == 5\">\n          <div class=\"property-header\">Shininess</div>\n          <md-slider\n            min=\"0\"\n            max=\"20\"\n            step=\"0.01\"\n            value=\"{{materialExtraParameter1}}\"\n            (input)=\"materialExtraParameter1 = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialExtraParameter1 | number: '1.2-2'}}</span>\n        </div>\n\n        <!-- Emission MATERIAL -->\n        <div *ngIf=\"materialType == 2\">\n          <div class=\"property-header\">Emission rate</div>\n          <md-slider\n            min=\"0\"\n            max=\"100\"\n            step=\"0.01\"\n            value=\"{{materialEmission}}\"\n            (input)=\"materialEmission = $event.value; materialUpdate()\"\n          ></md-slider>\n          <span class=\"data-label\">{{materialEmission | number: '1.2-2'}}</span>\n        </div>\n      </settings-container>\n    </div>\n\n  </div>\n</div>"
 
 /***/ }),
 
 /***/ 401:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"property-box\">\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_SLIDER'\">\n    <div class=\"property-header\">{{attribute.getValue().name}}</div>\n\n    <md-slider\n      min=\"{{attribute.getValue().uiAttributes.minValue}}\"\n      max=\"{{attribute.getValue().uiAttributes.maxValue}}\"\n      step=\"{{attribute.getValue().uiAttributes.stepSize}}\"\n      value=\"{{(attribute | async ).value}}\"\n      (input)=\"updateAttribute($event.value)\"\n    ></md-slider>\n    <span class=\"data-label\">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_COLORPICKER'\">\n    <div class=\"property-header\">\n      {{attribute.getValue().name}}\n      <div class=\"color-circle\" [style.background-color]=\"'rgba(' + redClr + ',' + greenClr + ',' + blueClr + ',1)'\"></div>\n    </div>\n\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"redClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"greenClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"blueClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_DROPDOWN'\">\n    <div class=\"property-header\">{{attribute.getValue().name}}</div>\n    <md-select [(ngModel)]=\"dropdownSelection\" class=\"dropdown\" (change)=\"updateDropdown()\">\n      <md-option *ngFor=\"let type of attribute.getValue().uiAttributes.alternatives\" [value]=\"type.id\">\n        {{ type.name }}\n      </md-option>\n    </md-select>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_TOGGLE'\" style=\"margin-top: 10px;\">\n    <span style=\"height: 50px;\">\n       <md-slide-toggle [checked]=\"enabled\" class=\"property-toggle\" (change)=\"updateAttribute($event.checked ? 1.0 : 0.0)\">\n         <span style=\"padding-left: 35px;\">\n            {{attribute.getValue().name}}\n         </span>\n       </md-slide-toggle>\n    </span>\n\n  </div>\n\n</div>\n"
+module.exports = "<div class=\"left-pane\">\n  <div class=\"scroll\">\n    <settings-container title=\"Render status\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <span class=\"property-header\">Start/stop render</span>\n        <span *ngIf=\"!(settingsService.shouldRenderSub.asObservable() | async)\">\n          <button (click)=\"settingsService.shouldRender = true\" md-icon-button><md-icon style=\"color: #fff\">play_arrow</md-icon></button>\n        </span>\n        <span *ngIf=\"settingsService.shouldRenderSub.asObservable() | async\">\n          <button (click)=\"settingsService.shouldRender = false\" md-icon-button><md-icon style=\"color: #fff\">pause</md-icon></button>\n        </span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 10px\">\n        <span class=\"property-header\">Rendered samples</span>\n        <span class=\"property-header\" style=\"font-weight: 400\">{{renderService.samples}}</span>\n      </div>\n      <div class=\"property-box\" style=\"margin-top: 20px\">\n        <div class=\"property-header\">Move with <b>w, a, s, d</b></div>\n      </div>\n    </settings-container>\n    <settings-container title=\"Render settings\" [expanded]=\"true\">\n      <div class=\"property-box\">\n        <div class=\"property-header\">Render type</div>\n        <md-select [(ngModel)]=\"renderType\" class=\"dropdown\" (change)=\"settingsService.renderTypeSub.next($event.value)\">\n          <md-option *ngFor=\"let renderType of renderTypes\" [value]=\"renderType.id\">\n            {{ renderType.name }}\n          </md-option>\n        </md-select>\n      </div>\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Resolution</div>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"resolution-input\" [(ngModel)]=\"resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">-->\n        <!--</md-input-container>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"resolution-input\" [(ngModel)]=\"resolutionHeight\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">-->\n        <!--</md-input-container>-->\n      <!--</div>-->\n\n      <!--<div class=\"property-box\">-->\n        <!--<div class=\"property-header\">Trace depth</div>-->\n        <!--<md-input-container dividerColor=\"accent\" mdSuffix=\"px\">-->\n          <!--<input class=\"resolution-input\" [(ngModel)]=\"resolutionWidth\" mdInput (change)=\"resolutionUpdate()\" type=\"number\">-->\n        <!--</md-input-container>-->\n      <!--</div>-->\n\n      <div class=\"property-box\" style=\"margin-top: 15px;\">\n        <div class=\"property-header\">Render view zoom</div>\n        <md-slider min=\"20\" max=\"300\" step=\"0.1\" value=\"100.0\" (input)=\"zoomSliderUpdate($event)\" #zoomSlider></md-slider>\n        <span class=\"data-label\">{{settingsService.zoomSub.asObservable() | async }}x</span>\n      </div>\n\n      <div *ngFor=\"let attribute of settingsService.renderSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Lightning\" [expanded]=\"true\">\n      <div *ngFor=\"let attribute of settingsService.lightSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n\n      <div class=\"property-box\">\n        <div class=\"property-header\">Custom light dome texture</div>\n        <input style=\"color: #fff; width: 170px; margin-top: 10px; font-weight: 200\" type=\"file\" (change)=\"imageUpload($event)\" />\n      </div>\n\n    </settings-container>\n\n    <settings-container title=\"Render effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.renderEffectSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <settings-container title=\"Post effects\" [expanded]=\"false\">\n      <div *ngFor=\"let attribute of settingsService.bloomSettings.attributes\">\n        <setting-attribute [attribute]=\"attribute\"></setting-attribute>\n      </div>\n    </settings-container>\n\n    <div class=\"options-pane\">\n      <button class=\"pane-button\" (click)=\"downloadImage()\" md-raised-button>Save image</button>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
 /***/ 402:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"options-pane\" [ngStyle]=\"{'height': expanded ? '' : '20px'}\">\n  <div (click)=\"expanded = !expanded\" class=\"expand-button\" md-button>\n    <button *ngIf=\"!expanded\" md-icon-button>\n      <md-icon style=\"\">keyboard_arrow_down</md-icon>\n    </button>\n    <button *ngIf=\"expanded\" md-icon-button>\n      <md-icon style=\"\">keyboard_arrow_up</md-icon>\n    </button>\n  </div>\n\n  <div class=\"info-header\">{{title}}</div>\n  <ng-content></ng-content>\n</div>"
+module.exports = "<div class=\"property-box\">\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_SLIDER'\">\n    <div class=\"property-header\">{{attribute.getValue().name}}</div>\n\n    <md-slider\n      min=\"{{attribute.getValue().uiAttributes.minValue}}\"\n      max=\"{{attribute.getValue().uiAttributes.maxValue}}\"\n      step=\"{{attribute.getValue().uiAttributes.stepSize}}\"\n      value=\"{{(attribute | async ).value}}\"\n      (input)=\"updateAttribute($event.value)\"\n    ></md-slider>\n    <span class=\"data-label\">{{(attribute.asObservable() | async).value | number: '1.2-2'}}</span>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_COLORPICKER'\">\n    <div class=\"property-header\">\n      {{attribute.getValue().name}}\n      <div class=\"color-circle\" [style.background-color]=\"'rgba(' + redClr + ',' + greenClr + ',' + blueClr + ',1)'\"></div>\n    </div>\n\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"redClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"greenClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"color-input\" [(ngModel)]=\"blueClr\" mdInput (change)=\"updateColor()\" type=\"number\">\n    </md-input-container>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_DROPDOWN'\">\n    <div class=\"property-header\">{{attribute.getValue().name}}</div>\n    <md-select [(ngModel)]=\"dropdownSelection\" class=\"dropdown\" (change)=\"updateDropdown()\">\n      <md-option *ngFor=\"let type of attribute.getValue().uiAttributes.alternatives\" [value]=\"type.id\">\n        {{ type.name }}\n      </md-option>\n    </md-select>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_VEC2'\">\n    <div class=\"property-header\">{{attribute.getValue().name}}</div>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"vec2-input\" [(ngModel)]=\"vec[0]\" mdInput (change)=\"updateVec2()\" type=\"number\">\n    </md-input-container>\n    <md-input-container dividerColor=\"accent\" mdSuffix=\"px\">\n      <input class=\"vec2-input\" [(ngModel)]=\"vec[1]\" mdInput (change)=\"updateVec2()\" type=\"number\">\n    </md-input-container>\n  </div>\n\n  <div *ngIf=\"attribute.getValue().uiType == 'UI_TYPE_TOGGLE'\" style=\"margin-top: 10px;\">\n    <span style=\"height: 50px;\">\n       <md-slide-toggle [checked]=\"enabled\" class=\"property-toggle\" (change)=\"updateAttribute($event.checked ? 1.0 : 0.0)\">\n         <span style=\"padding-left: 35px;\">\n            {{attribute.getValue().name}}\n         </span>\n       </md-slide-toggle>\n    </span>\n\n  </div>\n\n</div>\n"
 
 /***/ }),
 
 /***/ 403:
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"top-bar\">\n  <div class=\"header\">Pathtracer WebGL 2</div>\n</div>"
+module.exports = "<div class=\"options-pane\" [ngStyle]=\"{'height': expanded ? '' : '20px'}\">\n  <div (click)=\"expanded = !expanded\" class=\"expand-button\" md-button>\n    <button *ngIf=\"!expanded\" md-icon-button>\n      <md-icon style=\"\">keyboard_arrow_down</md-icon>\n    </button>\n    <button *ngIf=\"expanded\" md-icon-button>\n      <md-icon style=\"\">keyboard_arrow_up</md-icon>\n    </button>\n  </div>\n\n  <div class=\"info-header\">{{title}}</div>\n  <ng-content></ng-content>\n</div>"
 
 /***/ }),
 
 /***/ 404:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision lowp float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\n// Fractal uniforms\nuniform float u_fractalType;\nuniform float u_power;\nuniform float u_minDistance;\nuniform float u_maxIterations;\nuniform float u_bailout;\n\n// Menger sponge\nuniform float u_halfSpongeScale;\nuniform float u_spongeScale;\nuniform float u_spongeOffset;\n\n// Material uniforms\nuniform float u_materialType;\nuniform vec3 u_materialColor;\nuniform float u_materialExtra1;\nuniform float u_materialExtra2;\n\n// Global light uniforms\nuniform float u_imageBasedLightning;\nuniform vec3 u_globalLightColor;\nuniform float u_fillBackgroundWithLight;\nuniform float u_globalLightPower;\nuniform float u_globalLightContrast;\n\n// Render effect settings\nuniform float u_fogEnabled;\nuniform float u_fogDistance;\nuniform vec3 u_fogColor;\n\n// Renderer uniforms\nuniform float time;\nuniform float samples;\nuniform int trace_depth;\nuniform float global_lightning_enabled;\nuniform int triangle_count;\nuniform int object_count;\nuniform vec2 resolution;\n\n// Camera uniforms\nuniform float u_cameraYaw;\nuniform float u_cameraPitch;\nuniform vec3 camera_position;\nuniform vec3 camera_direction;\nuniform vec3 camera_right;\nuniform vec3 camera_up;\n\nuniform sampler2D u_dome_texture;\n\nuniform sampler2D u_accumulated_texture;\nuniform sampler2D u_buffer_texture;\nuniform sampler2D u_triangle_texture;\nuniform sampler2D u_triangle_index_texture;\nuniform sampler2D u_bvh_texture;\nuniform sampler2D u_light_texture;\nuniform sampler2D u_material_texture;\nuniform sampler2D u_objects_bvh_texture;\nuniform sampler2D u_objects_texture;\nuniform sampler2D u_light_sphere_texture;\n\n#define EPS 0.00000001\n#define PI 3.14\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nstruct Collision {\n  vec3 position;\n  vec3 normal;\n  vec2 uv;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  int material_index;\n  float distance;\n};\n\nstruct Triangle {\n  vec3 v0;\n  vec3 edge1;\n  vec3 edge2;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  vec2 uv0;\n  vec2 uv1;\n  vec2 uv2;\n  float triangle_area;\n  int material_index;\n};\n\nstruct Object {\n  vec3 bounding_bottom;\n  vec3 bounding_top;\n  vec3 position;\n  vec3 scale;\n  float object_bvh_start_index;\n  float triangle_start_index;\n};\n\n// Ray\nstruct Ray {\n  vec3 start_position;\n  vec3 direction;\n};\n\nhighp float random(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\nmat3 rotationMatrixVector(vec3 v, float angle) {\n  float c = cos(angle);\n  float s = sin(angle);\n\n  return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,\n            (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,\n            (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z);\n}\n\nRay createRay(vec2 pixel_position, int sample_step) {\n\n  mat3 cameraRotation = rotationMatrixVector(vec3(0, 1, 0), u_cameraYaw) * rotationMatrixVector(vec3(0, 0, 1), u_cameraPitch);\n\n  float width = resolution.x;\n  float height = resolution.y;\n\n  float i = ((pixel_position.x / width) - 0.5) * width / height;\n  float j = ((pixel_position.y / height) - 0.5);\n  vec3 image_point = i * 1.5 * camera_right + j * 1.5 * camera_up + camera_position + cross(camera_up, camera_right);\n\n  vec3 dx = (camera_up / width);\n  vec3 dy = (camera_right / height);\n  vec3 rand_x = dx * random(vec2(pixel_position.x, pixel_position.y) * vec2(1.9898, 128.13) * (time + float(sample_step)));\n  vec3 rand_y = dy * random(vec2(pixel_position.x, pixel_position.y) * vec2(134.9898, 36.342) * (time + float(sample_step)));\n  image_point += rand_x + rand_y;\n\n  vec3 direction = normalize(cameraRotation * (image_point - camera_position));\n\n  return Ray(camera_position, direction);\n}\n\n// Material\nstruct Material {\n  vec3 color;\n  int material_type;\n  float emission_rate;\n  float material_parameter1;\n  float material_parameter2;\n};\n\nvec2 getSample(vec2 start_sample, vec2 sample_step, float resolution, float steps) {\n  float s = start_sample.x + steps * sample_step.x;\n  return vec2(fract(s), floor(s) / resolution);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nMaterial getMaterial(int material_index) {\n  // Fetch material from texture\n  vec2 start_sample = SAMPLE_STEP_512 * float(material_index) * 3.0;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n\n  vec3 color = vec3(texture(u_material_texture, sample1));\n  vec3 extra_data1 = vec3(texture(u_material_texture, sample2));\n  vec3 extra_data2 = vec3(texture(u_material_texture, sample3));\n\n  int material_type = int(extra_data1.x);\n  float emission_rate = extra_data1.y;\n\n  float material_parameter1 = extra_data2.x;\n  float material_parameter2 = extra_data2.y;\n\n  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 BRDF(Ray ray, Material material, vec2 uv, vec3 collision_normal, vec3 next_dir) {\n\n//  // Emission material\n//  if (material.material_type == EMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Specular material\n//  if (material.material_type == SPECULAR_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Transmission material\n//  if (material.material_type == TRANSMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Glossy material\n//  if (material.material_type == GLOSSY_MATERIAL) {\n//    return material.color;\n//  }\n\n  // Lambertian diffuse material\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float albedo = material.material_parameter1; // material parameter 1 is albedo\n    float roughness = material.material_parameter2; // material parameter 2 is roughness\n    vec3 view_direction = -1.0 * ray.direction;\n\n    // calculate intermediary values\n    float NdotL = dot(collision_normal, next_dir);\n    float NdotV = dot(collision_normal, view_direction);\n\n    float angleVN = acos(NdotV);\n    float angleLN = acos(NdotL);\n\n    float alpha = max(angleVN, angleLN);\n    float beta = min(angleVN, angleLN);\n    float gamma = dot(view_direction - collision_normal * dot(view_direction, collision_normal), next_dir - collision_normal * dot(next_dir, collision_normal));\n\n    float roughnessSquared = roughness * roughness;\n\n    // calculate A and B\n    float A = 1.0 - 0.5 * (roughnessSquared / (roughnessSquared + 0.57));\n    float B = 0.45 * (roughnessSquared / (roughnessSquared + 0.09));\n    float C = sin(alpha) * tan(beta);\n\n    // put it all together\n    float L1 = max(0.0, NdotL) * (A + B * max(0.0, gamma) * C);\n\n    // get the final color\n    return material.color * L1;\n  }\n\n  return material.color;\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 PDF(Ray ray, Material material, vec3 collision_normal, float iteration, inout float distribution) {\n  vec3 real_normal = dot(collision_normal, ray.direction) > 0.0 ? -1.0 * collision_normal : collision_normal;\n  vec3 next_dir;\n\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(0.24, 78.233) * (time + 32.0 * iteration));\n    float r2 = random(v_texCoord * vec2(63.7264, 10.873) * (time + 12.0 * iteration));\n    float r2s = sqrt(r2);\n\n    vec3 w = collision_normal;\n\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n\n    return next_dir;\n  }\n\n  // Fully specular material\n  if (material.material_type == SPECULAR_MATERIAL) {\n    return normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n  }\n\n  // Glossy material\n  if (material.material_type == GLOSSY_MATERIAL) {\n    vec3 reflected = normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(521.9898, 2321.233) * (time + 100.0 * iteration));\n    float r2 = random(v_texCoord * vec2(2631.7264, 5.873) * (time + 12.0 * iteration));\n    float r2s = pow(r2, material.material_parameter1);\n\n    vec3 w = reflected;\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n    return next_dir;\n  }\n\n  if (material.material_type == TRANSMISSION_MATERIAL) {\n    bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?\n    float nc = 1.0;  // Index of Refraction air\n    float nt = 1.5;  // Index of Refraction glass/water\n    float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials\n    float ddn = dot(ray.direction, real_normal);\n    float cos2t = 1.0 - nnt*nnt * (1.0 - ddn*ddn);\n\n    if (cos2t < 0.0) // total internal reflection\n    {\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n    }\n    else // cos2t > 0\n    {\n      // compute direction of transmission ray\n      vec3 tdir = ray.direction * nnt;\n      tdir -= normalize(collision_normal * ((into ? 1.0 : -1.0) * (ddn * nnt + sqrt(cos2t))));\n\n      float R0 = (nt - nc)*(nt - nc) / (nt + nc)*(nt + nc);\n      float c = 1.0 - (into ? -ddn : dot(tdir, collision_normal));\n      float Re = R0 + (1.0 - R0) * c * c * c * c * c;\n      float Tr = 1.0 - Re; // Transmission\n      float P = 0.25 + 0.5 * Re;\n      float RP = Re / P;\n      float TP = Tr / (1.0 - P);\n\n      // randomly choose reflection or transmission ray\n      float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));\n      if (rand < 0.2) // reflection ray\n      {\n        distribution = RP;\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n      }\n      else // transmission ray\n      {\n        distribution = TP;\n        next_dir = normalize(tdir);\n      }\n\n      return next_dir;\n    }\n  }\n\n  return vec3(0,0,0);\n}\n\n// Triangle\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nTriangle GetTriangleFromIndex(float triangle_index) {\n  // Fetch triangle from texture\n  vec2 start_sample = SAMPLE_STEP_2048 * triangle_index * 11.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 4.0);\n  vec2 sample6 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 5.0);\n  vec2 sample7 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 6.0);\n  vec2 sample8 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 7.0);\n  vec2 sample9 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 8.0);\n  vec2 sample10 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 9.0);\n\n  vec3 v0 = vec3(texture(u_triangle_texture, sample1));\n  vec3 edge1 = vec3(texture(u_triangle_texture, sample2));\n  vec3 edge2 = vec3(texture(u_triangle_texture, sample3));\n\n  vec3 n0 = vec3(texture(u_triangle_texture, sample4));\n  vec3 n1 = vec3(texture(u_triangle_texture, sample5));\n  vec3 n2 = vec3(texture(u_triangle_texture, sample6));\n\n  vec2 uv0 = vec2(texture(u_triangle_texture, sample7));\n  vec2 uv1 = vec2(texture(u_triangle_texture, sample8));\n  vec2 uv2 = vec2(texture(u_triangle_texture, sample9));\n\n  int material_index = int(texture(u_triangle_texture, sample10).x);\n  float triangle_area = texture(u_light_texture, sample10).z;\n\n  return Triangle(v0, edge1, edge2, n0, n1, n2, uv0, uv1, uv2, triangle_area, material_index);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nfloat getTriangleIndex(float stackIdx) {\n  vec2 start_sample = SAMPLE_STEP_1024 * stackIdx;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_1024, 1024.0, 0.0);\n\n  vec4 triangle_index_slot = texture(u_triangle_index_texture, sample1);\n  return triangle_index_slot.x;\n}\n\nfloat triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_0, float closest_collision_distance) {\n  vec3 v0_0 = object_position + triangle.v0;\n\n  //Begin calculating determinant - also used to calculate u parameter\n  vec3 P = cross(ray.direction, triangle.edge2);\n  float det = dot(triangle.edge1, P);\n\n  //Distance from vertex1 to ray origin\n  vec3 T = ray.start_position - v0_0;\n  float u = dot(T, P);\n  vec3 Q = cross(T, triangle.edge1);\n  float v = dot(ray.direction, Q);\n  float t = dot(triangle.edge2, Q);\n\n  if(t < EPS || v < 0.0 || u+v > det || u < 0.0 || u > det || (det > -EPS && det < EPS)) return -1.0;\n\n  float inv_det = 1.0 / det;\n\n  collision_0.position = ray.start_position + inv_det * t * ray.direction;\n  collision_0.distance = length(ray.start_position - collision_0.position);\n\n  if (closest_collision_distance < collision_0.distance) return -1.0;\n\n  collision_0.material_index = triangle.material_index;\n\n  u = u * inv_det;\n  v = v * inv_det;\n  collision_0.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n  collision_0.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n\n  return 1.0;\n}\n\n//float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision, float closest_collision_distance) {\n//  vec3 e1 = triangle.edge1;\n//  vec3 e2 = triangle.edge2;\n//\n//  vec3 normal = normalize(cross(e1,e2));\n//  float b = dot(normal, ray.direction);\n//\n//  vec3 w0 = ray.start_position - triangle.v0;\n//  float a = -dot(normal, w0);\n//  float t = a / b;\n//\n//  vec3 p = ray.start_position + t * ray.direction;\n//  float uu, uv, vv, wu, wv, inverseD;\n//  uu = dot(e1,e1);\n//  uv = dot(e1,e2);\n//  vv = dot(e2,e2);\n//\n//  vec3 w = p - triangle.v0;\n//  wu = dot(w, e1);\n//  wv = dot(w, e2);\n//  inverseD = uv * uv - uu * vv;\n//  inverseD = 1.0 / inverseD;\n//\n//  float u = (uv * wv - vv * wu) * inverseD;\n//  if (u < 0.0 || u > 1.0) return -1.0;\n//\n//  float v = (uv * wu - uu * wv) * inverseD;\n//  if (v < 0.0 || (u + v) > 1.0) return -1.0;\n//\n//  collision.position = p; //ray.start_position + inverseD * t * ray.direction;\n//  collision.distance = length(ray.start_position - collision.position);\n//\n//  //if (closest_collision_distance < collision.distance) return -1.0;\n//\n//  collision.material_index = triangle.material_index;\n//  collision.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n//  collision.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n//\n//  return 1.0;\n//}\n\n// BBOX\nbool pointInsideBox(vec3 bottom, vec3 top, vec3 point) {\n  return (bottom.x < point.x && bottom.y < point.y && bottom.z < point.z && top.x > point.x && top.y > point.y && top.z > point.z);\n}\n\nfloat boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\n// Scene\n\nvoid getObjectAtIndex(int index, inout Object object_1) {\n  vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 4.0);\n\n  vec3 bottom_bbox = vec3(texture(u_objects_texture, sample1));\n  vec3 top_bbox = vec3(texture(u_objects_texture, sample2));\n  vec3 position = vec3(texture(u_objects_texture, sample3));\n  vec3 scale = vec3(texture(u_objects_texture, sample4));\n  vec3 extra_data = vec3(texture(u_objects_texture, sample5));\n\n  // Triangle model\n  float bvh_start_index = extra_data.x;\n  float triangle_start_index = extra_data.y;\n\n  object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);\n}\n\nfloat boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\nstruct BVHNode {\n  vec3 bottom_bbox;\n  vec3 top_bbox;\n  float is_leaf;\n  float distance;\n  float extra_data1;\n  float extra_data2;\n  float node_index;\n  float parent_index;\n  float sibling_index;\n};\n\nvoid getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) {\n  vec2 start_sample = SAMPLE_STEP_2048 * (index + start_index) * 4.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n\n  node_0.bottom_bbox = vec3(texture(u_objects_bvh_texture, sample1));\n  node_0.top_bbox = vec3(texture(u_objects_bvh_texture, sample2));\n\n  vec3 extra_data1 = vec3(texture(u_objects_bvh_texture, sample3));\n  node_0.is_leaf = extra_data1.x;\n  node_0.extra_data1 = extra_data1.y;\n  node_0.extra_data2 = extra_data1.z;\n\n  vec3 extra_data2 = vec3(texture(u_objects_bvh_texture, sample4));\n  node_0.parent_index = extra_data2.x;\n  node_0.sibling_index = extra_data2.y;\n\n//  node.distance = boundingBoxCollision(node.bottom_bbox, node.top_bbox, ray, node.is_leaf);\n\n  node_0.node_index = index;\n}\n\nvoid processLeaf(BVHNode node, inout Collision closest_collision_2352739786, Ray ray, float triangle_start_index_2352739786, Object object_0) {\n  float triangle_count_2352739786 = node.extra_data1;\n  float start_triangle_index = node.extra_data2 + triangle_start_index_2352739786;\n\n  float current_index = start_triangle_index;\n  float end_index = start_triangle_index + triangle_count_2352739786;\n\n  Collision collision;\n  for (float idx = 0.0; idx < triangle_count_2352739786; idx++) {\n    Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));\n\n    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_2352739786.distance) == 1.0) {\n      closest_collision_2352739786 = collision;\n    }\n  }\n}\n\nvoid traverseObjectTree(Ray ray, inout Collision closest_collision_2352739786, Object object) {\n  float start_index_2352739786 = object.object_bvh_start_index;\n  float triangle_start_index = object.triangle_start_index;\n\n  Collision collision;\n  BVHNode node;\n  BVHNode left_node;\n  BVHNode right_node;\n\n  //float stack[32];\n  float[] stack = float[] (.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0);\n  int stackIdx = 1;\n\n  for (int i = 0; i < 100; i++) {\n    if (stackIdx < 1) return;\n\n    float box_index = stack[--stackIdx];\n\n    // Fetch node data\n    getNodeData(box_index, start_index_2352739786, ray, node);\n\n    if (node.is_leaf == 0.0) {\n      // Check collision with bounding box\n      float collision_distance = 0.0;\n\n      getNodeData(node.extra_data1, start_index_2352739786, ray, left_node);\n      getNodeData(node.extra_data2, start_index_2352739786, ray, right_node);\n\n      left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);\n      right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);\n\n      float near_distance = min(left_node.distance, right_node.distance);\n      float far_distance = max(left_node.distance, right_node.distance);\n\n      float mixer = clamp(step(right_node.distance, left_node.distance), 0.0, 1.0);\n      float near_child = mix(node.extra_data1, node.extra_data2, mixer);\n      float far_child = mix(node.extra_data2, node.extra_data1, mixer);\n\n      if (far_distance < closest_collision_2352739786.distance) {\n        stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n      else if (near_distance < closest_collision_2352739786.distance) {\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n\n      // Return if stack index exceeds stack size\n      if (stackIdx > 31) return;\n    }\n    else {\n      processLeaf(node, closest_collision_2352739786, ray, triangle_start_index, object);\n    }\n  }\n}\n\nvec3 lightSphereContribution(Ray ray) {\n  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));\n  vec3 position = vec3(0,0,0);\n  float radius = 100.0;\n\n  vec3 op = position - ray.start_position;\n  float t, epsilon = 0.0001;\n  float b = dot(op, ray.direction);\n  float disc = b * b - dot(op, op) + radius * radius;\n  if (disc < 0.0) return vec3(0,0,0);\n  else disc = sqrt(disc);\n\n  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);\n\n  if (t < 0.01)\n    return vec3(0,0,0);\n\n  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;\n  vec3 normal = normalize(collision_position);\n  float u = 0.5 - atan(normal.z, normal.x) / 6.28;\n  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;\n\n  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;\n  return clr;\n}\n\n// Fractal uniform\n\nfloat mandelbulbDe(vec3 pos) {\n  int Iterations = 10;\n\n  vec3 z = pos;\n  float dr = 1.0;\n  float r = 0.0;\n\n  for (int i = 0; i < Iterations; i++) {\n    r = length(z);\n    if (r > 3.0)\n      break;\n\n    // Convert to polar coordinates\n    float theta = acos(z.z/r);\n    float phi = atan(z.y, z.x);\n    dr = pow(r, u_power - 1.0) * u_power * dr + 1.0;\n\n    // Scale and rotate the point\n    float zr = pow(r, u_power);\n    theta = theta * u_power;\n    phi = phi * u_power;\n\n    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));\n    z += pos;\n  }\n\n  float mandelBulbDistance = 0.5 * log(r) * r / dr;\n  return mandelBulbDistance;\n}\n\nfloat mengerSpongeDe(vec3 w) {\n  int Iterations = 5;\n  vec3 offset = vec3(u_spongeOffset);\n  float scale = u_spongeScale;\n\n  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]\n\n  vec3 v = abs(w - u_halfSpongeScale) - u_halfSpongeScale;\n  float d1 = max(v.x, max(v.y, v.z));     // distance to the box\n  float d = d1;\n  float p = 1.0;\n  vec3 cd = v;\n\n  for (int i = 0; i < Iterations; i++) {\n    vec3 a = mod(3.0 * w * p, 3.0);\n    p *= 3.0;\n\n    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;\n\n    // distance inside the 3 axis aligned square tubes\n    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;\n\n    // intersection\n    d = max(d, d1);\n  }\n\n  // The distance estimate, min distance, and fractional iteration count\n  return d * 2.0;\n}\n\nfloat distanceEstimator(vec3 pos) {\n  if (u_fractalType == 0.0) {\n    return mandelbulbDe(pos);\n  }\n\n  if (u_fractalType == 1.0) {\n    return mengerSpongeDe(pos);\n  }\n\n  return 0.0;\n}\n\n//float distanceEstimator(vec3 pos) {\n//  int Iterations = 10;\n//\n//  vec3 z = pos;\n//  float dr = 1.0;\n//  float r = 0.0;\n//\n//  for (int i = 0; i < Iterations; i++) {\n//    r = length(z);\n//    if (r > 3.0)\n//      break;\n//\n//    // Convert to polar coordinates\n//    float theta = acos(z.z/r);\n//    float phi = atan(z.y, z.x);\n//    dr = pow(r, Power - 1.0) * Power * dr + 1.0;\n//\n//    // Scale and rotate the point\n//    float zr = pow(r, Power);\n//    theta = theta * Power;\n//    phi = phi * Power;\n//\n//    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));\n//    z += pos;\n//  }\n//\n//  float mandelBulbDistance = 0.5 * log(r) * r / dr;\n//  return mandelBulbDistance;\n//}\n\n//float distanceEstimator(vec3 w) {\n//  int Iterations = 5;\n//  vec3 offset = vec3(spongeOffset);\n//  float scale = spongeScale;\n//\n//  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]\n//\n//  vec3 v = abs(w - halfSpongeScale) - halfSpongeScale;\n//  float d1 = max(v.x, max(v.y, v.z));     // distance to the box\n//  float d = d1;\n//  float p = 1.0;\n//  vec3 cd = v;\n//\n//  for (int i = 0; i < Iterations; i++) {\n//    vec3 a = mod(3.0 * w * p, 3.0);\n//    p *= 3.0;\n//\n//    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;\n//\n//    // distance inside the 3 axis aligned square tubes\n//    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;\n//\n//    // intersection\n//    d = max(d, d1);\n//  }\n//\n//  // The distance estimate, min distance, and fractional iteration count\n//  return d * 2.0;\n//}\n\n//float distanceEstimator(vec3 z) {\n//  int Iterations = 20;\n//  float Scale = 10.0;\n//\n//  vec3 a1 = vec3(1,1,1);\n//\tvec3 a2 = vec3(-1,-1,1);\n//\tvec3 a3 = vec3(1,-1,-1);\n//\tvec3 a4 = vec3(-1,1,-1);\n//\tvec3 c;\n//\tfloat dist, d;\n//\n//  int n = 0;\n//\tfor (n = 0; n < Iterations; n++) {\n//    c = a1;\n//    dist = length(z - a1);\n//\n//    d = length(z-a2);\n//    if (d < dist) {\n//      c = a2;\n//      dist=d;\n//    }\n//\n//    d = length(z-a3);\n//    if (d < dist) {\n//      c = a3;\n//      dist=d;\n//    }\n//\n//    d = length(z-a4);\n//    if (d < dist) {\n//      c = a4;\n//      dist=d;\n//    }\n//\n//\t\tz = Scale * z - c * (Scale - 1.0);\n//\t}\n//\n//\treturn length(z) * pow(Scale, float(-n));\n//}\n\n//const float minRadius2 = 0.1;\n//const float fixedRadius2 = 0.2;\n//\n//void sphereFold(inout vec3 z, inout float dz) {\n//\tfloat r2 = dot(z,z);\n//\tif (r2 < minRadius2) {\n//\t\t// linear inner scaling\n//\t\tfloat temp = (fixedRadius2 / minRadius2);\n//\t\tz *= temp;\n//\t\tdz*= temp;\n//\t} else if (r2 < fixedRadius2) {\n//\t\t// this is the actual sphere inversion\n//\t\tfloat temp = fixedRadius2 / r2;\n//\t\tz *= temp;\n//\t\tdz*= temp;\n//\t}\n//}\n//\n//void boxFold(inout vec3 z, inout float dz) {\n//  z = clamp(z, -1.0, 1.0) * 2.0 - z;\n//}\n//\n//float distanceEstimator(vec3 z) {\n//  int Iterations = 100;\n//  float Scale = 1.0;\n//\n//  vec3 offset = z;\n//  float dr = 1.0;\n//  for (int n = 0; n < Iterations; n++) {\n//    boxFold(z,dr);       // Reflect\n//    sphereFold(z,dr);    // Sphere Inversion\n//\n//    z = Scale*z + offset;  // Scale & Translate\n//    dr = dr * abs(Scale) + 1.0;\n//  }\n//  float r = length(z);\n//  return r/abs(dr);\n//}\n\nvec3 calculateNormal(vec3 pos) {\n  float e = 0.000001;\n  float n = distanceEstimator(pos);\n  float dx = distanceEstimator(pos + vec3(e, 0, 0)) - n;\n  float dy = distanceEstimator(pos + vec3(0, e, 0)) - n;\n  float dz = distanceEstimator(pos + vec3(0, 0, e)) - n;\n\n  vec3 grad = vec3(dx,dy,dz);\n  return normalize(grad);\n}\n\n//vec3 calculateNormal(vec3 pos) {\n//  float e = minDistance * 0.5;\n//  //float n = distanceEstimator(pos);\n//\n//  float dx1 = distanceEstimator(pos + vec3(e, 0, 0));\n//  float dx2  = distanceEstimator(pos - vec3(e, 0, 0));\n//\n//  float dy1 = distanceEstimator(pos + vec3(0, e, 0));\n//  float dy2 = distanceEstimator(pos - vec3(0, e, 0));\n//\n//  float dz1 = distanceEstimator(pos + vec3(0, 0, e));\n//  float dz2 = distanceEstimator(pos - vec3(0, 0, e));\n//\n//  return normalize(vec3(dx1 - dx2, dy1 - dy2, dz1 - dz2));\n//}\n\nbool rayMarch(Ray ray, inout Collision collision_1) {\n  float totalDistance = 0.0;\n  float steps;\n  vec3 p;\n  for (steps = 0.0; steps < u_maxIterations; steps++) {\n    p = ray.start_position + totalDistance * ray.direction;\n    float distance = distanceEstimator(p);\n    totalDistance += distance;\n\n    if (distance < u_minDistance) {\n      collision_1.position = p;\n      collision_1.normal = calculateNormal(p);\n      collision_1.distance = totalDistance;\n      return true;\n    }\n  }\n\n  return false;\n}\n\nvec3 applyFog(vec3 color, float distance) {\n  float fogAmount = 1.0 - exp( -distance * u_fogDistance );\n  return mix(color, u_fogColor, fogAmount);\n}\n\nvec3 pathTrace(Ray ray) {\n  vec3 mask = vec3(1,1,1);\n  float fogDistance = 0.0;\n  vec3 accumulated_color = vec3(0,0,0);\n  Collision collision;\n  Material collision_material = Material(u_materialColor, int(u_materialType), 0.0, u_materialExtra1, u_materialExtra2);\n\n  for (float iteration = 0.0; iteration < 3.0; iteration++) {\n    float distribution = 1.0;\n\n    if (!rayMarch(ray, collision)) {\n      vec3 lightSphereColor = mix(u_globalLightColor, lightSphereContribution(ray), u_imageBasedLightning);\n      if (iteration == 0.0) {\n        return mix(u_fogColor, lightSphereColor, u_fillBackgroundWithLight);\n      }\n      else {\n        float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;\n        accumulated_color += mask * lightSphereColor * lightPower;\n      }\n\n      return applyFog(accumulated_color, fogDistance);\n    }\n\n    vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);\n    vec3 color = BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;\n    mask *= color;\n\n    float collisionDistance = length(ray.start_position - collision.position);\n\n    if (iteration == 0.0 && u_fogEnabled == 1.0) {\n      fogDistance = collisionDistance; //clamp(collisionDistance / fogDistance, 0.0, 1.0);\n    }\n\n    ray = Ray(collision.position + next_dir * 0.001, next_dir);\n  }\n\n  return applyFog(accumulated_color, fogDistance);\n\n//  if (rayMarch(ray, collision)) {\n//    return vec3(0.8);\n//  }\n//  else {\n//    return vec3(0.2);\n//  }\n//  return vec3(1.0 - steps / maxSteps);\n}\n\nvoid main( void ) {\n  vec3 traceColor = vec3(0,0,0);\n  Ray ray = createRay(gl_FragCoord.xy, 0);\n  traceColor += pathTrace(ray);\n\n  vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;\n\n  vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));\n  outColor = vec4(mixedTraceColor, 1.0);\n}\n"
+module.exports = "<div class=\"top-bar\">\n  <div class=\"header\">Pathtracer WebGL 2</div>\n</div>"
 
 /***/ }),
 
 /***/ 405:
 /***/ (function(module, exports) {
 
-module.exports = "#version 300 es\nprecision lowp float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\n// Fractal uniforms\nuniform float u_fractalType;\nuniform float u_power;\nuniform float u_minDistance;\nuniform float u_maxIterations;\nuniform float u_bailout;\n\n// Menger sponge\nuniform float u_halfSpongeScale;\nuniform float u_spongeScale;\nuniform float u_spongeOffset;\n\n// Material uniforms\nuniform float u_materialType;\nuniform vec3 u_materialColor;\nuniform float u_materialExtra1;\nuniform float u_materialExtra2;\n\n// Global light uniforms\nuniform float u_imageBasedLightning;\nuniform vec3 u_globalLightColor;\nuniform float u_fillBackgroundWithLight;\nuniform float u_globalLightPower;\nuniform float u_globalLightContrast;\n\n// Render effect settings\nuniform float u_fogEnabled;\nuniform float u_fogDistance;\nuniform vec3 u_fogColor;\n\n// Renderer uniforms\nuniform float time;\nuniform float samples;\nuniform int trace_depth;\nuniform float global_lightning_enabled;\nuniform int triangle_count;\nuniform int object_count;\nuniform vec2 resolution;\n\n// Camera uniforms\nuniform float u_cameraYaw;\nuniform float u_cameraPitch;\nuniform vec3 camera_position;\nuniform vec3 camera_direction;\nuniform vec3 camera_right;\nuniform vec3 camera_up;\n\nuniform sampler2D u_dome_texture;\n\nuniform sampler2D u_accumulated_texture;\nuniform sampler2D u_buffer_texture;\nuniform sampler2D u_triangle_texture;\nuniform sampler2D u_triangle_index_texture;\nuniform sampler2D u_bvh_texture;\nuniform sampler2D u_light_texture;\nuniform sampler2D u_material_texture;\nuniform sampler2D u_objects_bvh_texture;\nuniform sampler2D u_objects_texture;\nuniform sampler2D u_light_sphere_texture;\n\n#define EPS 0.00000001\n#define PI 3.14\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nstruct Collision {\n  vec3 position;\n  vec3 normal;\n  vec2 uv;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  int material_index;\n  float distance;\n};\n\nstruct Triangle {\n  vec3 v0;\n  vec3 edge1;\n  vec3 edge2;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  vec2 uv0;\n  vec2 uv1;\n  vec2 uv2;\n  float triangle_area;\n  int material_index;\n};\n\nstruct Object {\n  vec3 bounding_bottom;\n  vec3 bounding_top;\n  vec3 position;\n  vec3 scale;\n  float object_bvh_start_index;\n  float triangle_start_index;\n};\n\n// Ray\nstruct Ray {\n  vec3 start_position;\n  vec3 direction;\n};\n\nhighp float random(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\nmat3 rotationMatrixVector(vec3 v, float angle) {\n  float c = cos(angle);\n  float s = sin(angle);\n\n  return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,\n            (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,\n            (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z);\n}\n\nRay createRay(vec2 pixel_position, int sample_step) {\n\n  mat3 cameraRotation = rotationMatrixVector(vec3(0, 1, 0), u_cameraYaw) * rotationMatrixVector(vec3(0, 0, 1), u_cameraPitch);\n\n  float width = resolution.x;\n  float height = resolution.y;\n\n  float i = ((pixel_position.x / width) - 0.5) * width / height;\n  float j = ((pixel_position.y / height) - 0.5);\n  vec3 image_point = i * 1.5 * camera_right + j * 1.5 * camera_up + camera_position + cross(camera_up, camera_right);\n\n  vec3 dx = (camera_up / width);\n  vec3 dy = (camera_right / height);\n  vec3 rand_x = dx * random(vec2(pixel_position.x, pixel_position.y) * vec2(1.9898, 128.13) * (time + float(sample_step)));\n  vec3 rand_y = dy * random(vec2(pixel_position.x, pixel_position.y) * vec2(134.9898, 36.342) * (time + float(sample_step)));\n  image_point += rand_x + rand_y;\n\n  vec3 direction = normalize(cameraRotation * (image_point - camera_position));\n\n  return Ray(camera_position, direction);\n}\n\n// Material\nstruct Material {\n  vec3 color;\n  int material_type;\n  float emission_rate;\n  float material_parameter1;\n  float material_parameter2;\n};\n\nvec2 getSample(vec2 start_sample, vec2 sample_step, float resolution, float steps) {\n  float s = start_sample.x + steps * sample_step.x;\n  return vec2(fract(s), floor(s) / resolution);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nMaterial getMaterial(int material_index) {\n  // Fetch material from texture\n  vec2 start_sample = SAMPLE_STEP_512 * float(material_index) * 3.0;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n\n  vec3 color = vec3(texture(u_material_texture, sample1));\n  vec3 extra_data1 = vec3(texture(u_material_texture, sample2));\n  vec3 extra_data2 = vec3(texture(u_material_texture, sample3));\n\n  int material_type = int(extra_data1.x);\n  float emission_rate = extra_data1.y;\n\n  float material_parameter1 = extra_data2.x;\n  float material_parameter2 = extra_data2.y;\n\n  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 BRDF(Ray ray, Material material, vec2 uv, vec3 collision_normal, vec3 next_dir) {\n\n//  // Emission material\n//  if (material.material_type == EMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Specular material\n//  if (material.material_type == SPECULAR_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Transmission material\n//  if (material.material_type == TRANSMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Glossy material\n//  if (material.material_type == GLOSSY_MATERIAL) {\n//    return material.color;\n//  }\n\n  // Lambertian diffuse material\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float albedo = material.material_parameter1; // material parameter 1 is albedo\n    float roughness = material.material_parameter2; // material parameter 2 is roughness\n    vec3 view_direction = -1.0 * ray.direction;\n\n    // calculate intermediary values\n    float NdotL = dot(collision_normal, next_dir);\n    float NdotV = dot(collision_normal, view_direction);\n\n    float angleVN = acos(NdotV);\n    float angleLN = acos(NdotL);\n\n    float alpha = max(angleVN, angleLN);\n    float beta = min(angleVN, angleLN);\n    float gamma = dot(view_direction - collision_normal * dot(view_direction, collision_normal), next_dir - collision_normal * dot(next_dir, collision_normal));\n\n    float roughnessSquared = roughness * roughness;\n\n    // calculate A and B\n    float A = 1.0 - 0.5 * (roughnessSquared / (roughnessSquared + 0.57));\n    float B = 0.45 * (roughnessSquared / (roughnessSquared + 0.09));\n    float C = sin(alpha) * tan(beta);\n\n    // put it all together\n    float L1 = max(0.0, NdotL) * (A + B * max(0.0, gamma) * C);\n\n    // get the final color\n    return material.color * L1;\n  }\n\n  return material.color;\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 PDF(Ray ray, Material material, vec3 collision_normal, float iteration, inout float distribution) {\n  vec3 real_normal = dot(collision_normal, ray.direction) > 0.0 ? -1.0 * collision_normal : collision_normal;\n  vec3 next_dir;\n\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(0.24, 78.233) * (time + 32.0 * iteration));\n    float r2 = random(v_texCoord * vec2(63.7264, 10.873) * (time + 12.0 * iteration));\n    float r2s = sqrt(r2);\n\n    vec3 w = collision_normal;\n\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n\n    return next_dir;\n  }\n\n  // Fully specular material\n  if (material.material_type == SPECULAR_MATERIAL) {\n    return normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n  }\n\n  // Glossy material\n  if (material.material_type == GLOSSY_MATERIAL) {\n    vec3 reflected = normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(521.9898, 2321.233) * (time + 100.0 * iteration));\n    float r2 = random(v_texCoord * vec2(2631.7264, 5.873) * (time + 12.0 * iteration));\n    float r2s = pow(r2, material.material_parameter1);\n\n    vec3 w = reflected;\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n    return next_dir;\n  }\n\n  if (material.material_type == TRANSMISSION_MATERIAL) {\n    bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?\n    float nc = 1.0;  // Index of Refraction air\n    float nt = 1.5;  // Index of Refraction glass/water\n    float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials\n    float ddn = dot(ray.direction, real_normal);\n    float cos2t = 1.0 - nnt*nnt * (1.0 - ddn*ddn);\n\n    if (cos2t < 0.0) // total internal reflection\n    {\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n    }\n    else // cos2t > 0\n    {\n      // compute direction of transmission ray\n      vec3 tdir = ray.direction * nnt;\n      tdir -= normalize(collision_normal * ((into ? 1.0 : -1.0) * (ddn * nnt + sqrt(cos2t))));\n\n      float R0 = (nt - nc)*(nt - nc) / (nt + nc)*(nt + nc);\n      float c = 1.0 - (into ? -ddn : dot(tdir, collision_normal));\n      float Re = R0 + (1.0 - R0) * c * c * c * c * c;\n      float Tr = 1.0 - Re; // Transmission\n      float P = 0.25 + 0.5 * Re;\n      float RP = Re / P;\n      float TP = Tr / (1.0 - P);\n\n      // randomly choose reflection or transmission ray\n      float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));\n      if (rand < 0.2) // reflection ray\n      {\n        distribution = RP;\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n      }\n      else // transmission ray\n      {\n        distribution = TP;\n        next_dir = normalize(tdir);\n      }\n\n      return next_dir;\n    }\n  }\n\n  return vec3(0,0,0);\n}\n\n// Triangle\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nTriangle GetTriangleFromIndex(float triangle_index) {\n  // Fetch triangle from texture\n  vec2 start_sample = SAMPLE_STEP_2048 * triangle_index * 11.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 4.0);\n  vec2 sample6 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 5.0);\n  vec2 sample7 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 6.0);\n  vec2 sample8 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 7.0);\n  vec2 sample9 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 8.0);\n  vec2 sample10 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 9.0);\n\n  vec3 v0 = vec3(texture(u_triangle_texture, sample1));\n  vec3 edge1 = vec3(texture(u_triangle_texture, sample2));\n  vec3 edge2 = vec3(texture(u_triangle_texture, sample3));\n\n  vec3 n0 = vec3(texture(u_triangle_texture, sample4));\n  vec3 n1 = vec3(texture(u_triangle_texture, sample5));\n  vec3 n2 = vec3(texture(u_triangle_texture, sample6));\n\n  vec2 uv0 = vec2(texture(u_triangle_texture, sample7));\n  vec2 uv1 = vec2(texture(u_triangle_texture, sample8));\n  vec2 uv2 = vec2(texture(u_triangle_texture, sample9));\n\n  int material_index = int(texture(u_triangle_texture, sample10).x);\n  float triangle_area = texture(u_light_texture, sample10).z;\n\n  return Triangle(v0, edge1, edge2, n0, n1, n2, uv0, uv1, uv2, triangle_area, material_index);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nfloat getTriangleIndex(float stackIdx) {\n  vec2 start_sample = SAMPLE_STEP_1024 * stackIdx;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_1024, 1024.0, 0.0);\n\n  vec4 triangle_index_slot = texture(u_triangle_index_texture, sample1);\n  return triangle_index_slot.x;\n}\n\nfloat triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_1, float closest_collision_distance) {\n  vec3 v0_0 = object_position + triangle.v0;\n\n  //Begin calculating determinant - also used to calculate u parameter\n  vec3 P = cross(ray.direction, triangle.edge2);\n  float det = dot(triangle.edge1, P);\n\n  //Distance from vertex1 to ray origin\n  vec3 T = ray.start_position - v0_0;\n  float u = dot(T, P);\n  vec3 Q = cross(T, triangle.edge1);\n  float v = dot(ray.direction, Q);\n  float t = dot(triangle.edge2, Q);\n\n  if(t < EPS || v < 0.0 || u+v > det || u < 0.0 || u > det || (det > -EPS && det < EPS)) return -1.0;\n\n  float inv_det = 1.0 / det;\n\n  collision_1.position = ray.start_position + inv_det * t * ray.direction;\n  collision_1.distance = length(ray.start_position - collision_1.position);\n\n  if (closest_collision_distance < collision_1.distance) return -1.0;\n\n  collision_1.material_index = triangle.material_index;\n\n  u = u * inv_det;\n  v = v * inv_det;\n  collision_1.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n  collision_1.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n\n  return 1.0;\n}\n\n//float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision, float closest_collision_distance) {\n//  vec3 e1 = triangle.edge1;\n//  vec3 e2 = triangle.edge2;\n//\n//  vec3 normal = normalize(cross(e1,e2));\n//  float b = dot(normal, ray.direction);\n//\n//  vec3 w0 = ray.start_position - triangle.v0;\n//  float a = -dot(normal, w0);\n//  float t = a / b;\n//\n//  vec3 p = ray.start_position + t * ray.direction;\n//  float uu, uv, vv, wu, wv, inverseD;\n//  uu = dot(e1,e1);\n//  uv = dot(e1,e2);\n//  vv = dot(e2,e2);\n//\n//  vec3 w = p - triangle.v0;\n//  wu = dot(w, e1);\n//  wv = dot(w, e2);\n//  inverseD = uv * uv - uu * vv;\n//  inverseD = 1.0 / inverseD;\n//\n//  float u = (uv * wv - vv * wu) * inverseD;\n//  if (u < 0.0 || u > 1.0) return -1.0;\n//\n//  float v = (uv * wu - uu * wv) * inverseD;\n//  if (v < 0.0 || (u + v) > 1.0) return -1.0;\n//\n//  collision.position = p; //ray.start_position + inverseD * t * ray.direction;\n//  collision.distance = length(ray.start_position - collision.position);\n//\n//  //if (closest_collision_distance < collision.distance) return -1.0;\n//\n//  collision.material_index = triangle.material_index;\n//  collision.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n//  collision.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n//\n//  return 1.0;\n//}\n\n// BBOX\nbool pointInsideBox(vec3 bottom, vec3 top, vec3 point) {\n  return (bottom.x < point.x && bottom.y < point.y && bottom.z < point.z && top.x > point.x && top.y > point.y && top.z > point.z);\n}\n\nfloat boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\n// Scene\n\nvoid getObjectAtIndex(int index, inout Object object_1) {\n  vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 4.0);\n\n  vec3 bottom_bbox = vec3(texture(u_objects_texture, sample1));\n  vec3 top_bbox = vec3(texture(u_objects_texture, sample2));\n  vec3 position = vec3(texture(u_objects_texture, sample3));\n  vec3 scale = vec3(texture(u_objects_texture, sample4));\n  vec3 extra_data = vec3(texture(u_objects_texture, sample5));\n\n  // Triangle model\n  float bvh_start_index = extra_data.x;\n  float triangle_start_index = extra_data.y;\n\n  object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);\n}\n\nfloat boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\nstruct BVHNode {\n  vec3 bottom_bbox;\n  vec3 top_bbox;\n  float is_leaf;\n  float distance;\n  float extra_data1;\n  float extra_data2;\n  float node_index;\n  float parent_index;\n  float sibling_index;\n};\n\nvoid getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) {\n  vec2 start_sample = SAMPLE_STEP_2048 * (index + start_index) * 4.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n\n  node_0.bottom_bbox = vec3(texture(u_objects_bvh_texture, sample1));\n  node_0.top_bbox = vec3(texture(u_objects_bvh_texture, sample2));\n\n  vec3 extra_data1 = vec3(texture(u_objects_bvh_texture, sample3));\n  node_0.is_leaf = extra_data1.x;\n  node_0.extra_data1 = extra_data1.y;\n  node_0.extra_data2 = extra_data1.z;\n\n  vec3 extra_data2 = vec3(texture(u_objects_bvh_texture, sample4));\n  node_0.parent_index = extra_data2.x;\n  node_0.sibling_index = extra_data2.y;\n\n//  node.distance = boundingBoxCollision(node.bottom_bbox, node.top_bbox, ray, node.is_leaf);\n\n  node_0.node_index = index;\n}\n\nvoid processLeaf(BVHNode node, inout Collision closest_collision_1248018414, Ray ray, float triangle_start_index_1248018414, Object object_0) {\n  float triangle_count_1248018414 = node.extra_data1;\n  float start_triangle_index = node.extra_data2 + triangle_start_index_1248018414;\n\n  float current_index = start_triangle_index;\n  float end_index = start_triangle_index + triangle_count_1248018414;\n\n  Collision collision;\n  for (float idx = 0.0; idx < triangle_count_1248018414; idx++) {\n    Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));\n\n    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_1248018414.distance) == 1.0) {\n      closest_collision_1248018414 = collision;\n    }\n  }\n}\n\nvoid traverseObjectTree(Ray ray, inout Collision closest_collision_1248018414, Object object) {\n  float start_index_1248018414 = object.object_bvh_start_index;\n  float triangle_start_index = object.triangle_start_index;\n\n  Collision collision;\n  BVHNode node;\n  BVHNode left_node;\n  BVHNode right_node;\n\n  //float stack[32];\n  float[] stack = float[] (.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0);\n  int stackIdx = 1;\n\n  for (int i = 0; i < 100; i++) {\n    if (stackIdx < 1) return;\n\n    float box_index = stack[--stackIdx];\n\n    // Fetch node data\n    getNodeData(box_index, start_index_1248018414, ray, node);\n\n    if (node.is_leaf == 0.0) {\n      // Check collision with bounding box\n      float collision_distance = 0.0;\n\n      getNodeData(node.extra_data1, start_index_1248018414, ray, left_node);\n      getNodeData(node.extra_data2, start_index_1248018414, ray, right_node);\n\n      left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);\n      right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);\n\n      float near_distance = min(left_node.distance, right_node.distance);\n      float far_distance = max(left_node.distance, right_node.distance);\n\n      float mixer = clamp(step(right_node.distance, left_node.distance), 0.0, 1.0);\n      float near_child = mix(node.extra_data1, node.extra_data2, mixer);\n      float far_child = mix(node.extra_data2, node.extra_data1, mixer);\n\n      if (far_distance < closest_collision_1248018414.distance) {\n        stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n      else if (near_distance < closest_collision_1248018414.distance) {\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n\n      // Return if stack index exceeds stack size\n      if (stackIdx > 31) return;\n    }\n    else {\n      processLeaf(node, closest_collision_1248018414, ray, triangle_start_index, object);\n    }\n  }\n}\n\nvec3 lightSphereContribution(Ray ray) {\n  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));\n  vec3 position = vec3(0,0,0);\n  float radius = 100.0;\n\n  vec3 op = position - ray.start_position;\n  float t, epsilon = 0.0001;\n  float b = dot(op, ray.direction);\n  float disc = b * b - dot(op, op) + radius * radius;\n  if (disc < 0.0) return vec3(0,0,0);\n  else disc = sqrt(disc);\n\n  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);\n\n  if (t < 0.01)\n    return vec3(0,0,0);\n\n  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;\n  vec3 normal = normalize(collision_position);\n  float u = 0.5 - atan(normal.z, normal.x) / 6.28;\n  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;\n\n  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;\n  return clr;\n}\n\nbool sceneIntersection(Ray ray, inout Collision collision_0) {\n  Collision closest_collision;\n  closest_collision.distance = 10000.0;\n\n  Object object;\n  int collision_count = 0;\n  for (int i = 0; i < object_count; i++) {\n    getObjectAtIndex(i, object);\n\n    float collision_distance = boundingBoxCollision_0(object.bounding_bottom + object.position, object.bounding_top + object.position, ray);\n\n    if (collision_distance < closest_collision.distance) {\n      traverseObjectTree(ray, closest_collision, object);\n    }\n  }\n\n  if (closest_collision.distance == 10000.0) {\n    return false;\n  }\n  else {\n    collision_0 = closest_collision;\n    return true;\n  }\n}\n\nvec3 applyFog(vec3 color, float distance) {\n  float fogAmount = 1.0 - exp( -distance * u_fogDistance * 0.2 );\n  return mix(color, u_fogColor, fogAmount);\n}\n\nvec3 pathTrace(Ray ray) {\n  vec3 mask = vec3(1,1,1);\n  float fogDistance = 0.0;\n  vec3 accumulated_color = vec3(0,0,0);\n  Collision collision;\n  Material collision_material;\n\n  for (float iteration = 0.0; iteration < float(trace_depth); iteration++) {\n    float distribution = 1.0;\n\n    if (!sceneIntersection(ray, collision)) {\n      vec3 lightSphereColor = mix(u_globalLightColor, lightSphereContribution(ray), u_imageBasedLightning);\n      if (iteration == 0.0) {\n        return mix(u_fogColor, lightSphereColor, u_fillBackgroundWithLight);\n      }\n      else {\n        float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;\n        accumulated_color += mask * lightSphereColor * lightPower;\n      }\n      return applyFog(accumulated_color, fogDistance);\n    }\n\n    collision_material = getMaterial(collision.material_index);\n\n    vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);\n    mask *= BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;\n    //mask *= 2.0;\n\n    accumulated_color += mask * collision_material.emission_rate;\n\n    float collisionDistance = length(ray.start_position - collision.position);\n    if (iteration == 0.0 && u_fogEnabled == 1.0) {\n      fogDistance = collisionDistance; //clamp(collisionDistance / fogDistance, 0.0, 1.0);\n    }\n\n    if (collision_material.emission_rate != 0.0) return applyFog(accumulated_color, fogDistance);\n\n    ray = Ray(collision.position + next_dir * EPS, next_dir);\n  }\n\n  return applyFog(accumulated_color, fogDistance);\n}\n\nvoid main( void ) {\n  vec3 traceColor = vec3(0,0,0);\n  Ray ray = createRay(gl_FragCoord.xy, 0);\n  traceColor += pathTrace(ray);\n\n  vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;\n\n  vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));\n  outColor = vec4(mixedTraceColor, 1.0);\n}\n"
+module.exports = "#version 300 es\nprecision lowp float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\n// Fractal uniforms\nuniform float u_fractalType;\nuniform float u_power;\nuniform float u_minDistance;\nuniform float u_maxIterations;\nuniform float u_bailout;\n\n// Menger sponge\nuniform float u_halfSpongeScale;\nuniform float u_spongeScale;\nuniform float u_spongeOffset;\n\n// Material uniforms\nuniform float u_materialType;\nuniform vec3 u_materialColor;\nuniform float u_materialExtra1;\nuniform float u_materialExtra2;\n\n// Global light uniforms\nuniform float u_imageBasedLightning;\nuniform vec3 u_globalLightColor;\nuniform float u_fillBackgroundWithLight;\nuniform float u_globalLightPower;\nuniform float u_globalLightContrast;\n\n// Render effect settings\nuniform float u_fogEnabled;\nuniform float u_fogDistance;\nuniform vec3 u_fogColor;\n\n// Renderer uniforms\nuniform float time;\nuniform float samples;\nuniform int trace_depth;\nuniform float global_lightning_enabled;\nuniform int triangle_count;\nuniform int object_count;\nuniform vec2 resolution;\n\n// Camera uniforms\nuniform float u_cameraYaw;\nuniform float u_cameraPitch;\nuniform vec3 camera_position;\nuniform vec3 camera_direction;\nuniform vec3 camera_right;\nuniform vec3 camera_up;\n\nuniform sampler2D u_dome_texture;\n\nuniform sampler2D u_accumulated_texture;\nuniform sampler2D u_buffer_texture;\nuniform sampler2D u_triangle_texture;\nuniform sampler2D u_triangle_index_texture;\nuniform sampler2D u_bvh_texture;\nuniform sampler2D u_light_texture;\nuniform sampler2D u_material_texture;\nuniform sampler2D u_objects_bvh_texture;\nuniform sampler2D u_objects_texture;\nuniform sampler2D u_light_sphere_texture;\n\n#define EPS 0.00000001\n#define PI 3.14\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nstruct Collision {\n  vec3 position;\n  vec3 normal;\n  vec2 uv;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  int material_index;\n  float distance;\n};\n\nstruct Triangle {\n  vec3 v0;\n  vec3 edge1;\n  vec3 edge2;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  vec2 uv0;\n  vec2 uv1;\n  vec2 uv2;\n  float triangle_area;\n  int material_index;\n};\n\nstruct Object {\n  vec3 bounding_bottom;\n  vec3 bounding_top;\n  vec3 position;\n  vec3 scale;\n  float object_bvh_start_index;\n  float triangle_start_index;\n};\n\n// Ray\nstruct Ray {\n  vec3 start_position;\n  vec3 direction;\n};\n\nhighp float random(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\nmat3 rotationMatrixVector(vec3 v, float angle) {\n  float c = cos(angle);\n  float s = sin(angle);\n\n  return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,\n            (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,\n            (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z);\n}\n\nRay createRay(vec2 pixel_position, int sample_step) {\n\n  mat3 cameraRotation = rotationMatrixVector(vec3(0, 1, 0), u_cameraYaw) * rotationMatrixVector(vec3(0, 0, 1), u_cameraPitch);\n\n  float width = resolution.x;\n  float height = resolution.y;\n\n  float i = ((pixel_position.x / width) - 0.5) * width / height;\n  float j = ((pixel_position.y / height) - 0.5);\n  vec3 image_point = i * 1.5 * camera_right + j * 1.5 * camera_up + camera_position + cross(camera_up, camera_right);\n\n  vec3 dx = (camera_up / width);\n  vec3 dy = (camera_right / height);\n  vec3 rand_x = dx * random(vec2(pixel_position.x, pixel_position.y) * vec2(1.9898, 128.13) * (time + float(sample_step)));\n  vec3 rand_y = dy * random(vec2(pixel_position.x, pixel_position.y) * vec2(134.9898, 36.342) * (time + float(sample_step)));\n  image_point += rand_x + rand_y;\n\n  vec3 direction = normalize(cameraRotation * (image_point - camera_position));\n\n  return Ray(camera_position, direction);\n}\n\n// Material\nstruct Material {\n  vec3 color;\n  int material_type;\n  float emission_rate;\n  float material_parameter1;\n  float material_parameter2;\n};\n\nvec2 getSample(vec2 start_sample, vec2 sample_step, float resolution, float steps) {\n  float s = start_sample.x + steps * sample_step.x;\n  return vec2(fract(s), floor(s) / resolution);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nMaterial getMaterial(int material_index) {\n  // Fetch material from texture\n  vec2 start_sample = SAMPLE_STEP_512 * float(material_index) * 3.0;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n\n  vec3 color = vec3(texture(u_material_texture, sample1));\n  vec3 extra_data1 = vec3(texture(u_material_texture, sample2));\n  vec3 extra_data2 = vec3(texture(u_material_texture, sample3));\n\n  int material_type = int(extra_data1.x);\n  float emission_rate = extra_data1.y;\n\n  float material_parameter1 = extra_data2.x;\n  float material_parameter2 = extra_data2.y;\n\n  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 BRDF(Ray ray, Material material, vec2 uv, vec3 collision_normal, vec3 next_dir) {\n\n//  // Emission material\n//  if (material.material_type == EMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Specular material\n//  if (material.material_type == SPECULAR_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Transmission material\n//  if (material.material_type == TRANSMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Glossy material\n//  if (material.material_type == GLOSSY_MATERIAL) {\n//    return material.color;\n//  }\n\n  // Lambertian diffuse material\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float albedo = material.material_parameter1; // material parameter 1 is albedo\n    float roughness = material.material_parameter2; // material parameter 2 is roughness\n    vec3 view_direction = -1.0 * ray.direction;\n\n    // calculate intermediary values\n    float NdotL = dot(collision_normal, next_dir);\n    float NdotV = dot(collision_normal, view_direction);\n\n    float angleVN = acos(NdotV);\n    float angleLN = acos(NdotL);\n\n    float alpha = max(angleVN, angleLN);\n    float beta = min(angleVN, angleLN);\n    float gamma = dot(view_direction - collision_normal * dot(view_direction, collision_normal), next_dir - collision_normal * dot(next_dir, collision_normal));\n\n    float roughnessSquared = roughness * roughness;\n\n    // calculate A and B\n    float A = 1.0 - 0.5 * (roughnessSquared / (roughnessSquared + 0.57));\n    float B = 0.45 * (roughnessSquared / (roughnessSquared + 0.09));\n    float C = sin(alpha) * tan(beta);\n\n    // put it all together\n    float L1 = max(0.0, NdotL) * (A + B * max(0.0, gamma) * C);\n\n    // get the final color\n    return material.color * L1;\n  }\n\n  return material.color;\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 PDF(Ray ray, Material material, vec3 collision_normal, float iteration, inout float distribution) {\n  vec3 real_normal = dot(collision_normal, ray.direction) > 0.0 ? -1.0 * collision_normal : collision_normal;\n  vec3 next_dir;\n\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(0.24, 78.233) * (time + 32.0 * iteration));\n    float r2 = random(v_texCoord * vec2(63.7264, 10.873) * (time + 12.0 * iteration));\n    float r2s = sqrt(r2);\n\n    vec3 w = collision_normal;\n\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n\n    return next_dir;\n  }\n\n  // Fully specular material\n  if (material.material_type == SPECULAR_MATERIAL) {\n    return normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n  }\n\n  // Glossy material\n  if (material.material_type == GLOSSY_MATERIAL) {\n    vec3 reflected = normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(521.9898, 2321.233) * (time + 100.0 * iteration));\n    float r2 = random(v_texCoord * vec2(2631.7264, 5.873) * (time + 12.0 * iteration));\n    float r2s = pow(r2, material.material_parameter1);\n\n    vec3 w = reflected;\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n    return next_dir;\n  }\n\n  if (material.material_type == TRANSMISSION_MATERIAL) {\n    bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?\n    float nc = 1.0;  // Index of Refraction air\n    float nt = 1.5;  // Index of Refraction glass/water\n    float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials\n    float ddn = dot(ray.direction, real_normal);\n    float cos2t = 1.0 - nnt*nnt * (1.0 - ddn*ddn);\n\n    if (cos2t < 0.0) // total internal reflection\n    {\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n    }\n    else // cos2t > 0\n    {\n      // compute direction of transmission ray\n      vec3 tdir = ray.direction * nnt;\n      tdir -= normalize(collision_normal * ((into ? 1.0 : -1.0) * (ddn * nnt + sqrt(cos2t))));\n\n      float R0 = (nt - nc)*(nt - nc) / (nt + nc)*(nt + nc);\n      float c = 1.0 - (into ? -ddn : dot(tdir, collision_normal));\n      float Re = R0 + (1.0 - R0) * c * c * c * c * c;\n      float Tr = 1.0 - Re; // Transmission\n      float P = 0.25 + 0.5 * Re;\n      float RP = Re / P;\n      float TP = Tr / (1.0 - P);\n\n      // randomly choose reflection or transmission ray\n      float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));\n      if (rand < 0.2) // reflection ray\n      {\n        distribution = RP;\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n      }\n      else // transmission ray\n      {\n        distribution = TP;\n        next_dir = normalize(tdir);\n      }\n\n      return next_dir;\n    }\n  }\n\n  return vec3(0,0,0);\n}\n\n// Triangle\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nTriangle GetTriangleFromIndex(float triangle_index) {\n  // Fetch triangle from texture\n  vec2 start_sample = SAMPLE_STEP_2048 * triangle_index * 11.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 4.0);\n  vec2 sample6 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 5.0);\n  vec2 sample7 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 6.0);\n  vec2 sample8 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 7.0);\n  vec2 sample9 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 8.0);\n  vec2 sample10 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 9.0);\n\n  vec3 v0 = vec3(texture(u_triangle_texture, sample1));\n  vec3 edge1 = vec3(texture(u_triangle_texture, sample2));\n  vec3 edge2 = vec3(texture(u_triangle_texture, sample3));\n\n  vec3 n0 = vec3(texture(u_triangle_texture, sample4));\n  vec3 n1 = vec3(texture(u_triangle_texture, sample5));\n  vec3 n2 = vec3(texture(u_triangle_texture, sample6));\n\n  vec2 uv0 = vec2(texture(u_triangle_texture, sample7));\n  vec2 uv1 = vec2(texture(u_triangle_texture, sample8));\n  vec2 uv2 = vec2(texture(u_triangle_texture, sample9));\n\n  int material_index = int(texture(u_triangle_texture, sample10).x);\n  float triangle_area = texture(u_light_texture, sample10).z;\n\n  return Triangle(v0, edge1, edge2, n0, n1, n2, uv0, uv1, uv2, triangle_area, material_index);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nfloat getTriangleIndex(float stackIdx) {\n  vec2 start_sample = SAMPLE_STEP_1024 * stackIdx;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_1024, 1024.0, 0.0);\n\n  vec4 triangle_index_slot = texture(u_triangle_index_texture, sample1);\n  return triangle_index_slot.x;\n}\n\nfloat triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_0, float closest_collision_distance) {\n  vec3 v0_0 = object_position + triangle.v0;\n\n  //Begin calculating determinant - also used to calculate u parameter\n  vec3 P = cross(ray.direction, triangle.edge2);\n  float det = dot(triangle.edge1, P);\n\n  //Distance from vertex1 to ray origin\n  vec3 T = ray.start_position - v0_0;\n  float u = dot(T, P);\n  vec3 Q = cross(T, triangle.edge1);\n  float v = dot(ray.direction, Q);\n  float t = dot(triangle.edge2, Q);\n\n  if(t < EPS || v < 0.0 || u+v > det || u < 0.0 || u > det || (det > -EPS && det < EPS)) return -1.0;\n\n  float inv_det = 1.0 / det;\n\n  collision_0.position = ray.start_position + inv_det * t * ray.direction;\n  collision_0.distance = length(ray.start_position - collision_0.position);\n\n  if (closest_collision_distance < collision_0.distance) return -1.0;\n\n  collision_0.material_index = triangle.material_index;\n\n  u = u * inv_det;\n  v = v * inv_det;\n  collision_0.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n  collision_0.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n\n  return 1.0;\n}\n\n//float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision, float closest_collision_distance) {\n//  vec3 e1 = triangle.edge1;\n//  vec3 e2 = triangle.edge2;\n//\n//  vec3 normal = normalize(cross(e1,e2));\n//  float b = dot(normal, ray.direction);\n//\n//  vec3 w0 = ray.start_position - triangle.v0;\n//  float a = -dot(normal, w0);\n//  float t = a / b;\n//\n//  vec3 p = ray.start_position + t * ray.direction;\n//  float uu, uv, vv, wu, wv, inverseD;\n//  uu = dot(e1,e1);\n//  uv = dot(e1,e2);\n//  vv = dot(e2,e2);\n//\n//  vec3 w = p - triangle.v0;\n//  wu = dot(w, e1);\n//  wv = dot(w, e2);\n//  inverseD = uv * uv - uu * vv;\n//  inverseD = 1.0 / inverseD;\n//\n//  float u = (uv * wv - vv * wu) * inverseD;\n//  if (u < 0.0 || u > 1.0) return -1.0;\n//\n//  float v = (uv * wu - uu * wv) * inverseD;\n//  if (v < 0.0 || (u + v) > 1.0) return -1.0;\n//\n//  collision.position = p; //ray.start_position + inverseD * t * ray.direction;\n//  collision.distance = length(ray.start_position - collision.position);\n//\n//  //if (closest_collision_distance < collision.distance) return -1.0;\n//\n//  collision.material_index = triangle.material_index;\n//  collision.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n//  collision.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n//\n//  return 1.0;\n//}\n\n// BBOX\nbool pointInsideBox(vec3 bottom, vec3 top, vec3 point) {\n  return (bottom.x < point.x && bottom.y < point.y && bottom.z < point.z && top.x > point.x && top.y > point.y && top.z > point.z);\n}\n\nfloat boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\n// Scene\n\nvoid getObjectAtIndex(int index, inout Object object_1) {\n  vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 4.0);\n\n  vec3 bottom_bbox = vec3(texture(u_objects_texture, sample1));\n  vec3 top_bbox = vec3(texture(u_objects_texture, sample2));\n  vec3 position = vec3(texture(u_objects_texture, sample3));\n  vec3 scale = vec3(texture(u_objects_texture, sample4));\n  vec3 extra_data = vec3(texture(u_objects_texture, sample5));\n\n  // Triangle model\n  float bvh_start_index = extra_data.x;\n  float triangle_start_index = extra_data.y;\n\n  object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);\n}\n\nfloat boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\nstruct BVHNode {\n  vec3 bottom_bbox;\n  vec3 top_bbox;\n  float is_leaf;\n  float distance;\n  float extra_data1;\n  float extra_data2;\n  float node_index;\n  float parent_index;\n  float sibling_index;\n};\n\nvoid getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) {\n  vec2 start_sample = SAMPLE_STEP_2048 * (index + start_index) * 4.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n\n  node_0.bottom_bbox = vec3(texture(u_objects_bvh_texture, sample1));\n  node_0.top_bbox = vec3(texture(u_objects_bvh_texture, sample2));\n\n  vec3 extra_data1 = vec3(texture(u_objects_bvh_texture, sample3));\n  node_0.is_leaf = extra_data1.x;\n  node_0.extra_data1 = extra_data1.y;\n  node_0.extra_data2 = extra_data1.z;\n\n  vec3 extra_data2 = vec3(texture(u_objects_bvh_texture, sample4));\n  node_0.parent_index = extra_data2.x;\n  node_0.sibling_index = extra_data2.y;\n\n//  node.distance = boundingBoxCollision(node.bottom_bbox, node.top_bbox, ray, node.is_leaf);\n\n  node_0.node_index = index;\n}\n\nvoid processLeaf(BVHNode node, inout Collision closest_collision_2352739786, Ray ray, float triangle_start_index_2352739786, Object object_0) {\n  float triangle_count_2352739786 = node.extra_data1;\n  float start_triangle_index = node.extra_data2 + triangle_start_index_2352739786;\n\n  float current_index = start_triangle_index;\n  float end_index = start_triangle_index + triangle_count_2352739786;\n\n  Collision collision;\n  for (float idx = 0.0; idx < triangle_count_2352739786; idx++) {\n    Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));\n\n    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_2352739786.distance) == 1.0) {\n      closest_collision_2352739786 = collision;\n    }\n  }\n}\n\nvoid traverseObjectTree(Ray ray, inout Collision closest_collision_2352739786, Object object) {\n  float start_index_2352739786 = object.object_bvh_start_index;\n  float triangle_start_index = object.triangle_start_index;\n\n  Collision collision;\n  BVHNode node;\n  BVHNode left_node;\n  BVHNode right_node;\n\n  //float stack[32];\n  float[] stack = float[] (.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0);\n  int stackIdx = 1;\n\n  for (int i = 0; i < 100; i++) {\n    if (stackIdx < 1) return;\n\n    float box_index = stack[--stackIdx];\n\n    // Fetch node data\n    getNodeData(box_index, start_index_2352739786, ray, node);\n\n    if (node.is_leaf == 0.0) {\n      // Check collision with bounding box\n      float collision_distance = 0.0;\n\n      getNodeData(node.extra_data1, start_index_2352739786, ray, left_node);\n      getNodeData(node.extra_data2, start_index_2352739786, ray, right_node);\n\n      left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);\n      right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);\n\n      float near_distance = min(left_node.distance, right_node.distance);\n      float far_distance = max(left_node.distance, right_node.distance);\n\n      float mixer = clamp(step(right_node.distance, left_node.distance), 0.0, 1.0);\n      float near_child = mix(node.extra_data1, node.extra_data2, mixer);\n      float far_child = mix(node.extra_data2, node.extra_data1, mixer);\n\n      if (far_distance < closest_collision_2352739786.distance) {\n        stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n      else if (near_distance < closest_collision_2352739786.distance) {\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n\n      // Return if stack index exceeds stack size\n      if (stackIdx > 31) return;\n    }\n    else {\n      processLeaf(node, closest_collision_2352739786, ray, triangle_start_index, object);\n    }\n  }\n}\n\nvec3 lightSphereContribution(Ray ray) {\n  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));\n  vec3 position = vec3(0,0,0);\n  float radius = 100.0;\n\n  vec3 op = position - ray.start_position;\n  float t, epsilon = 0.0001;\n  float b = dot(op, ray.direction);\n  float disc = b * b - dot(op, op) + radius * radius;\n  if (disc < 0.0) return vec3(0,0,0);\n  else disc = sqrt(disc);\n\n  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);\n\n  if (t < 0.01)\n    return vec3(0,0,0);\n\n  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;\n  vec3 normal = normalize(collision_position);\n  float u = 0.5 - atan(normal.z, normal.x) / 6.28;\n  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;\n\n  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;\n  return clr;\n}\n\n// Fractal uniform\n\nfloat mandelbulbDe(vec3 pos) {\n  int Iterations = 10;\n\n  vec3 z = pos;\n  float dr = 1.0;\n  float r = 0.0;\n\n  for (int i = 0; i < Iterations; i++) {\n    r = length(z);\n    if (r > 3.0)\n      break;\n\n    // Convert to polar coordinates\n    float theta = acos(z.z/r);\n    float phi = atan(z.y, z.x);\n    dr = pow(r, u_power - 1.0) * u_power * dr + 1.0;\n\n    // Scale and rotate the point\n    float zr = pow(r, u_power);\n    theta = theta * u_power;\n    phi = phi * u_power;\n\n    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));\n    z += pos;\n  }\n\n  float mandelBulbDistance = 0.5 * log(r) * r / dr;\n  return mandelBulbDistance;\n}\n\nfloat mengerSpongeDe(vec3 w) {\n  int Iterations = 5;\n  vec3 offset = vec3(u_spongeOffset);\n  float scale = u_spongeScale;\n\n  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]\n\n  vec3 v = abs(w - u_halfSpongeScale) - u_halfSpongeScale;\n  float d1 = max(v.x, max(v.y, v.z));     // distance to the box\n  float d = d1;\n  float p = 1.0;\n  vec3 cd = v;\n\n  for (int i = 0; i < Iterations; i++) {\n    vec3 a = mod(3.0 * w * p, 3.0);\n    p *= 3.0;\n\n    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;\n\n    // distance inside the 3 axis aligned square tubes\n    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;\n\n    // intersection\n    d = max(d, d1);\n  }\n\n  // The distance estimate, min distance, and fractional iteration count\n  return d * 2.0;\n}\n\nfloat distanceEstimator(vec3 pos) {\n  if (u_fractalType == 0.0) {\n    return mandelbulbDe(pos);\n  }\n\n  if (u_fractalType == 1.0) {\n    return mengerSpongeDe(pos);\n  }\n\n  return 0.0;\n}\n\n//float distanceEstimator(vec3 pos) {\n//  int Iterations = 10;\n//\n//  vec3 z = pos;\n//  float dr = 1.0;\n//  float r = 0.0;\n//\n//  for (int i = 0; i < Iterations; i++) {\n//    r = length(z);\n//    if (r > 3.0)\n//      break;\n//\n//    // Convert to polar coordinates\n//    float theta = acos(z.z/r);\n//    float phi = atan(z.y, z.x);\n//    dr = pow(r, Power - 1.0) * Power * dr + 1.0;\n//\n//    // Scale and rotate the point\n//    float zr = pow(r, Power);\n//    theta = theta * Power;\n//    phi = phi * Power;\n//\n//    z = zr * vec3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));\n//    z += pos;\n//  }\n//\n//  float mandelBulbDistance = 0.5 * log(r) * r / dr;\n//  return mandelBulbDistance;\n//}\n\n//float distanceEstimator(vec3 w) {\n//  int Iterations = 5;\n//  vec3 offset = vec3(spongeOffset);\n//  float scale = spongeScale;\n//\n//  w = (w * 0.5 + vec3(0.5)) * scale;  // scale [-1, 1] range to [0, 1]\n//\n//  vec3 v = abs(w - halfSpongeScale) - halfSpongeScale;\n//  float d1 = max(v.x, max(v.y, v.z));     // distance to the box\n//  float d = d1;\n//  float p = 1.0;\n//  vec3 cd = v;\n//\n//  for (int i = 0; i < Iterations; i++) {\n//    vec3 a = mod(3.0 * w * p, 3.0);\n//    p *= 3.0;\n//\n//    v = vec3(0.5) - abs(a - vec3(1.5)) + offset;\n//\n//    // distance inside the 3 axis aligned square tubes\n//    d1 = min(max(v.x, v.z), min(max(v.x, v.y), max(v.y, v.z))) / p;\n//\n//    // intersection\n//    d = max(d, d1);\n//  }\n//\n//  // The distance estimate, min distance, and fractional iteration count\n//  return d * 2.0;\n//}\n\n//float distanceEstimator(vec3 z) {\n//  int Iterations = 20;\n//  float Scale = 10.0;\n//\n//  vec3 a1 = vec3(1,1,1);\n//\tvec3 a2 = vec3(-1,-1,1);\n//\tvec3 a3 = vec3(1,-1,-1);\n//\tvec3 a4 = vec3(-1,1,-1);\n//\tvec3 c;\n//\tfloat dist, d;\n//\n//  int n = 0;\n//\tfor (n = 0; n < Iterations; n++) {\n//    c = a1;\n//    dist = length(z - a1);\n//\n//    d = length(z-a2);\n//    if (d < dist) {\n//      c = a2;\n//      dist=d;\n//    }\n//\n//    d = length(z-a3);\n//    if (d < dist) {\n//      c = a3;\n//      dist=d;\n//    }\n//\n//    d = length(z-a4);\n//    if (d < dist) {\n//      c = a4;\n//      dist=d;\n//    }\n//\n//\t\tz = Scale * z - c * (Scale - 1.0);\n//\t}\n//\n//\treturn length(z) * pow(Scale, float(-n));\n//}\n\n//const float minRadius2 = 0.1;\n//const float fixedRadius2 = 0.2;\n//\n//void sphereFold(inout vec3 z, inout float dz) {\n//\tfloat r2 = dot(z,z);\n//\tif (r2 < minRadius2) {\n//\t\t// linear inner scaling\n//\t\tfloat temp = (fixedRadius2 / minRadius2);\n//\t\tz *= temp;\n//\t\tdz*= temp;\n//\t} else if (r2 < fixedRadius2) {\n//\t\t// this is the actual sphere inversion\n//\t\tfloat temp = fixedRadius2 / r2;\n//\t\tz *= temp;\n//\t\tdz*= temp;\n//\t}\n//}\n//\n//void boxFold(inout vec3 z, inout float dz) {\n//  z = clamp(z, -1.0, 1.0) * 2.0 - z;\n//}\n//\n//float distanceEstimator(vec3 z) {\n//  int Iterations = 100;\n//  float Scale = 1.0;\n//\n//  vec3 offset = z;\n//  float dr = 1.0;\n//  for (int n = 0; n < Iterations; n++) {\n//    boxFold(z,dr);       // Reflect\n//    sphereFold(z,dr);    // Sphere Inversion\n//\n//    z = Scale*z + offset;  // Scale & Translate\n//    dr = dr * abs(Scale) + 1.0;\n//  }\n//  float r = length(z);\n//  return r/abs(dr);\n//}\n\nvec3 calculateNormal(vec3 pos) {\n  float e = 0.000001;\n  float n = distanceEstimator(pos);\n  float dx = distanceEstimator(pos + vec3(e, 0, 0)) - n;\n  float dy = distanceEstimator(pos + vec3(0, e, 0)) - n;\n  float dz = distanceEstimator(pos + vec3(0, 0, e)) - n;\n\n  vec3 grad = vec3(dx,dy,dz);\n  return normalize(grad);\n}\n\n//vec3 calculateNormal(vec3 pos) {\n//  float e = minDistance * 0.5;\n//  //float n = distanceEstimator(pos);\n//\n//  float dx1 = distanceEstimator(pos + vec3(e, 0, 0));\n//  float dx2  = distanceEstimator(pos - vec3(e, 0, 0));\n//\n//  float dy1 = distanceEstimator(pos + vec3(0, e, 0));\n//  float dy2 = distanceEstimator(pos - vec3(0, e, 0));\n//\n//  float dz1 = distanceEstimator(pos + vec3(0, 0, e));\n//  float dz2 = distanceEstimator(pos - vec3(0, 0, e));\n//\n//  return normalize(vec3(dx1 - dx2, dy1 - dy2, dz1 - dz2));\n//}\n\nbool rayMarch(Ray ray, inout Collision collision_1) {\n  float totalDistance = 0.0;\n  float steps;\n  vec3 p;\n  for (steps = 0.0; steps < u_maxIterations; steps++) {\n    p = ray.start_position + totalDistance * ray.direction;\n    float distance = distanceEstimator(p);\n    totalDistance += distance;\n\n    if (distance < u_minDistance) {\n      collision_1.position = p;\n      collision_1.normal = calculateNormal(p);\n      collision_1.distance = totalDistance;\n      return true;\n    }\n  }\n\n  return false;\n}\n\nvec3 applyFog(vec3 color, float distance) {\n  float fogAmount = 1.0 - exp( -distance * u_fogDistance );\n  return mix(color, u_fogColor, fogAmount);\n}\n\nvec3 pathTrace(Ray ray) {\n  vec3 mask = vec3(1,1,1);\n  float fogDistance = 0.0;\n  vec3 accumulated_color = vec3(0,0,0);\n  Collision collision;\n  Material collision_material = Material(u_materialColor, int(u_materialType), 0.0, u_materialExtra1, u_materialExtra2);\n\n  for (float iteration = 0.0; iteration < float(trace_depth); iteration++) {\n    float distribution = 1.0;\n\n    if (!rayMarch(ray, collision)) {\n      vec3 lightSphereColor = mix(u_globalLightColor, lightSphereContribution(ray), u_imageBasedLightning);\n      if (iteration == 0.0) {\n        return mix(u_fogColor, lightSphereColor, u_fillBackgroundWithLight);\n      }\n      else {\n        float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;\n        accumulated_color += mask * lightSphereColor * lightPower;\n      }\n\n      return applyFog(accumulated_color, fogDistance);\n    }\n\n    vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);\n    vec3 color = BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;\n    mask *= color;\n\n    float collisionDistance = length(ray.start_position - collision.position);\n\n    if (iteration == 0.0 && u_fogEnabled == 1.0) {\n      fogDistance = collisionDistance; //clamp(collisionDistance / fogDistance, 0.0, 1.0);\n    }\n\n    ray = Ray(collision.position + next_dir * 0.001, next_dir);\n  }\n\n  return applyFog(accumulated_color, fogDistance);\n\n//  if (rayMarch(ray, collision)) {\n//    return vec3(0.8);\n//  }\n//  else {\n//    return vec3(0.2);\n//  }\n//  return vec3(1.0 - steps / maxSteps);\n}\n\nvoid main( void ) {\n  vec3 traceColor = vec3(0,0,0);\n  Ray ray = createRay(gl_FragCoord.xy, 0);\n  traceColor += pathTrace(ray);\n\n  vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;\n\n  vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));\n  outColor = vec4(mixedTraceColor, 1.0);\n}\n"
+
+/***/ }),
+
+/***/ 406:
+/***/ (function(module, exports) {
+
+module.exports = "#version 300 es\nprecision lowp float;\n#define GLSLIFY 1\n\nin vec2 v_texCoord;\nout vec4 outColor;\n\n// Fractal uniforms\nuniform float u_fractalType;\nuniform float u_power;\nuniform float u_minDistance;\nuniform float u_maxIterations;\nuniform float u_bailout;\n\n// Menger sponge\nuniform float u_halfSpongeScale;\nuniform float u_spongeScale;\nuniform float u_spongeOffset;\n\n// Material uniforms\nuniform float u_materialType;\nuniform vec3 u_materialColor;\nuniform float u_materialExtra1;\nuniform float u_materialExtra2;\n\n// Global light uniforms\nuniform float u_imageBasedLightning;\nuniform vec3 u_globalLightColor;\nuniform float u_fillBackgroundWithLight;\nuniform float u_globalLightPower;\nuniform float u_globalLightContrast;\n\n// Render effect settings\nuniform float u_fogEnabled;\nuniform float u_fogDistance;\nuniform vec3 u_fogColor;\n\n// Renderer uniforms\nuniform float time;\nuniform float samples;\nuniform int trace_depth;\nuniform float global_lightning_enabled;\nuniform int triangle_count;\nuniform int object_count;\nuniform vec2 resolution;\n\n// Camera uniforms\nuniform float u_cameraYaw;\nuniform float u_cameraPitch;\nuniform vec3 camera_position;\nuniform vec3 camera_direction;\nuniform vec3 camera_right;\nuniform vec3 camera_up;\n\nuniform sampler2D u_dome_texture;\n\nuniform sampler2D u_accumulated_texture;\nuniform sampler2D u_buffer_texture;\nuniform sampler2D u_triangle_texture;\nuniform sampler2D u_triangle_index_texture;\nuniform sampler2D u_bvh_texture;\nuniform sampler2D u_light_texture;\nuniform sampler2D u_material_texture;\nuniform sampler2D u_objects_bvh_texture;\nuniform sampler2D u_objects_texture;\nuniform sampler2D u_light_sphere_texture;\n\n#define EPS 0.00000001\n#define PI 3.14\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nstruct Collision {\n  vec3 position;\n  vec3 normal;\n  vec2 uv;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  int material_index;\n  float distance;\n};\n\nstruct Triangle {\n  vec3 v0;\n  vec3 edge1;\n  vec3 edge2;\n  vec3 n0;\n  vec3 n1;\n  vec3 n2;\n  vec2 uv0;\n  vec2 uv1;\n  vec2 uv2;\n  float triangle_area;\n  int material_index;\n};\n\nstruct Object {\n  vec3 bounding_bottom;\n  vec3 bounding_top;\n  vec3 position;\n  vec3 scale;\n  float object_bvh_start_index;\n  float triangle_start_index;\n};\n\n// Ray\nstruct Ray {\n  vec3 start_position;\n  vec3 direction;\n};\n\nhighp float random(vec2 co)\n{\n    highp float a = 12.9898;\n    highp float b = 78.233;\n    highp float c = 43758.5453;\n    highp float dt= dot(co.xy ,vec2(a,b));\n    highp float sn= mod(dt,3.14);\n    return fract(sin(sn) * c);\n}\n\nmat3 rotationMatrixVector(vec3 v, float angle) {\n  float c = cos(angle);\n  float s = sin(angle);\n\n  return mat3(c + (1.0 - c) * v.x * v.x, (1.0 - c) * v.x * v.y - s * v.z, (1.0 - c) * v.x * v.z + s * v.y,\n            (1.0 - c) * v.x * v.y + s * v.z, c + (1.0 - c) * v.y * v.y, (1.0 - c) * v.y * v.z - s * v.x,\n            (1.0 - c) * v.x * v.z - s * v.y, (1.0 - c) * v.y * v.z + s * v.x, c + (1.0 - c) * v.z * v.z);\n}\n\nRay createRay(vec2 pixel_position, int sample_step) {\n\n  mat3 cameraRotation = rotationMatrixVector(vec3(0, 1, 0), u_cameraYaw) * rotationMatrixVector(vec3(0, 0, 1), u_cameraPitch);\n\n  float width = resolution.x;\n  float height = resolution.y;\n\n  float i = ((pixel_position.x / width) - 0.5) * width / height;\n  float j = ((pixel_position.y / height) - 0.5);\n  vec3 image_point = i * 1.5 * camera_right + j * 1.5 * camera_up + camera_position + cross(camera_up, camera_right);\n\n  vec3 dx = (camera_up / width);\n  vec3 dy = (camera_right / height);\n  vec3 rand_x = dx * random(vec2(pixel_position.x, pixel_position.y) * vec2(1.9898, 128.13) * (time + float(sample_step)));\n  vec3 rand_y = dy * random(vec2(pixel_position.x, pixel_position.y) * vec2(134.9898, 36.342) * (time + float(sample_step)));\n  image_point += rand_x + rand_y;\n\n  vec3 direction = normalize(cameraRotation * (image_point - camera_position));\n\n  return Ray(camera_position, direction);\n}\n\n// Material\nstruct Material {\n  vec3 color;\n  int material_type;\n  float emission_rate;\n  float material_parameter1;\n  float material_parameter2;\n};\n\nvec2 getSample(vec2 start_sample, vec2 sample_step, float resolution, float steps) {\n  float s = start_sample.x + steps * sample_step.x;\n  return vec2(fract(s), floor(s) / resolution);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nMaterial getMaterial(int material_index) {\n  // Fetch material from texture\n  vec2 start_sample = SAMPLE_STEP_512 * float(material_index) * 3.0;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n\n  vec3 color = vec3(texture(u_material_texture, sample1));\n  vec3 extra_data1 = vec3(texture(u_material_texture, sample2));\n  vec3 extra_data2 = vec3(texture(u_material_texture, sample3));\n\n  int material_type = int(extra_data1.x);\n  float emission_rate = extra_data1.y;\n\n  float material_parameter1 = extra_data2.x;\n  float material_parameter2 = extra_data2.y;\n\n  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 BRDF(Ray ray, Material material, vec2 uv, vec3 collision_normal, vec3 next_dir) {\n\n//  // Emission material\n//  if (material.material_type == EMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Specular material\n//  if (material.material_type == SPECULAR_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Transmission material\n//  if (material.material_type == TRANSMISSION_MATERIAL) {\n//    return material.color;\n//  }\n//\n//  // Glossy material\n//  if (material.material_type == GLOSSY_MATERIAL) {\n//    return material.color;\n//  }\n\n  // Lambertian diffuse material\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float albedo = material.material_parameter1; // material parameter 1 is albedo\n    float roughness = material.material_parameter2; // material parameter 2 is roughness\n    vec3 view_direction = -1.0 * ray.direction;\n\n    // calculate intermediary values\n    float NdotL = dot(collision_normal, next_dir);\n    float NdotV = dot(collision_normal, view_direction);\n\n    float angleVN = acos(NdotV);\n    float angleLN = acos(NdotL);\n\n    float alpha = max(angleVN, angleLN);\n    float beta = min(angleVN, angleLN);\n    float gamma = dot(view_direction - collision_normal * dot(view_direction, collision_normal), next_dir - collision_normal * dot(next_dir, collision_normal));\n\n    float roughnessSquared = roughness * roughness;\n\n    // calculate A and B\n    float A = 1.0 - 0.5 * (roughnessSquared / (roughnessSquared + 0.57));\n    float B = 0.45 * (roughnessSquared / (roughnessSquared + 0.09));\n    float C = sin(alpha) * tan(beta);\n\n    // put it all together\n    float L1 = max(0.0, NdotL) * (A + B * max(0.0, gamma) * C);\n\n    // get the final color\n    return material.color * L1;\n  }\n\n  return material.color;\n}\n\n#define DIFFUSE_MATERIAL 0\n#define SPECULAR_MATERIAL 1\n#define EMISSION_MATERIAL 2\n#define TRANSMISSION_MATERIAL 3\n#define GLOSSY_MATERIAL 5\n\nvec3 PDF(Ray ray, Material material, vec3 collision_normal, float iteration, inout float distribution) {\n  vec3 real_normal = dot(collision_normal, ray.direction) > 0.0 ? -1.0 * collision_normal : collision_normal;\n  vec3 next_dir;\n\n  if (material.material_type == DIFFUSE_MATERIAL) {\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(0.24, 78.233) * (time + 32.0 * iteration));\n    float r2 = random(v_texCoord * vec2(63.7264, 10.873) * (time + 12.0 * iteration));\n    float r2s = sqrt(r2);\n\n    vec3 w = collision_normal;\n\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n\n    return next_dir;\n  }\n\n  // Fully specular material\n  if (material.material_type == SPECULAR_MATERIAL) {\n    return normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n  }\n\n  // Glossy material\n  if (material.material_type == GLOSSY_MATERIAL) {\n    vec3 reflected = normalize(ray.direction - 2.0 * dot(ray.direction, collision_normal) * collision_normal);\n\n    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(521.9898, 2321.233) * (time + 100.0 * iteration));\n    float r2 = random(v_texCoord * vec2(2631.7264, 5.873) * (time + 12.0 * iteration));\n    float r2s = pow(r2, material.material_parameter1);\n\n    vec3 w = reflected;\n    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));\n    vec3 v = cross(w, u);\n\n    // compute cosine weighted random ray direction on hemisphere\n    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));\n    return next_dir;\n  }\n\n  if (material.material_type == TRANSMISSION_MATERIAL) {\n    bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?\n    float nc = 1.0;  // Index of Refraction air\n    float nt = 1.5;  // Index of Refraction glass/water\n    float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials\n    float ddn = dot(ray.direction, real_normal);\n    float cos2t = 1.0 - nnt*nnt * (1.0 - ddn*ddn);\n\n    if (cos2t < 0.0) // total internal reflection\n    {\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n    }\n    else // cos2t > 0\n    {\n      // compute direction of transmission ray\n      vec3 tdir = ray.direction * nnt;\n      tdir -= normalize(collision_normal * ((into ? 1.0 : -1.0) * (ddn * nnt + sqrt(cos2t))));\n\n      float R0 = (nt - nc)*(nt - nc) / (nt + nc)*(nt + nc);\n      float c = 1.0 - (into ? -ddn : dot(tdir, collision_normal));\n      float Re = R0 + (1.0 - R0) * c * c * c * c * c;\n      float Tr = 1.0 - Re; // Transmission\n      float P = 0.25 + 0.5 * Re;\n      float RP = Re / P;\n      float TP = Tr / (1.0 - P);\n\n      // randomly choose reflection or transmission ray\n      float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));\n      if (rand < 0.2) // reflection ray\n      {\n        distribution = RP;\n        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));\n      }\n      else // transmission ray\n      {\n        distribution = TP;\n        next_dir = normalize(tdir);\n      }\n\n      return next_dir;\n    }\n  }\n\n  return vec3(0,0,0);\n}\n\n// Triangle\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nTriangle GetTriangleFromIndex(float triangle_index) {\n  // Fetch triangle from texture\n  vec2 start_sample = SAMPLE_STEP_2048 * triangle_index * 11.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 4.0);\n  vec2 sample6 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 5.0);\n  vec2 sample7 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 6.0);\n  vec2 sample8 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 7.0);\n  vec2 sample9 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 8.0);\n  vec2 sample10 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 9.0);\n\n  vec3 v0 = vec3(texture(u_triangle_texture, sample1));\n  vec3 edge1 = vec3(texture(u_triangle_texture, sample2));\n  vec3 edge2 = vec3(texture(u_triangle_texture, sample3));\n\n  vec3 n0 = vec3(texture(u_triangle_texture, sample4));\n  vec3 n1 = vec3(texture(u_triangle_texture, sample5));\n  vec3 n2 = vec3(texture(u_triangle_texture, sample6));\n\n  vec2 uv0 = vec2(texture(u_triangle_texture, sample7));\n  vec2 uv1 = vec2(texture(u_triangle_texture, sample8));\n  vec2 uv2 = vec2(texture(u_triangle_texture, sample9));\n\n  int material_index = int(texture(u_triangle_texture, sample10).x);\n  float triangle_area = texture(u_light_texture, sample10).z;\n\n  return Triangle(v0, edge1, edge2, n0, n1, n2, uv0, uv1, uv2, triangle_area, material_index);\n}\n\n#define SAMPLE_STEP_128 vec2(1,0) / 128.0\n#define SAMPLE_STEP_256 vec2(1,0) / 256.0\n#define SAMPLE_STEP_512 vec2(1,0) / 512.0\n#define SAMPLE_STEP_1024 vec2(1,0) / 1024.0\n#define SAMPLE_STEP_2048 vec2(1,0) / 2048.0\n\nfloat getTriangleIndex(float stackIdx) {\n  vec2 start_sample = SAMPLE_STEP_1024 * stackIdx;\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_1024, 1024.0, 0.0);\n\n  vec4 triangle_index_slot = texture(u_triangle_index_texture, sample1);\n  return triangle_index_slot.x;\n}\n\nfloat triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision_1, float closest_collision_distance) {\n  vec3 v0_0 = object_position + triangle.v0;\n\n  //Begin calculating determinant - also used to calculate u parameter\n  vec3 P = cross(ray.direction, triangle.edge2);\n  float det = dot(triangle.edge1, P);\n\n  //Distance from vertex1 to ray origin\n  vec3 T = ray.start_position - v0_0;\n  float u = dot(T, P);\n  vec3 Q = cross(T, triangle.edge1);\n  float v = dot(ray.direction, Q);\n  float t = dot(triangle.edge2, Q);\n\n  if(t < EPS || v < 0.0 || u+v > det || u < 0.0 || u > det || (det > -EPS && det < EPS)) return -1.0;\n\n  float inv_det = 1.0 / det;\n\n  collision_1.position = ray.start_position + inv_det * t * ray.direction;\n  collision_1.distance = length(ray.start_position - collision_1.position);\n\n  if (closest_collision_distance < collision_1.distance) return -1.0;\n\n  collision_1.material_index = triangle.material_index;\n\n  u = u * inv_det;\n  v = v * inv_det;\n  collision_1.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n  collision_1.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n\n  return 1.0;\n}\n\n//float triangleIntersection(Ray ray, Triangle triangle, vec3 object_position, inout Collision collision, float closest_collision_distance) {\n//  vec3 e1 = triangle.edge1;\n//  vec3 e2 = triangle.edge2;\n//\n//  vec3 normal = normalize(cross(e1,e2));\n//  float b = dot(normal, ray.direction);\n//\n//  vec3 w0 = ray.start_position - triangle.v0;\n//  float a = -dot(normal, w0);\n//  float t = a / b;\n//\n//  vec3 p = ray.start_position + t * ray.direction;\n//  float uu, uv, vv, wu, wv, inverseD;\n//  uu = dot(e1,e1);\n//  uv = dot(e1,e2);\n//  vv = dot(e2,e2);\n//\n//  vec3 w = p - triangle.v0;\n//  wu = dot(w, e1);\n//  wv = dot(w, e2);\n//  inverseD = uv * uv - uu * vv;\n//  inverseD = 1.0 / inverseD;\n//\n//  float u = (uv * wv - vv * wu) * inverseD;\n//  if (u < 0.0 || u > 1.0) return -1.0;\n//\n//  float v = (uv * wu - uu * wv) * inverseD;\n//  if (v < 0.0 || (u + v) > 1.0) return -1.0;\n//\n//  collision.position = p; //ray.start_position + inverseD * t * ray.direction;\n//  collision.distance = length(ray.start_position - collision.position);\n//\n//  //if (closest_collision_distance < collision.distance) return -1.0;\n//\n//  collision.material_index = triangle.material_index;\n//  collision.uv = (1.0 - u - v) * triangle.uv0 + u * triangle.uv1 + v * triangle.uv2;\n//  collision.normal = (1.0 - u - v) * triangle.n0 + u * triangle.n1 + v * triangle.n2;\n//\n//  return 1.0;\n//}\n\n// BBOX\nbool pointInsideBox(vec3 bottom, vec3 top, vec3 point) {\n  return (bottom.x < point.x && bottom.y < point.y && bottom.z < point.z && top.x > point.x && top.y > point.y && top.z > point.z);\n}\n\nfloat boundingBoxCollision_0(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\n// Scene\n\nvoid getObjectAtIndex(int index, inout Object object_1) {\n  vec2 start_sample = SAMPLE_STEP_512 * float(index) * 5.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 3.0);\n  vec2 sample5 = getSample(start_sample, SAMPLE_STEP_512, 512.0, 4.0);\n\n  vec3 bottom_bbox = vec3(texture(u_objects_texture, sample1));\n  vec3 top_bbox = vec3(texture(u_objects_texture, sample2));\n  vec3 position = vec3(texture(u_objects_texture, sample3));\n  vec3 scale = vec3(texture(u_objects_texture, sample4));\n  vec3 extra_data = vec3(texture(u_objects_texture, sample5));\n\n  // Triangle model\n  float bvh_start_index = extra_data.x;\n  float triangle_start_index = extra_data.y;\n\n  object_1 = Object(bottom_bbox, top_bbox, position, scale, bvh_start_index, triangle_start_index);\n}\n\nfloat boundingBoxCollision_1(vec3 bottom, vec3 top, Ray r) {\n  vec3 dirfrac = vec3(1,1,1) / r.direction;\n\n  vec3 t1 = (bottom - r.start_position) * dirfrac;\n  vec3 t2 = (top - r.start_position) * dirfrac;\n\n  float tmin = max(max(min(t1.x, t2.x), min(t1.y, t2.y)), min(t1.z, t2.z));\n  float tmax = min(min(max(t1.x, t2.x), max(t1.y, t2.y)), max(t1.z, t2.z));\n\n  return (tmax < 0.0 || tmin > tmax) ? 10000.0 : tmin;\n}\n\nstruct BVHNode {\n  vec3 bottom_bbox;\n  vec3 top_bbox;\n  float is_leaf;\n  float distance;\n  float extra_data1;\n  float extra_data2;\n  float node_index;\n  float parent_index;\n  float sibling_index;\n};\n\nvoid getNodeData(float index, float start_index, Ray ray, inout BVHNode node_0) {\n  vec2 start_sample = SAMPLE_STEP_2048 * (index + start_index) * 4.0;\n\n  vec2 sample1 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 0.0);\n  vec2 sample2 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 1.0);\n  vec2 sample3 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 2.0);\n  vec2 sample4 = getSample(start_sample, SAMPLE_STEP_2048, 2048.0, 3.0);\n\n  node_0.bottom_bbox = vec3(texture(u_objects_bvh_texture, sample1));\n  node_0.top_bbox = vec3(texture(u_objects_bvh_texture, sample2));\n\n  vec3 extra_data1 = vec3(texture(u_objects_bvh_texture, sample3));\n  node_0.is_leaf = extra_data1.x;\n  node_0.extra_data1 = extra_data1.y;\n  node_0.extra_data2 = extra_data1.z;\n\n  vec3 extra_data2 = vec3(texture(u_objects_bvh_texture, sample4));\n  node_0.parent_index = extra_data2.x;\n  node_0.sibling_index = extra_data2.y;\n\n//  node.distance = boundingBoxCollision(node.bottom_bbox, node.top_bbox, ray, node.is_leaf);\n\n  node_0.node_index = index;\n}\n\nvoid processLeaf(BVHNode node, inout Collision closest_collision_1248018414, Ray ray, float triangle_start_index_1248018414, Object object_0) {\n  float triangle_count_1248018414 = node.extra_data1;\n  float start_triangle_index = node.extra_data2 + triangle_start_index_1248018414;\n\n  float current_index = start_triangle_index;\n  float end_index = start_triangle_index + triangle_count_1248018414;\n\n  Collision collision;\n  for (float idx = 0.0; idx < triangle_count_1248018414; idx++) {\n    Triangle triangle = GetTriangleFromIndex(getTriangleIndex(start_triangle_index + idx));\n\n    if (triangleIntersection(ray, triangle, object_0.position, collision, closest_collision_1248018414.distance) == 1.0) {\n      closest_collision_1248018414 = collision;\n    }\n  }\n}\n\nvoid traverseObjectTree(Ray ray, inout Collision closest_collision_1248018414, Object object) {\n  float start_index_1248018414 = object.object_bvh_start_index;\n  float triangle_start_index = object.triangle_start_index;\n\n  Collision collision;\n  BVHNode node;\n  BVHNode left_node;\n  BVHNode right_node;\n\n  //float stack[32];\n  float[] stack = float[] (.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0,.0);\n  int stackIdx = 1;\n\n  for (int i = 0; i < 100; i++) {\n    if (stackIdx < 1) return;\n\n    float box_index = stack[--stackIdx];\n\n    // Fetch node data\n    getNodeData(box_index, start_index_1248018414, ray, node);\n\n    if (node.is_leaf == 0.0) {\n      // Check collision with bounding box\n      float collision_distance = 0.0;\n\n      getNodeData(node.extra_data1, start_index_1248018414, ray, left_node);\n      getNodeData(node.extra_data2, start_index_1248018414, ray, right_node);\n\n      left_node.distance = boundingBoxCollision_1(left_node.bottom_bbox + object.position, left_node.top_bbox + object.position, ray);\n      right_node.distance = boundingBoxCollision_1(right_node.bottom_bbox + object.position, right_node.top_bbox + object.position, ray);\n\n      float near_distance = min(left_node.distance, right_node.distance);\n      float far_distance = max(left_node.distance, right_node.distance);\n\n      float mixer = clamp(step(right_node.distance, left_node.distance), 0.0, 1.0);\n      float near_child = mix(node.extra_data1, node.extra_data2, mixer);\n      float far_child = mix(node.extra_data2, node.extra_data1, mixer);\n\n      if (far_distance < closest_collision_1248018414.distance) {\n        stack[stackIdx++] = far_child; // Set left child index: extra_data1 = left index\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n      else if (near_distance < closest_collision_1248018414.distance) {\n        stack[stackIdx++] = near_child; // Set left child index: extra_data1 = left index\n      }\n\n      // Return if stack index exceeds stack size\n      if (stackIdx > 31) return;\n    }\n    else {\n      processLeaf(node, closest_collision_1248018414, ray, triangle_start_index, object);\n    }\n  }\n}\n\nvec3 lightSphereContribution(Ray ray) {\n  vec3 sun_position = normalize(vec3(1.0, 1.0, 1.0));\n  vec3 position = vec3(0,0,0);\n  float radius = 100.0;\n\n  vec3 op = position - ray.start_position;\n  float t, epsilon = 0.0001;\n  float b = dot(op, ray.direction);\n  float disc = b * b - dot(op, op) + radius * radius;\n  if (disc < 0.0) return vec3(0,0,0);\n  else disc = sqrt(disc);\n\n  t = (t = b - disc) > epsilon ? t : ((t = b + disc) > epsilon ? t : 0.0);\n\n  if (t < 0.01)\n    return vec3(0,0,0);\n\n  vec3 collision_position = (ray.start_position + ray.direction * t) / 100.0;\n  vec3 normal = normalize(collision_position);\n  float u = 0.5 - atan(normal.z, normal.x) / 6.28;\n  float v = 0.5 - 2.0 * asin(normal.y) / 6.28;\n\n  vec3 clr = texture(u_dome_texture, vec2(u,v)).rgb;\n  return clr;\n}\n\nbool sceneIntersection(Ray ray, inout Collision collision_0) {\n  Collision closest_collision;\n  closest_collision.distance = 10000.0;\n\n  Object object;\n  int collision_count = 0;\n  for (int i = 0; i < object_count; i++) {\n    getObjectAtIndex(i, object);\n\n    float collision_distance = boundingBoxCollision_0(object.bounding_bottom + object.position, object.bounding_top + object.position, ray);\n\n    if (collision_distance < closest_collision.distance) {\n      traverseObjectTree(ray, closest_collision, object);\n    }\n  }\n\n  if (closest_collision.distance == 10000.0) {\n    return false;\n  }\n  else {\n    collision_0 = closest_collision;\n    return true;\n  }\n}\n\nvec3 applyFog(vec3 color, float distance) {\n  float fogAmount = 1.0 - exp( -distance * u_fogDistance * 0.2 );\n  return mix(color, u_fogColor, fogAmount);\n}\n\nvec3 pathTrace(Ray ray) {\n  vec3 mask = vec3(1,1,1);\n  float fogDistance = 0.0;\n  vec3 accumulated_color = vec3(0,0,0);\n  Collision collision;\n  Material collision_material;\n\n  for (float iteration = 0.0; iteration < float(trace_depth); iteration++) {\n    float distribution = 1.0;\n\n    if (!sceneIntersection(ray, collision)) {\n      vec3 lightSphereColor = mix(u_globalLightColor, lightSphereContribution(ray), u_imageBasedLightning);\n      if (iteration == 0.0) {\n        return mix(u_fogColor, lightSphereColor, u_fillBackgroundWithLight);\n      }\n      else {\n        float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;\n        accumulated_color += mask * lightSphereColor * lightPower;\n        return applyFog(accumulated_color, fogDistance);\n      }\n    }\n\n    collision_material = getMaterial(collision.material_index);\n\n    vec3 next_dir = PDF(ray, collision_material, collision.normal, iteration, distribution);\n    mask *= BRDF(ray, collision_material, collision.uv, collision.normal, next_dir) * distribution;\n    //mask *= 2.0;\n\n    accumulated_color += mask * collision_material.emission_rate;\n\n    float collisionDistance = length(ray.start_position - collision.position);\n    if (iteration == 0.0 && u_fogEnabled == 1.0) {\n      fogDistance = collisionDistance; //clamp(collisionDistance / fogDistance, 0.0, 1.0);\n    }\n\n    if (collision_material.emission_rate != 0.0) return applyFog(accumulated_color, fogDistance);\n\n    ray = Ray(collision.position + next_dir * EPS, next_dir);\n  }\n\n  return applyFog(accumulated_color, fogDistance);\n}\n\nvoid main( void ) {\n  vec3 traceColor = vec3(0,0,0);\n  Ray ray = createRay(gl_FragCoord.xy, 0);\n  traceColor += pathTrace(ray);\n\n  vec3 texture = texture(u_accumulated_texture, v_texCoord).rgb;\n\n  vec3 mixedTraceColor = mix(traceColor, texture, samples / (samples + 1.0));\n  outColor = vec4(mixedTraceColor, 1.0);\n}\n"
 
 /***/ }),
 
@@ -4320,13 +4235,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 
-var Stats = __webpack_require__(662);
+var Stats = __webpack_require__(663);
 var RenderService = (function () {
     function RenderService(settingsService, sceneService) {
         var _this = this;
         this.settingsService = settingsService;
         this.sceneService = sceneService;
         this._rayTracingEnabled = true;
+        this._bloomEnabled = false;
         this._samples = 0;
         this._sceneLoaded = false;
         this.render = function () {
@@ -4343,7 +4259,7 @@ var RenderService = (function () {
                     renderTexture = _this._rayMarcher.renderTexture;
                 }
             }
-            if (_this.settingsService.bloomSettings.getAttribute('u_bloomEnabled').value == 1.0) {
+            if (_this._bloomEnabled) {
                 _this._bloomProgram.render(renderTexture);
             }
             _this._compositionProgram.render(renderTexture, _this._bloomProgram.renderTexture);
@@ -4375,14 +4291,15 @@ var RenderService = (function () {
             _this._startTime = __WEBPACK_IMPORTED_MODULE_5_moment__().valueOf();
             _this._sceneLoaded = true;
         });
+        this.settingsService.bloomSettings.getAttributeSub('u_bloomEnabled').asObservable().subscribe(function (attr) {
+            _this._bloomEnabled = attr.value == 1.0;
+        });
         this.settingsService.renderTypeSub.asObservable().subscribe(function (renderType) {
             _this._rayTracingEnabled = renderType == 0;
-            console.log(_this._rayTracingEnabled);
             if (_this._rayTracingEnabled && _this._rayTracer != null) {
                 _this._rayTracer.init();
             }
             else if (!_this._rayTracingEnabled) {
-                console.log('init hej hej');
                 _this._rayMarcher.init();
             }
         });
@@ -4481,10 +4398,11 @@ var SceneService = (function () {
         var _this = this;
         this._scene = new __WEBPACK_IMPORTED_MODULE_2__path_tracer_models_scene__["a" /* default */]();
         this._camera = new __WEBPACK_IMPORTED_MODULE_1__path_tracer_models_camera__["a" /* default */](this._settingsService, vec3.fromValues(10.90, 3.51, 4.00), vec3.fromValues(1.59, 3.79, 2.27));
+        this._resolutionSub = this._settingsService.renderSettings.getAttributeSub('resolution');
         var renderCanvas = $('#renderCanvas');
         renderCanvas.click(function (event) {
             var windowSize = vec2.fromValues(window.innerWidth, window.innerHeight);
-            var resolution = _this._settingsService.resolutionSub.getValue();
+            var resolution = _this._resolutionSub.getValue().value;
             var zoom = _this._settingsService.zoomSub.getValue();
             var clickPosition = vec2.fromValues(event.offsetX, event.offsetY);
             var windowTop = vec2.fromValues(windowSize[0] / 2.0 - (resolution[0] * zoom) / 2.0, windowSize[1] / 2.0 - (resolution[1] * zoom) / 2.0);
@@ -4549,7 +4467,7 @@ var _a;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createProgram__ = __webpack_require__(316);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__createProgram__ = __webpack_require__(317);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__render_context__ = __webpack_require__(25);
 
 
@@ -4631,11 +4549,157 @@ var RenderTarget = (function () {
 
 /***/ }),
 
-/***/ 666:
+/***/ 667:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(278);
 
+
+/***/ }),
+
+/***/ 9:
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__render_context__ = __webpack_require__(25);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FLOAT_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return INTEGER_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return VEC2_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return VEC3_TYPE; });
+/* unused harmony export VEC4_TYPE */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return TEXTURE_TYPE; });
+
+var FLOAT_TYPE = 0;
+var INTEGER_TYPE = 1;
+var VEC2_TYPE = 2;
+var VEC3_TYPE = 3;
+var VEC4_TYPE = 4;
+var TEXTURE_TYPE = 5;
+var Shader = (function () {
+    function Shader(vertexSource, fragmentSource) {
+        this.needsUpdate = false;
+        this._vertexShader = this.createShader(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].VERTEX_SHADER, vertexSource);
+        this._fragmentShader = this.createShader(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].FRAGMENT_SHADER, fragmentSource);
+        this._uniforms = {};
+    }
+    Shader.prototype.update = function () {
+        var textureCount = 0;
+        for (var uniformName in this._uniforms) {
+            var uniform = this._uniforms[uniformName];
+            switch (uniform.type) {
+                case FLOAT_TYPE:
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1f(uniform.location, uniform.value);
+                    break;
+                case VEC2_TYPE:
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform2fv(uniform.location, uniform.value);
+                    break;
+                case VEC3_TYPE:
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform3fv(uniform.location, uniform.value);
+                    break;
+                case INTEGER_TYPE:
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1i(uniform.location, uniform.value);
+                    break;
+                case TEXTURE_TYPE:
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].uniform1i(uniform.location, textureCount);
+                    switch (textureCount) {
+                        case 0:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE0);
+                            break;
+                        case 1:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE1);
+                            break;
+                        case 2:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE2);
+                            break;
+                        case 3:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE3);
+                            break;
+                        case 4:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE4);
+                            break;
+                        case 5:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE5);
+                            break;
+                        case 6:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE6);
+                            break;
+                        case 7:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE7);
+                            break;
+                        case 8:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE8);
+                            break;
+                        case 9:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE9);
+                            break;
+                        case 10:
+                            __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].activeTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE10);
+                            break;
+                    }
+                    __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].bindTexture(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].TEXTURE_2D, uniform.value);
+                    textureCount++;
+                    break;
+            }
+        }
+    };
+    Shader.prototype.updateTexture = function (data) {
+    };
+    Shader.prototype.createShader = function (type, source) {
+        var shader = __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].createShader(type);
+        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].shaderSource(shader, source);
+        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].compileShader(shader);
+        if (__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getShaderParameter(shader, __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].COMPILE_STATUS)) {
+            return shader;
+        }
+        console.warn(__WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getShaderInfoLog(shader));
+        //console.warn(gl.getShaderSource(shader))
+        //console.debug(gl.getShaderSource(shader))
+        __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].deleteShader(shader);
+    };
+    Shader.prototype.updateUniforms = function () {
+        if (this._program) {
+            for (var name in this._uniforms) {
+                var uniform = this._uniforms[name];
+                uniform.location = __WEBPACK_IMPORTED_MODULE_0__render_context__["a" /* gl */].getUniformLocation(this._program, name);
+            }
+        }
+    };
+    Shader.prototype.setUniform = function (id, data) {
+        this._uniforms[id] = data;
+        this.updateUniforms();
+        this.needsUpdate = true;
+    };
+    Object.defineProperty(Shader.prototype, "uniforms", {
+        get: function () { return this._uniforms; },
+        set: function (value) {
+            this._uniforms = value;
+            this.updateUniforms();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Shader.prototype, "program", {
+        set: function (value) {
+            this._program = value;
+            this.updateUniforms();
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Shader.prototype, "fragmentShader", {
+        get: function () { return this._fragmentShader; },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Shader.prototype, "vertexShader", {
+        get: function () { return this._vertexShader; },
+        enumerable: true,
+        configurable: true
+    });
+    return Shader;
+}());
+/* harmony default export */ __webpack_exports__["e"] = Shader;
+//# sourceMappingURL=shader.js.map
 
 /***/ }),
 
@@ -4767,7 +4831,7 @@ var CameraNavigator = (function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ray__ = __webpack_require__(304);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_rotation_matrix_vector__ = __webpack_require__(318);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__utils_rotation_matrix_vector__ = __webpack_require__(319);
 
 
 var Camera = (function () {
@@ -4779,7 +4843,7 @@ var Camera = (function () {
         this._look_at = look_at;
         this._direction = vec3.fromValues(0, 0, 0);
         this._hasChanged = false;
-        settingsService.resolutionSub.asObservable().subscribe(function (res) { return _this._resolution = res; });
+        settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe(function (attr) { return _this._resolution = attr.value; });
         this.update();
     }
     Camera.prototype.createRayFromPixel = function (pixel_position) {
@@ -5010,5 +5074,5 @@ var TransmissionMaterial = (function (_super) {
 
 /***/ })
 
-},[666]);
+},[667]);
 //# sourceMappingURL=main.bundle.js.map

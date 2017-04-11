@@ -63,10 +63,10 @@ module.exports = function() {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(373);
+var content = __webpack_require__(374);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(663)(content, {});
+var update = __webpack_require__(664)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -84,7 +84,7 @@ if(false) {
 
 /***/ }),
 
-/***/ 372:
+/***/ 373:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
@@ -99,12 +99,12 @@ exports.push([module.i, ".mat-elevation-z0{box-shadow:0 0 0 0 rgba(0,0,0,.2),0 0
 
 /***/ }),
 
-/***/ 373:
+/***/ 374:
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(16)();
 // imports
-exports.i(__webpack_require__(372), "");
+exports.i(__webpack_require__(373), "");
 
 // module
 exports.push([module.i, "/* You can add global styles to this file, and also import other style files */\n\ncanvas {\n  cursor: crosshair;\n}\n\ncanvas:active {\n  cursor: move;\n}\n\n.mat-select-value {\n  color: #fff;\n  font-size: 12px;\n}\n\n.mat-select-ripple {\n  color: #222;\n}\n\n.left-pane {\n  position: absolute;\n  left: 0;\n  top: 0;\n  height: 100%;\n  overflow: hidden;\n  width: 215px;\n}\n\n.right-pane {\n  position: absolute;\n  right: 0;\n  top: 0;\n  height: 100%;\n  overflow: hidden;\n  width: 202px;\n}\n\n.scroll {\n  height: 100%;\n  overflow-y: scroll;\n  width: 230px;\n}\n\n.options-pane {\n  padding: 10px;\n  margin: 5px;\n  border-radius: 3px;\n  width: 170px;\n  background: rgba(0,0,0,0.2);\n  overflow: hidden;\n}\n\n.info-header {\n  font-family: Roboto, serif;\n  font-size: 15px;\n  font-weight: 400;\n  line-height: 20px;\n  color: #fff;\n}\n\n.property-header {\n  font-family: Roboto, serif;\n  font-size: 12px;\n  font-weight: 200;\n  line-height: 12px;\n  color: #fff;\n  margin-top: 10px;\n}\n\n.data-label {\n  font-family: Roboto, serif;\n  font-size: 12px;\n  font-weight: 200;\n  line-height: 50px;\n  color: #fff;\n}\n\n.mat-slide-toggle-content {\n  font-family: Roboto, \"Helvetica Neue\", sans-serif !important;\n  font-size: 12px !important;\n  font-weight: 200 !important;\n}\n\ncolor-picker {\n\n}\n\n.mat-dialog-container {\n  font-weight: 200;\n  background: rgba(0,0,0,0.2);\n  font-family: Roboto, \"Helvetica Neue\", sans-serif !important;\n  color: #fff;\n}\n\n.mat-spinner path {\n  stroke: #ffc107;\n  stroke-width: 6px;\n}", ""]);
@@ -114,7 +114,7 @@ exports.push([module.i, "/* You can add global styles to this file, and also imp
 
 /***/ }),
 
-/***/ 663:
+/***/ 664:
 /***/ (function(module, exports) {
 
 /*
@@ -367,7 +367,7 @@ function updateLink(linkElement, obj) {
 
 /***/ }),
 
-/***/ 668:
+/***/ 669:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(280);
@@ -375,5 +375,5 @@ module.exports = __webpack_require__(280);
 
 /***/ })
 
-},[668]);
+},[669]);
 //# sourceMappingURL=styles.bundle.js.map
