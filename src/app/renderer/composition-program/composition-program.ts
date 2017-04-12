@@ -2,6 +2,7 @@ import {SettingsService} from "../settings/settings.service";
 import FBO from "../utils/fbo";
 import Shader from "../utils/shader";
 import {TEXTURE_TYPE} from "../utils/shader";
+import {ISettingAttribute} from "../settings/setting";
 
 /*
  Shader imports
@@ -14,7 +15,7 @@ export class CompositionProgram {
   private _compositionShader: Shader
 
   constructor(settingsService: SettingsService) {
-    let renderSize = settingsService.resolutionSub.getValue()
+    let renderSize = settingsService.renderSettings.getAttribute('resolution').value
 
     this._compositionShader = new Shader(compositionVert, compositionFrag);
     this._compositionShader.uniforms = {
@@ -25,7 +26,10 @@ export class CompositionProgram {
     this._compositionProgram.enableWriteToTexture();
 
     settingsService.connectShader(this._compositionShader)
-    settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => this._compositionProgram.resize(resolution[0], resolution[1]))
+    settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => {
+      let res = attr.value
+      this._compositionProgram.resize(res[0], res[1])
+    })
   }
 
   render(mainTexture: WebGLTexture, bloomTexture: WebGLTexture) {

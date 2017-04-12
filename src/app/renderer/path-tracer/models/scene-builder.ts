@@ -8,6 +8,7 @@ import {Object3d} from "./primitives/object3d";
 import {MATERIAL_TYPES} from "./materials/material";
 import {DiffuseMaterial} from "./materials/diffuse-material";
 import {GlossyMaterial} from "./materials/glossy-material";
+import TransmissionMaterial from "./materials/transmission-material";
 export interface ISceneTextures {
   objects: Float32Array
   object_count: number
@@ -118,6 +119,12 @@ export default function buildScene(scene: any): Promise<ISceneTextures> {
         materialData.push(diffuse_material.shininess);
         materialData.push(0);
         materialData.push(0);
+      }
+      else if (material.material_type == MATERIAL_TYPES.transmission) {
+        let transmissionMaterial = <TransmissionMaterial> material;
+        materialData.push(transmissionMaterial.refractionIndex);
+        materialData.push(transmissionMaterial.reflectRefractRatio);
+        materialData.push(transmissionMaterial.roughness);
       }
       else {
         materialData.push(0);

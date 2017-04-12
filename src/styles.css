@@ -97,3 +97,24 @@ color-picker {
   stroke: #ffc107;
   stroke-width: 6px;
 }
+
+.start-page-container {
+  display: table;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  background: -webkit-linear-gradient(top,#727272,#545454);
+  background: linear-gradient(180deg,#727272 0,#545454);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#727272",endColorstr="#545454",GradientType=0);
+  color: #fff;
+}
+
+.loading-header {
+  font-size: 55px;
+  font-weight: 200;
+  font-family: 'Permanent Marker', cursive;
+  color: #fff;
+  display: table-cell;
+  vertical-align: middle;
+}

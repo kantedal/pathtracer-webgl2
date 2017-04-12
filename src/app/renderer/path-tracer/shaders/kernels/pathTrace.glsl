@@ -36,7 +36,7 @@ vec3 pathTrace(Ray ray) {
   Collision collision;
   Material collision_material = Material(materialColor, int(materialType), 0.0, materialExtra1, materialExtra2);
 
-  for (float iteration = 0.0; iteration < 3.0; iteration++) {
+  for (float iteration = 0.0; iteration < float(trace_depth); iteration++) {
     float distribution = 1.0;
 
     if (!rayMarch(ray, collision)) {

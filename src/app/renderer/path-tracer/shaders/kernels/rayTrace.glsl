@@ -26,8 +26,8 @@ vec3 pathTrace(Ray ray) {
       else {
         float lightPower = (globalLightPower - 0.5) * globalLightContrast + 0.5;
         accumulated_color += mask * lightSphereColor * lightPower;
+        return applyFog(accumulated_color, fogDistance);
       }
-      return applyFog(accumulated_color, fogDistance);
     }
 
     collision_material = getMaterial(collision.material_index);

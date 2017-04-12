@@ -21,7 +21,7 @@ export default class LightSettings extends Setting {
         maxValue: 5.0,
         stepSize: 0.01,
       },
-      value: 1.5,
+      value: 1.0,
       uniformName: 'u_globalLightPower',
       uniformType: FLOAT_TYPE
     })
@@ -34,7 +34,7 @@ export default class LightSettings extends Setting {
         maxValue: 5.0,
         stepSize: 0.1,
       },
-      value: 1.0,
+      value: 1.5,
       uniformName: 'u_globalLightContrast',
       uniformType: FLOAT_TYPE
     })

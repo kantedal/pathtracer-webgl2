@@ -23,8 +23,9 @@ Material getMaterial(int material_index) {
 
   float material_parameter1 = extra_data2.x;
   float material_parameter2 = extra_data2.y;
+  float material_parameter3 = extra_data2.z;
 
-  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);
+  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2, material_parameter3);
 }
 
 #pragma glslify: export(getMaterial)

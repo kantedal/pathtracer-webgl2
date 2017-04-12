@@ -32,3 +32,11 @@
   display: inline-block;
   margin-left: 10px;
 }
+
+.vec2-input {
+  color: #fff;
+  font-weight: 200;
+  font-size: 12px;
+  width: 70px;
+  text-align: center;
+}

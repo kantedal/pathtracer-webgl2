@@ -14,6 +14,9 @@
         <span class="property-header">Rendered samples</span>
         <span class="property-header" style="font-weight: 400">{{renderService.samples}}</span>
       </div>
+      <div class="property-box" style="margin-top: 20px">
+        <div class="property-header">Move with <b>w, a, s, d</b></div>
+      </div>
     </settings-container>
     <settings-container title="Render settings" [expanded]="true">
       <div class="property-box">
@@ -25,20 +28,31 @@
         </md-select>
       </div>
 
-      <div class="property-box">
-        <div class="property-header">Resolution</div>
-        <md-input-container dividerColor="accent" mdSuffix="px">
-          <input class="resolution-input" [(ngModel)]="resolutionWidth" mdInput (change)="resolutionUpdate()" type="number" #resolutionWidth>
-        </md-input-container>
-        <md-input-container dividerColor="accent" mdSuffix="px">
-          <input class="resolution-input" [(ngModel)]="resolutionHeight" mdInput (change)="resolutionUpdate()" type="number" #resolutionHeight>
-        </md-input-container>
-      </div>
+      <!--<div class="property-box">-->
+        <!--<div class="property-header">Resolution</div>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="resolution-input" [(ngModel)]="resolutionWidth" mdInput (change)="resolutionUpdate()" type="number">-->
+        <!--</md-input-container>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="resolution-input" [(ngModel)]="resolutionHeight" mdInput (change)="resolutionUpdate()" type="number">-->
+        <!--</md-input-container>-->
+      <!--</div>-->
 
-      <div class="property-box">
+      <!--<div class="property-box">-->
+        <!--<div class="property-header">Trace depth</div>-->
+        <!--<md-input-container dividerColor="accent" mdSuffix="px">-->
+          <!--<input class="resolution-input" [(ngModel)]="resolutionWidth" mdInput (change)="resolutionUpdate()" type="number">-->
+        <!--</md-input-container>-->
+      <!--</div>-->
+
+      <div class="property-box" style="margin-top: 15px;">
         <div class="property-header">Render view zoom</div>
         <md-slider min="20" max="300" step="0.1" value="100.0" (input)="zoomSliderUpdate($event)" #zoomSlider></md-slider>
         <span class="data-label">{{settingsService.zoomSub.asObservable() | async }}x</span>
+      </div>
+
+      <div *ngFor="let attribute of settingsService.renderSettings.attributes">
+        <setting-attribute [attribute]="attribute"></setting-attribute>
       </div>
     </settings-container>
 

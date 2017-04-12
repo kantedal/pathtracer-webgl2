@@ -4,6 +4,7 @@ import {SettingsService} from "../settings/settings.service";
 import Camera from "./models/camera";
 import {CameraNavigator} from "../camera-navigator";
 import {gl} from "../utils/render-context";
+import {ISettingAttribute} from "../settings/setting";
 
 /*
  Shader imports
@@ -34,9 +35,7 @@ export default class RayMarcher {
       // Render settings uniforms
       time: { type: FLOAT_TYPE, value: 1.0 },
       samples: { type: FLOAT_TYPE, value: 0.0 },
-      trace_depth: { type: INTEGER_TYPE, value: 3 },
       global_lightning_enabled: { type: FLOAT_TYPE, value: 0.0 },
-      resolution: { type: VEC2_TYPE, value: [512, 512] },
 
       // Fractal uniforms
       u_fractalType: { type: FLOAT_TYPE, value: 0.0 },
@@ -70,6 +69,12 @@ export default class RayMarcher {
     this.loadDomeTexture("./assets/sky-3.jpg")
 
     this.setupSettingsListeners();
+  }
+
+  public init() {
+    this._navigator = new CameraNavigator(this._camera, this._settingsService)
+    this._navigator.rotationYFactor = 1.0
+    this._navigator.zoomFactor = 1.0
   }
 
   public loadDomeTexture(url: any) {
@@ -130,7 +135,8 @@ export default class RayMarcher {
   }
 
   private setupSettingsListeners() {
-    this._settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => {
+    this._settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => {
+      let resolution = attr.value
       this._pathTracerUniforms['resolution'].value = resolution
       this._frameBuffer.setWindowSize(resolution[0], resolution[1])
       this._frameBuffer.resetTextures()

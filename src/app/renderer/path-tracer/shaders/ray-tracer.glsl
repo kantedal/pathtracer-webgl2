@@ -168,6 +168,7 @@ struct Material {
   float emission_rate;
   float material_parameter1;
   float material_parameter2;
+  float material_parameter3;
 };
 
 vec2 getSample(vec2 start_sample, vec2 sample_step, float resolution, float steps) {
@@ -197,8 +198,9 @@ Material getMaterial(int material_index) {
 
   float material_parameter1 = extra_data2.x;
   float material_parameter2 = extra_data2.y;
+  float material_parameter3 = extra_data2.z;
 
-  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2);
+  return Material(color, material_type, emission_rate, material_parameter1, material_parameter2, material_parameter3);
 }
 
 #define DIFFUSE_MATERIAL 0
@@ -312,46 +314,33 @@ vec3 PDF(Ray ray, Material material, vec3 collision_normal, float iteration, ino
   }
 
   if (material.material_type == TRANSMISSION_MATERIAL) {
-    bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?
-    float nc = 1.0;  // Index of Refraction air
-    float nt = 1.5;  // Index of Refraction glass/water
-    float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials
-    float ddn = dot(ray.direction, real_normal);
-    float cos2t = 1.0 - nnt*nnt * (1.0 - ddn*ddn);
+    vec3 nextRay;
 
-    if (cos2t < 0.0) // total internal reflection
-    {
-        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));
+    // randomly choose reflection or transmission ray
+    float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));
+    if (rand < material.material_parameter2) {
+      nextRay = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));
     }
-    else // cos2t > 0
-    {
-      // compute direction of transmission ray
-      vec3 tdir = ray.direction * nnt;
-      tdir -= normalize(collision_normal * ((into ? 1.0 : -1.0) * (ddn * nnt + sqrt(cos2t))));
+    else {
+      bool into = dot(collision_normal, real_normal) > 0.0; // is ray entering or leaving refractive material?
 
-      float R0 = (nt - nc)*(nt - nc) / (nt + nc)*(nt + nc);
-      float c = 1.0 - (into ? -ddn : dot(tdir, collision_normal));
-      float Re = R0 + (1.0 - R0) * c * c * c * c * c;
-      float Tr = 1.0 - Re; // Transmission
-      float P = 0.25 + 0.5 * Re;
-      float RP = Re / P;
-      float TP = Tr / (1.0 - P);
+      float nc = 1.0;  // Index of Refraction air
+      float nt = material.material_parameter1;  // Index of Refraction glass/water
+      float nnt = into ? nc / nt : nt / nc;  // IOR ratio of refractive materials
 
-      // randomly choose reflection or transmission ray
-      float rand = random(v_texCoord * vec2(86.425, 145.233) * (time + iteration));
-      if (rand < 0.2) // reflection ray
-      {
-        distribution = RP;
-        next_dir = normalize(ray.direction - collision_normal * 2.0 * dot(collision_normal, ray.direction));
-      }
-      else // transmission ray
-      {
-        distribution = TP;
-        next_dir = normalize(tdir);
-      }
-
-      return next_dir;
+      nextRay = refract(ray.direction, real_normal, nnt);
     }
+
+    float r1 = 2.0 * 3.14 * random(v_texCoord * vec2(521.9898, 2321.233) * (time + 100.0 * iteration));
+    float r2 = random(v_texCoord * vec2(2631.7264, 5.873) * (time + 12.0 * iteration));
+    float r2s = pow(r2, 10.0 - material.material_parameter3);
+
+    vec3 w = nextRay;
+    vec3 u = normalize(cross(mix(vec3(1,0,0), vec3(0,1,0), step(0.1, abs(w.x))), w));
+    vec3 v = cross(w, u);
+
+    next_dir = normalize(u * cos(r1) * r2s + v * sin(r1) * r2s + w * sqrt(1.0 - r2));
+    return next_dir;
   }
 
   return vec3(0,0,0);
@@ -722,8 +711,8 @@ vec3 pathTrace(Ray ray) {
       else {
         float lightPower = (u_globalLightPower - 0.5) * u_globalLightContrast + 0.5;
         accumulated_color += mask * lightSphereColor * lightPower;
+        return applyFog(accumulated_color, fogDistance);
       }
-      return applyFog(accumulated_color, fogDistance);
     }
 
     collision_material = getMaterial(collision.material_index);

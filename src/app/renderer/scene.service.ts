@@ -7,22 +7,26 @@ import {
 } from "./path-tracer/models/default-scenes/default-scenes";
 import {ISceneTextures, default as buildScene} from "./path-tracer/models/scene-builder";
 import {SettingsService} from "./settings/settings.service";
+import {BehaviorSubject} from "rxjs";
+import {ISettingAttribute} from "./settings/setting";
 
 @Injectable()
 export class SceneService {
   private _scene: Scene;
   private _camera: Camera;
+  private _resolutionSub: BehaviorSubject<ISettingAttribute>
 
   constructor(private _settingsService: SettingsService) {}
 
   public init() {
     this._scene = new Scene();
     this._camera = new Camera(this._settingsService, vec3.fromValues(10.90, 3.51, 4.00), vec3.fromValues(1.59, 3.79, 2.27))
+    this._resolutionSub = this._settingsService.renderSettings.getAttributeSub('resolution')
 
     let renderCanvas = $('#renderCanvas')
     renderCanvas.click((event) => {
       let windowSize = vec2.fromValues(window.innerWidth, window.innerHeight)
-      let resolution = this._settingsService.resolutionSub.getValue()
+      let resolution = this._resolutionSub.getValue().value
       let zoom = this._settingsService.zoomSub.getValue()
       let clickPosition = vec2.fromValues(event.offsetX, event.offsetY)
 

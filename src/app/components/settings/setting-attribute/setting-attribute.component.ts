@@ -1,6 +1,6 @@
 import {Component, Input, AfterContentChecked} from "@angular/core";
 import {BehaviorSubject} from "rxjs";
-import {ISettingAttribute, UI_TYPE_COLORPICKER, UI_TYPE_TOGGLE} from "../../../renderer/settings/setting";
+import {ISettingAttribute, UI_TYPE_COLORPICKER, UI_TYPE_TOGGLE, UI_TYPE_VEC2} from "../../../renderer/settings/setting";
 const hexRgb = require('hex-rgb');
 const rgbHex = require('rgb-hex');
 
@@ -18,6 +18,9 @@ export class SettingAttributeComponent implements AfterContentChecked {
   blueClr = 255
   greenClr = 255
 
+  // Vector attributes
+  vec = [0,0,0]
+
   // Dropdown attributes
   dropdownSelection = 0
 
@@ -34,6 +37,10 @@ export class SettingAttributeComponent implements AfterContentChecked {
 
   updateColor() {
     this.updateAttribute(vec3.fromValues(this.redClr / 255, this.greenClr / 255, this.blueClr / 255))
+  }
+
+  updateVec2() {
+    this.updateAttribute(vec2.fromValues(this.vec[0], this.vec[1]))
   }
 
   hexToRgb(hex: any): GLM.IArray {
@@ -55,6 +62,10 @@ export class SettingAttributeComponent implements AfterContentChecked {
         break
       case UI_TYPE_TOGGLE:
         this.enabled = attr.value == 1.0
+        break
+      case UI_TYPE_VEC2:
+        this.vec[0] = attr.value[0]
+        this.vec[1] = attr.value[1]
         break
     }
   }

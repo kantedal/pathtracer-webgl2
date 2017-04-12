@@ -1,6 +1,7 @@
 import Ray from "./ray";
 import {SettingsService} from "../../settings/settings.service";
 import {rotationMatrixVector} from "../../utils/rotation-matrix-vector";
+import {ISettingAttribute} from "../../settings/setting";
 
 export default class Camera {
   private _position: GLM.IArray
@@ -18,7 +19,7 @@ export default class Camera {
     this._look_at = look_at
     this._direction = vec3.fromValues(0,0,0)
     this._hasChanged = false
-    settingsService.resolutionSub.asObservable().subscribe((res: GLM.IArray) => this._resolution = res)
+    settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => this._resolution = attr.value)
     this.update()
   }
 

@@ -5,6 +5,7 @@ import {TEXTURE_TYPE} from "../utils/shader";
 import {IUniform} from "../utils/shader";
 import {VEC2_TYPE} from "../utils/shader";
 import {SettingsService} from "../settings/settings.service";
+import {ISettingAttribute} from "../settings/setting";
 
 /*
  Shader imports
@@ -37,7 +38,7 @@ export default class RenderView {
       this._uniforms['u_zoom'].value = value
     })
 
-    this._settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => this._uniforms['u_rendererResolution'].value = resolution)
+    _settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => this._uniforms['u_rendererResolution'].value = attr.value)
   }
 
   public render(pathTracerTexture: WebGLTexture) {

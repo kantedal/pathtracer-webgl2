@@ -9,6 +9,7 @@ import {BloomProgram} from "./bloom-program/bloom-program";
 import {CompositionProgram} from "./composition-program/composition-program";
 import {SceneService} from "./scene.service";
 import {ISceneTextures} from "./path-tracer/models/scene-builder";
+import {CameraNavigator} from "./camera-navigator";
 const Stats = require('stats-js')
 
 
@@ -17,7 +18,10 @@ export class RenderService {
   private _canvas: any
   private _rayMarcher: RayMarcher
   private _rayTracer: RayTracer
+  private _rayTracingEnabled: boolean = true
+  private _cameraNavigator: CameraNavigator
   private _bloomProgram: BloomProgram
+  private _bloomEnabled: boolean = false
   private _compositionProgram: CompositionProgram
   private _renderView: RenderView
   private _stats: any
@@ -53,10 +57,25 @@ export class RenderService {
     document.body.appendChild(this._stats.domElement)
 
     this.sceneService.init()
-    this.sceneService.loadScene(1).then((sceneTextures: ISceneTextures) => {
+    this.sceneService.loadScene(3).then((sceneTextures: ISceneTextures) => {
       this._rayTracer = new RayTracer(this.settingsService, this.sceneService, sceneTextures)
       this._startTime = moment().valueOf()
       this._sceneLoaded = true
+    })
+
+    this.settingsService.bloomSettings.getAttributeSub('u_bloomEnabled').asObservable().subscribe(attr => {
+      this._bloomEnabled = attr.value == 1.0
+    })
+
+    this.settingsService.renderTypeSub.asObservable().subscribe((renderType: number) => {
+      this._rayTracingEnabled = renderType == 0
+
+      if (this._rayTracingEnabled && this._rayTracer != null) {
+        this._rayTracer.init()
+      }
+      else if (!this._rayTracingEnabled) {
+        this._rayMarcher.init()
+      }
     })
 
     this._rayMarcher = new RayMarcher(this.settingsService)
@@ -83,7 +102,7 @@ export class RenderService {
       }
     }
 
-    if (this.settingsService.bloomSettings.getAttribute('u_bloomEnabled').value == 1.0) {
+    if (this._bloomEnabled) {
       this._bloomProgram.render(renderTexture)
     }
 

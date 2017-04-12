@@ -38,6 +38,16 @@
     </md-select>
   </div>
 
+  <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_VEC2'">
+    <div class="property-header">{{attribute.getValue().name}}</div>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="vec2-input" [(ngModel)]="vec[0]" mdInput (change)="updateVec2()" type="number">
+    </md-input-container>
+    <md-input-container dividerColor="accent" mdSuffix="px">
+      <input class="vec2-input" [(ngModel)]="vec[1]" mdInput (change)="updateVec2()" type="number">
+    </md-input-container>
+  </div>
+
   <div *ngIf="attribute.getValue().uiType == 'UI_TYPE_TOGGLE'" style="margin-top: 10px;">
     <span style="height: 50px;">
        <md-slide-toggle [checked]="enabled" class="property-toggle" (change)="updateAttribute($event.checked ? 1.0 : 0.0)">

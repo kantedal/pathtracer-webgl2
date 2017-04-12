@@ -56,4 +56,12 @@ export class Setting {
       }
     }
   }
+
+  getAttributeSub(name: string): BehaviorSubject<ISettingAttribute> {
+    for (let attribute of this.attributes) {
+      if (attribute.getValue().uniformName == name) {
+        return attribute;
+      }
+    }
+  }
 }

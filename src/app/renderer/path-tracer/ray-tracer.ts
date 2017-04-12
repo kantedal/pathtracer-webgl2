@@ -7,6 +7,7 @@ import Camera from "./models/camera";
 import {CameraNavigator} from "../camera-navigator";
 import {gl} from "../utils/render-context";
 import {SceneService} from "../scene.service";
+import {ISettingAttribute} from "../settings/setting";
 
 /*
  Shader imports
@@ -60,11 +61,9 @@ export default class RayTracer {
       // Uniforms
       time: { type: FLOAT_TYPE, value: 1.0 },
       samples: { type: FLOAT_TYPE, value: 0.0 },
-      trace_depth: { type: INTEGER_TYPE, value: 3 },
       global_lightning_enabled: { type: FLOAT_TYPE, value: 0.0 },
       triangle_count: { type: INTEGER_TYPE, value: sceneTextures.triangle_count },
       object_count: { type: INTEGER_TYPE, value: sceneTextures.object_count },
-      resolution: { type: VEC2_TYPE, value: [512, 512] },
 
       // Camera
       u_cameraYaw: { type: FLOAT_TYPE, value: 0.0},
@@ -79,11 +78,15 @@ export default class RayTracer {
 
     this._frameBuffer = new PingPongFBO(this._pathTracerShader, 512, 512)
 
-    this.loadDomeTexture("./assets/sky-3.jpg")
+    this.loadDomeTexture("./assets/dome.jpg")
 
     this.setupSettingsListeners()
 
     this._refreshScreen = false
+  }
+
+  public init() {
+    this._navigator = new CameraNavigator(this._sceneService.camera, this._settingsService)
   }
 
   public loadDomeTexture(url: any) {
@@ -110,7 +113,8 @@ export default class RayTracer {
   }
 
   private setupSettingsListeners() {
-    this._settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => {
+    this._settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => {
+      let resolution = attr.value
       this._pathTracerUniforms['resolution'].value = resolution
       this._frameBuffer.setWindowSize(resolution[0], resolution[1])
       this._frameBuffer.resetTextures()

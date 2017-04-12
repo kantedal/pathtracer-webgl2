@@ -4,6 +4,7 @@ import {TEXTURE_TYPE} from "../utils/shader";
 import FBO from "../utils/fbo";
 import {SettingsService} from "../settings/settings.service";
 import {VEC2_TYPE} from "../utils/shader";
+import {ISettingAttribute} from "../settings/setting";
 
 
 /*
@@ -26,7 +27,7 @@ export class BloomProgram {
   private _horizontalBloomShader: Shader
 
   constructor(public settingsService: SettingsService) {
-    let renderSize = settingsService.resolutionSub.getValue()
+    let renderSize = settingsService.renderSettings.getAttributeSub('resolution').getValue().value
 
     this._thresholdShader = new Shader(thresholdVert, thresholdFrag);
     this._thresholdShader.uniforms = {
@@ -36,19 +37,20 @@ export class BloomProgram {
 
     this._verticalBloomShader = new Shader(bloomVert, bloomHorizontalFrag)
     this._verticalBloomShader.uniforms = {
-      u_resolution: { type: VEC2_TYPE, value: settingsService.resolutionSub.getValue() },
+      u_resolution: { type: VEC2_TYPE, value: renderSize },
       u_buffer_texture: { type: TEXTURE_TYPE, value: null },
     }
     this._verticalBloomProgram = new FBO(this._verticalBloomShader, renderSize[0], renderSize[1])
 
     this._horizontalBloomShader = new Shader(bloomVert, bloomVerticalFrag)
     this._horizontalBloomShader.uniforms = {
-      u_resolution: { type: VEC2_TYPE, value: settingsService.resolutionSub.getValue() },
+      u_resolution: { type: VEC2_TYPE, value: renderSize },
       u_buffer_texture: { type: TEXTURE_TYPE, value: null },
     }
     this._horizontalBloomProgram = new FBO(this._horizontalBloomShader, renderSize[0], renderSize[1])
 
-    settingsService.resolutionSub.asObservable().subscribe((resolution: GLM.IArray) => {
+    settingsService.renderSettings.getAttributeSub('resolution').asObservable().subscribe((attr: ISettingAttribute) => {
+      let resolution = attr.value
       this._thresholdProgram.resize(resolution[0], resolution[1])
       this._verticalBloomProgram.resize(resolution[0], resolution[1])
       this._horizontalBloomProgram.resize(resolution[0], resolution[1])

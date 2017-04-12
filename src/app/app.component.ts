@@ -18,7 +18,11 @@ export class AppComponent implements AfterViewInit, AfterContentInit {
     public settingsService: SettingsService,
     public sceneService: SceneService,
     public dialog: MdDialog
-  ) {}
+  ) {
+    //this.renderCanvas.nativeElement._bloomEnabled = false
+  }
+
+
 
   ngAfterViewInit(): void {
     this.renderCanvas.nativeElement.oncontextmenu = (e) => e.preventDefault()

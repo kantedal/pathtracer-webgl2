@@ -28,13 +28,13 @@ export class ObjectSettingsComponent {
   materialColor: number[] = [0,0,0]
   materialExtraParameter1: number
   materialExtraParameter2: number
+  materialExtraParameter3: number
   materialEmission: number
-
 
   materials = [{ id: 0, name: 'Diffuse' }, { id: 2, name: 'Emission' }, { id: 5, name: 'Glossy' },  { id: 1, name: 'Specular' }, { id: 3, name: 'Transmission' }]
   selelectedMaterial: number = 0
   defaultScenes = [{ id: 1, name: 'HDR teapot and bunny' }, { id: 2, name: 'HDR stanford dragon'}, { id: 3, name: 'Room teapot and bunny'}, { id: 4, name: 'Room stanford dragon'} ]
-  sceneId: number = 1
+  sceneId: number = 3
   //materialColor: string = '#ffffff'
 
   constructor(
@@ -46,8 +46,6 @@ export class ObjectSettingsComponent {
       this.selectedObject = object
       if (this.selectedObject != null) {
         this.selectedMaterial = object.material
-        console.log('selected object', object)
-        console.log(this.selectedObject.material.material_type)
 
         this.position = [object.position[0], object.position[1], object.position[2]]
         this.scale = [object.scale[0], object.scale[1], object.scale[2]]
@@ -74,6 +72,10 @@ export class ObjectSettingsComponent {
           this.materialExtraParameter1 = material.shininess;
         }
         else if (this.materialType == MATERIAL_TYPES.transmission) {
+          let material = <TransmissionMaterial> this.selectedObject.material;
+          this.materialExtraParameter1 = material.refractionIndex;
+          this.materialExtraParameter2 = material.reflectRefractRatio;
+          this.materialExtraParameter3 = material.roughness;
         }
         else if (this.materialType == MATERIAL_TYPES.specular) {
         }
@@ -149,6 +151,9 @@ export class ObjectSettingsComponent {
     // Extra data 2
     if (this.selectedMaterial.material_type == MATERIAL_TYPES.diffuse) {
       let material = <DiffuseMaterial> this.selectedObject.material;
+      material.albedo = this.materialExtraParameter1
+      material.roughness = this.materialExtraParameter2
+
       materialTexture.textureData[this.selectedMaterial.material_index * 9 + 6] = material.albedo;
       materialTexture.textureData[this.selectedMaterial.material_index * 9 + 7] = material.roughness;
     }
@@ -157,6 +162,16 @@ export class ObjectSettingsComponent {
       material.shininess = this.materialExtraParameter1
 
       materialTexture.textureData[this.selectedMaterial.material_index * 9 + 6] = material.shininess
+    }
+    else if (this.selectedMaterial.material_type == MATERIAL_TYPES.transmission) {
+      let material = <TransmissionMaterial> this.selectedMaterial;
+      material.refractionIndex = this.materialExtraParameter1
+      material.reflectRefractRatio = this.materialExtraParameter2
+      material.roughness = this.materialExtraParameter3
+
+      materialTexture.textureData[this.selectedMaterial.material_index * 9 + 6] = material.refractionIndex
+      materialTexture.textureData[this.selectedMaterial.material_index * 9 + 7] = material.reflectRefractRatio
+      materialTexture.textureData[this.selectedMaterial.material_index * 9 + 8] = material.roughness
     }
 
     materialTexture.updateTexture()

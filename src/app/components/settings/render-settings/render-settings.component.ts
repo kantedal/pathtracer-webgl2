@@ -1,6 +1,8 @@
 import {Component, ElementRef} from "@angular/core";
 import {SettingsService} from "../../../renderer/settings/settings.service";
 import {RenderService} from "../../../renderer/render.service";
+import {BehaviorSubject} from "rxjs";
+import {ISettingAttribute} from "../../../renderer/settings/setting";
 const hexRgb = require('hex-rgb');
 
 @Component({
@@ -12,21 +14,13 @@ export class RenderSettingsComponent {
   renderTypes = [{ id: 0, name: 'Ray tracing' }, { id: 1, name: 'Ray marching' }]
   renderType = 0
 
-  resolutionWidth: number
-  resolutionHeight: number
+  resolutionSub: BehaviorSubject<ISettingAttribute>
 
   constructor(
     public settingsService: SettingsService,
     public renderService: RenderService
   ) {
-    settingsService.resolutionSub.asObservable().subscribe((res: GLM.IArray) => {
-      this.resolutionWidth = res[0]
-      this.resolutionHeight = res[1]
-    })
-  }
-
-  resolutionUpdate() {
-    this.settingsService.resolutionSub.next([this.resolutionWidth, this.resolutionHeight])
+    this.resolutionSub = settingsService.renderSettings.getAttributeSub('resolution')
   }
 
   zoomSliderUpdate(event) {
@@ -35,25 +29,30 @@ export class RenderSettingsComponent {
 
   downloadImage() {
     // Create a 2D canvas to store the result
+    let w = this.resolutionSub.getValue().value[0]
+    let h = this.resolutionSub.getValue().value[1]
     let canvas = document.createElement('canvas');
-    canvas.width = this.resolutionWidth;
-    canvas.height = this.resolutionHeight;
+    canvas.width = w
+    canvas.height = h
     let context = canvas.getContext('2d');
 
-    let textureData = new Uint8ClampedArray(this.resolutionWidth * this.resolutionHeight * 4);
-    for (let x = 0; x < this.resolutionWidth; x++) {
-      for (let y = 0; y < this.resolutionHeight; y++) {
-        textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth)] = this.renderService.textureData[4 * (y + x * this.resolutionWidth)]
-        textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 1] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 1]
-        textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 2] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 2]
-        textureData[this.resolutionWidth * this.resolutionHeight * 4 - 4 * (y + x * this.resolutionWidth) + 3] = this.renderService.textureData[4 * (y + x * this.resolutionWidth) + 3]
+    console.log(w, h)
+
+    let textureData = new Uint8ClampedArray(w * h * 4);
+
+    for (let x = 0; x < w; x++) {
+      for (let y = 0; y < h; y++) {
+        textureData[4 * (w * x + y) + 0] = this.renderService.textureData[4 * (w * (w - x) + y) + 0]
+        textureData[4 * (w * x + y) + 1] = this.renderService.textureData[4 * (w * (w - x) + y) + 1]
+        textureData[4 * (w * x + y) + 2] = this.renderService.textureData[4 * (w * (w - x) + y) + 2]
+        textureData[4 * (w * x + y) + 3] = this.renderService.textureData[4 * (w * (w - x) + y) + 3]
       }
     }
 
     // Copy the pixels to a 2D canvas
-    let imageData = context.createImageData(this.resolutionWidth, this.resolutionHeight);
+    let imageData = context.createImageData(w, h);
     imageData.data.set(textureData);
-    context.putImageData(imageData, 0, 0);
+    context.putImageData(imageData, 0, 0)
 
     let download = document.createElement('a');
     download.href = canvas.toDataURL()
